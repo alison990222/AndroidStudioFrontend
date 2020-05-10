@@ -20,7 +20,7 @@ android:orientation="vertical">
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:text="Apple "
+            android:text="一起安卓"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
             android:textColor="#000000" />
 
@@ -31,7 +31,7 @@ android:orientation="vertical">
             android:layout_below="@id/textViewTitle"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:text="13.3 Inch, 256 GB"
+            android:text="teacher name"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
         <TextView
@@ -43,7 +43,7 @@ android:orientation="vertical">
             android:layout_marginTop="5dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:text="4.7"
+            android:text="Software Engineering"
             android:textColor="#070000"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small.Inverse"
             android:textStyle="bold" />
@@ -55,7 +55,7 @@ android:orientation="vertical">
             android:layout_below="@id/textViewDepartment"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:text="INR 56990"
+            android:text="移动应用"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             android:textStyle="bold" />
 
