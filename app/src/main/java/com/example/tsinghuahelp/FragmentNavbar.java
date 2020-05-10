@@ -42,25 +42,30 @@ public class FragmentNavbar  extends AppCompatActivity {
         transaction.add(R.id.content, fragment3);
         transaction.add(R.id.content, fragment4);
         transaction.add(R.id.content, fragment5);
-        transaction.show(fragment1).commit();
+//        transaction.show(fragment1).commit();
 
         navigationMenu.setOnNavigationItemSelectedListener(item -> {
             FragmentTransaction trans = fm.beginTransaction();
             switch (item.getItemId()) {
                 case R.id.navigation1:
-                    trans.show(fragment1).commit();
+                    trans.hide(fragment2).hide(fragment3).
+                            hide(fragment4).hide(fragment5).show(fragment1).commit();
                     return true;
                 case R.id.navigation2:
-                    trans.show(fragment2).commit();
+                    trans.hide(fragment1).hide(fragment3).
+                            hide(fragment4).hide(fragment5).show(fragment2).commit();
                     return true;
                 case R.id.navigation3:
-                    trans.show(fragment3).commit();
+                    trans.hide(fragment2).hide(fragment1).
+                            hide(fragment4).hide(fragment5).show(fragment3).commit();
                     return true;
                 case R.id.navigation4:
-                    trans.show(fragment4).commit();
+                    trans.hide(fragment2).hide(fragment3).
+                            hide(fragment1).hide(fragment5).show(fragment4).commit();
                     return true;
                 case R.id.navigation5:
-                    trans.show(fragment5).commit();
+                    trans.hide(fragment2).hide(fragment3).
+                            hide(fragment4).hide(fragment1).show(fragment5).commit();
                     return true;
             }
             return false;

@@ -11,20 +11,19 @@ import com.example.tsinghuahelp.Adapter.MyFragmentAdapter;
 import com.example.tsinghuahelp.Fragment.*;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class mainPage<BottomNavigationView> extends AppCompatActivity {
+public class mainPage extends AppCompatActivity {
 
     @BindView(R.id.viewpager)
     ViewPager viewPager;
 
-//    @BindView(R.id.navigation)
-//    BottomNavigationView navigationMenu;
+    @BindView(R.id.navigation)
+    BottomNavigationView navigationMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +45,26 @@ public class mainPage<BottomNavigationView> extends AppCompatActivity {
 
         viewPager.setAdapter(new MyFragmentAdapter(fm, fragments));
 
-//        navigationMenu.setOnNavigationItemSelectedListener(item -> {
-//            switch (item.getItemId()) {
-//                case R.id.navigation1:
-//                    viewPager.setCurrentItem(0);
-//                    return true;
-//                case R.id.navigation2:
-//                    viewPager.setCurrentItem(1);
-//                    return true;
-//            }
-//            return false;
-//        });
+        navigationMenu.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.navigation1:
+                    viewPager.setCurrentItem(0);
+                    return true;
+                case R.id.navigation2:
+                    viewPager.setCurrentItem(1);
+                    return true;
+                case R.id.navigation3:
+                    viewPager.setCurrentItem(2);
+                    return true;
+                case R.id.navigation4:
+                    viewPager.setCurrentItem(3);
+                    return true;
+                case R.id.navigation5:
+                    viewPager.setCurrentItem(4);
+                    return true;
+            }
+            return false;
+        });
         // 以上为fragment相关设置
 
     }

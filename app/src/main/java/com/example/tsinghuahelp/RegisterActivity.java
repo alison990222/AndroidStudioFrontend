@@ -73,10 +73,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
 
-        HashMap<String,String> h = new HashMap<>();
-        h.put("username",mUsername.getText().toString());
-        h.put("password",mPassword.getText().toString());
-        h.put("type","true");
+
         // 初始化websocket
 //        WebSocket.initSocket();
 
@@ -91,6 +88,13 @@ public class RegisterActivity extends AppCompatActivity {
         mButtonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                HashMap<String,String> h = new HashMap<>();
+                h.put("username",mUsername.getText().toString());
+                h.put("password",mPassword.getText().toString());
+                h.put("type","true");
+                Log.e("d",mUsername.getText().toString());
+
                 CommonInterface.sendOkHttpPostRequest("/api/user/register", new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {

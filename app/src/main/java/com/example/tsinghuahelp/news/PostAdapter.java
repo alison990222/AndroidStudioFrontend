@@ -1,6 +1,7 @@
 package com.example.tsinghuahelp.news;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         TextView title, department, researchDirection, teacher;
 
+
+
         public PostViewHolder(View itemView) {
             super(itemView);
 
@@ -57,6 +60,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             department = itemView.findViewById(R.id.textViewDepartment);
             researchDirection = itemView.findViewById(R.id.textViewResearchField);
             teacher = itemView.findViewById(R.id.textViewTeacher);
+
+
+            itemView.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getAdapterPosition();
+                    Posts post = postsList.get(pos);
+                    Log.e("m","hihi"+post.getTitle());
+//                    mWordList.set(pos,"Clicked!"+s);
+//                    updateData(mWordList);;
+                }
+            });
         }
     }
 }

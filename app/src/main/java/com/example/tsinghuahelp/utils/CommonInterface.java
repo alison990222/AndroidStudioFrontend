@@ -1,6 +1,7 @@
 package com.example.tsinghuahelp.utils;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +43,9 @@ public class CommonInterface {
         @Override
         public void saveFromResponse(@NotNull HttpUrl httpUrl, @NotNull List<Cookie> list) {
             cookieStore.put(httpUrl.host(), list);
+            Log.e("j","en");
+            Log.e("j",list.toString());
+            Log.e("j",httpUrl.host());
         }
 
         @NotNull
@@ -85,5 +89,7 @@ public class CommonInterface {
         request = new Request.Builder().url(server_url + url).post(requestBody).build();
         okHttpClient.newCall(request).enqueue(callback);
     }
+
+
 
 }

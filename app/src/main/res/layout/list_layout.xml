@@ -20,9 +20,12 @@ android:orientation="vertical">
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:text="一起安卓"
+            android:text="Apple "
+            android:textStyle="bold"
+            android:textAlignment="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:gravity="center_horizontal" />
 
         <TextView
             android:id="@+id/textViewTeacher"
@@ -31,7 +34,7 @@ android:orientation="vertical">
             android:layout_below="@id/textViewTitle"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:text="teacher name"
+            android:text="13.3 Inch, 256 GB"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
         <TextView
@@ -41,9 +44,7 @@ android:orientation="vertical">
             android:layout_below="@id/textViewTeacher"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:text="Software Engineering"
+            android:text="4.7"
             android:textColor="#070000"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small.Inverse"
             android:textStyle="bold" />
@@ -55,9 +56,9 @@ android:orientation="vertical">
             android:layout_below="@id/textViewDepartment"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:text="移动应用"
+            android:text="INR 56990"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-            android:textStyle="bold" />
+             />
 
     </RelativeLayout>
 

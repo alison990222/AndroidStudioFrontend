@@ -1,6 +1,5 @@
 package com.example.tsinghuahelp.Fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +20,13 @@ import butterknife.ButterKnife;
 
 public class Fragment1 extends Fragment {
 
-    View mView;
+    private View mView;
 
-    RecyclerView recyclerView;
-    PostAdapter adapter;
+    private RecyclerView recyclerView;
+    private PostAdapter adapter;
 
-    List<Posts> postsList;
+    private List<Posts> postsList;
+
     public Fragment1() {
         // Required empty public constructor
     }
@@ -37,33 +37,30 @@ public class Fragment1 extends Fragment {
         super.onCreate(savedInstanceState);
         postsList = new ArrayList<>();
 
-
-
-
         postsList.add(
                 new Posts(
-                        "alison",
-                        "helllollo android",
-                        "13.3 infdsssfjdiosajioajsdoifjasoifjsaoifjdsoijfois",
-                        "4.3",
+                        "陈老师",
+                        "一起做安卓",
+                        "移动应用",
+                        "软件学院",
                         "60000",
                        "require"));
 
         postsList.add(
                 new Posts(
-                        "alison",
-                        "helllollo android",
-                        "13.3 inch, Silver, 1.35 kg",
-                        "4.3",
+                        "王老师",
+                        "机器人。。。",
+                        "硬件。。。",
+                        "自动化",
                         "60000",
                         "require"));
 
         postsList.add(
                 new Posts(
-                        "alison",
-                        "helllollo android",
-                        "13.3 inch, Silver, 1.35 kg",
-                        "4.3",
+                        "田老师",
+                        "计算机视觉",
+                        "人工智能计算机视觉",
+                        "计算机",
                         "60000",
                         "require"));
 
@@ -76,7 +73,7 @@ public class Fragment1 extends Fragment {
         // 绑定视图
         ButterKnife.bind(this, mView);
 
-        recyclerView = mView.findViewById(R.id.recyclerView);
+        recyclerView = mView.findViewById(R.id.recyclerView4);
         recyclerView.setHasFixedSize(true);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
