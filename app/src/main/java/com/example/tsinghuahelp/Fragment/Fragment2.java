@@ -1,9 +1,13 @@
 package com.example.tsinghuahelp.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,9 +28,13 @@ public class Fragment2 extends Fragment {
     View mView;
     private RecyclerView recyclerView;
 
+    private Spinner spinner;
+
     private SearchResultAdapter adapter;
 
     private List<SearchResult> resultsList;
+
+    private String choose = "All";
 
     public Fragment2() {
         // Required empty public constructor
@@ -59,10 +67,26 @@ public class Fragment2 extends Fragment {
         recyclerView = mView.findViewById(R.id.searchRecyclerView);
         recyclerView.setHasFixedSize(true);
 
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         adapter = new SearchResultAdapter(getContext(),resultsList);
         recyclerView.setAdapter(adapter);
+        spinner = (Spinner) mView.findViewById(R.id.search_spinner);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //拿到被选择项的值
+                choose = (String) spinner.getSelectedItem();
+//                Toast.makeText(getContext(),"选择了"+choose,Toast.LENGTH_SHORT).show();
+                Log.e("m","选择了"+choose);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         return mView;
     }
