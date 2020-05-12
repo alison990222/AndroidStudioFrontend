@@ -18,6 +18,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".mainPage"></activity>
         <activity android:name=".RegisterActivity" />
+        <activity android:name=".DetailActivity" />
+        <activity android:name=".DetailActivityTeacher" />
+        <activity android:name=".CheckUser.CheckUser"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

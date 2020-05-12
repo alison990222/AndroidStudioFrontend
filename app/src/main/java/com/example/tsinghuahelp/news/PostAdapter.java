@@ -1,6 +1,7 @@
 package com.example.tsinghuahelp.news;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tsinghuahelp.DetailActivity;
+import com.example.tsinghuahelp.DetailActivityTeacher;
+import com.example.tsinghuahelp.MainActivity;
 import com.example.tsinghuahelp.R;
+import com.example.tsinghuahelp.RegisterActivity;
 
 import java.util.List;
 
@@ -51,8 +56,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         TextView title, department, researchDirection, teacher;
 
-
-
         public PostViewHolder(View itemView) {
             super(itemView);
 
@@ -67,9 +70,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 public void onClick(View view) {
                     int pos = getAdapterPosition();
                     Posts post = postsList.get(pos);
-                    Log.e("m","hihi"+post.getTitle());
-//                    mWordList.set(pos,"Clicked!"+s);
-//                    updateData(mWordList);;
+
+                    Intent detailIntent = new Intent(mCtx, DetailActivityTeacher.class);//ActivityDetail.class
+                    detailIntent.putExtra("title",post.getTitle());
+                    mCtx.startActivity(detailIntent);
+
                 }
             });
         }
