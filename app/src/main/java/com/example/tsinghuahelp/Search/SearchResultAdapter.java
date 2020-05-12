@@ -19,9 +19,9 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     private Context mCtx;
     private List<SearchResult> resultsList;
 
-    public SearchResultAdapter(Context mCtx, List<SearchResult> postsList) {
+    public SearchResultAdapter(Context mCtx, List<SearchResult> resultsList) {
         this.mCtx = mCtx;
-        this.resultsList = postsList;
+        this.resultsList = resultsList;
     }
 
     @NonNull
