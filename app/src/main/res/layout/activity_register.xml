@@ -10,73 +10,19 @@
     android:gravity="center_horizontal"
     tools:context=".RegisterActivity">
 
-    <EditText
-        android:id="@+id/username"
-        android:layout_width="190dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="150dp"
-        android:drawableStart="@drawable/user"
-        android:hint="@string/username"
-        android:background="@null"
-        android:drawablePadding="10dp"
-        android:drawableLeft="@drawable/user" />
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="190dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="30dp"
-        android:drawableLeft="@drawable/password"
-        android:background="@null"
-        android:drawablePadding="10dp"
-        android:hint="@string/password" />
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <EditText
-        android:id="@+id/confirm_password"
-        android:layout_width="190dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="30dp"
-        android:drawableLeft="@drawable/password"
-        android:background="@null"
-        android:drawablePadding="10dp"
-        android:hint="@string/confirmpassword" />
-
-    <EditText
-        android:id="@+id/id"
-        android:layout_width="190dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="30dp"
-        android:background="@null"
-        android:drawableLeft="@drawable/password"
-        android:drawablePadding="10dp"
-        android:hint="@string/id" />
-
-    <Button
-        android:id="@+id/button_register"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginTop="30dp"
-        android:background="#9ab5ff"
-        android:hint="Register" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:text = "@string/already_registered"/>
-
-        <TextView
-            android:id="@+id/textview_login"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:paddingLeft="10dp"
-            android:text="@string/login"
-            android:textStyle="bold" />
-    </LinearLayout>
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/tab_layout"/>
 
 </LinearLayout>

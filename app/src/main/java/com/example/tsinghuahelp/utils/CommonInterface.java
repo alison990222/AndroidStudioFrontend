@@ -43,9 +43,6 @@ public class CommonInterface {
         @Override
         public void saveFromResponse(@NotNull HttpUrl httpUrl, @NotNull List<Cookie> list) {
             cookieStore.put(httpUrl.host(), list);
-            Log.e("j","en");
-            Log.e("j",list.toString());
-            Log.e("j",httpUrl.host());
         }
 
         @NotNull

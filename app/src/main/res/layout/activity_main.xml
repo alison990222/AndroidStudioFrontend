@@ -30,6 +30,28 @@
         android:drawablePadding="10dp"
         android:hint="@string/password" />
 
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="24dp" >
+
+        <RadioButton
+            android:id="@+id/radioButtonStu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="学生" />
+
+        <RadioButton
+            android:id="@+id/radioButtonTch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="老师" />
+
+    </RadioGroup>
+
     <Button
         android:id="@+id/button_login"
         android:layout_width="wrap_content"
@@ -59,4 +81,6 @@
             android:textColor="#ffffff"
             android:textStyle="bold" />
     </LinearLayout>
+
+
 </LinearLayout>

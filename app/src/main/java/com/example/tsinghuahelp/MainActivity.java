@@ -16,6 +16,8 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,10 +36,12 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText mUsername;
-    EditText mPassword;
-    Button mButtonLogin;
-    TextView mTextview_register;
+    private EditText mUsername;
+    private EditText mPassword;
+    private Button mButtonLogin;
+    private TextView mTextview_register;
+    private RadioGroup radioGroup;
+    private RadioButton radioBtn;
     public static Handler msgHandler;
 
     @SuppressLint("HandlerLeak")
@@ -50,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         mPassword = (EditText)findViewById(R.id.password);
         mButtonLogin = (Button)findViewById(R.id.button_login);
         mTextview_register = (TextView)findViewById(R.id.textview_register);
+        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 
 
         // 消息处理
@@ -77,6 +82,12 @@ public class MainActivity extends AppCompatActivity {
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                int selected = radioGroup.getCheckedRadioButtonId();
+                Log.e("", String.valueOf(selected));
+                radioBtn = (RadioButton) findViewById(selected);
+                Toast.makeText(MainActivity.this, radioBtn.getText(), Toast.LENGTH_SHORT).show();
+
                 HashMap<String,String> h = new HashMap<>();
                 h.put("username",mUsername.getText().toString());
                 h.put("password",mPassword.getText().toString());
@@ -103,12 +114,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 },h);
 
-
-
-
                 Intent mainIntent = new Intent(MainActivity.this, mainPage.class);
                 startActivity(mainIntent);
             }
         });
     }
+
+
 }
