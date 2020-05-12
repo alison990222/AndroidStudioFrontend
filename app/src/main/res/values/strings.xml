@@ -8,7 +8,6 @@
     <string name="id">student ID</string>
     <string name="confirmpassword">Confirm Password</string>
     <string name="already_registered">Already Registered?</string>
-    <string name="confirm">确定</string>
 
     <string-array name="search_spinner_list">
         <item>Teacher</item>

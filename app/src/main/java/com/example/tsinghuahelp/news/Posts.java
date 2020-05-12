@@ -21,6 +21,8 @@ public class Posts {
         this.requirement = requirement;
     }
 
+
+
     public String getTeacher() {
         return teacher;
     }
@@ -44,5 +46,12 @@ public class Posts {
     public String getRequirement() {
         return requirement;
     }
+
+
+
+
+
+
+
 
 }
