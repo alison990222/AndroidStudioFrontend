@@ -11,23 +11,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tsinghuahelp.MainActivity;
 import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.news.PostAdapter;
 import com.example.tsinghuahelp.news.Posts;
-import com.example.tsinghuahelp.utils.CommonInterface;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
 
 public class Fragment1 extends Fragment {
 
