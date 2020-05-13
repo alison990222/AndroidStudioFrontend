@@ -1,13 +1,12 @@
 package com.example.tsinghuahelp.RegisterTab;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.telecom.Call;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +18,7 @@ import android.widget.Toast;
 
 import com.example.tsinghuahelp.MainActivity;
 import com.example.tsinghuahelp.R;
-import com.example.tsinghuahelp.RegisterActivity;
 import com.example.tsinghuahelp.utils.CommonInterface;
-import com.example.tsinghuahelp.utils.WebSocket;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -32,10 +29,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.HashMap;
-
-import javax.security.auth.callback.Callback;
-
-import retrofit2.Response;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class RegisterStudent extends Fragment {
 
@@ -60,7 +56,7 @@ public class RegisterStudent extends Fragment {
         mTextview_Login = mView.findViewById(R.id.textview_login);
 
         // 初始化websocket
-        WebSocket.initSocket();
+//        WebSocket.initSocket();
 
         // 消息处理
         msgHandler = new Handler() {
@@ -84,38 +80,32 @@ public class RegisterStudent extends Fragment {
             }
         });
 
+
         mButtonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-//                HashMap<String,String> h = new HashMap<>();
-//                h.put("username",mUsername.getText().toString());
-//                h.put("password",mPassword.getText().toString());
-//                h.put("type","true");
-//                Log.e("d",mUsername.getText().toString());
-//
-//                CommonInterface.sendOkHttpPostRequest("/api/user/register", new Callback() {
-//                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                        Log.e("error", e.toString());
-//                    }
-//
-//                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                        String resStr = response.body().string();
-//                        getActivity().runOnUiThread(() -> Toast.makeText(getContext(), resStr, Toast.LENGTH_LONG).show());
-//                        Log.e("response", resStr);
-////                        try {
-////                            // 解析json，然后进行自己的内部逻辑处理
-////                            JSONObject jsonObject = new JSONObject(resStr);
-////                        } catch (JSONException e) {
-////
-////                        }
-//                    }
-//                },h);
+                HashMap<String,String> h = new HashMap<>();
+                h.put("username",mUsername.getText().toString());
+                h.put("password",mPassword.getText().toString());
+                h.put("type","false"); // false means = student
+
+                CommonInterface.sendOkHttpPostRequest("/api/user/register", new Callback() {
+
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
+                    }
+
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        getActivity().runOnUiThread(() -> Toast.makeText(getContext(), resStr, Toast.LENGTH_LONG).show());
+                        Log.e("response", resStr);
+
+                    }
+                },h);
             }
         });
 
-
         return mView;
-
     }
 }

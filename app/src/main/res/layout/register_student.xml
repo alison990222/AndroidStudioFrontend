@@ -27,6 +27,7 @@
             android:drawableLeft="@drawable/password"
             android:background="@null"
             android:drawablePadding="10dp"
+            android:inputType="textPassword"
             android:hint="@string/password" />
 
         <EditText
@@ -37,6 +38,7 @@
             android:drawableLeft="@drawable/password"
             android:background="@null"
             android:drawablePadding="10dp"
+            android:inputType="textPassword"
             android:hint="@string/confirmpassword" />
 
         <EditText
@@ -45,11 +47,13 @@
             android:layout_height="40dp"
             android:layout_marginTop="30dp"
             android:background="@null"
-            android:drawableLeft="@drawable/password"
+            android:drawableLeft="@drawable/id"
             android:drawablePadding="10dp"
             android:hint="@string/id" />
 
-        <Button
+
+
+    <Button
             android:id="@+id/button_register"
             android:layout_width="wrap_content"
             android:layout_height="40dp"

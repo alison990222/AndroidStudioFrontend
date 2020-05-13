@@ -39,7 +39,8 @@ public class mainPage extends AppCompatActivity {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(new Fragment1());
         fragments.add(new Fragment2());
-        fragments.add(new Fragment3());
+//        fragments.add(new Fragment3());
+        fragments.add(new Fragment3Teacher());
         fragments.add(new Fragment4());
         fragments.add(new Fragment5());
 
