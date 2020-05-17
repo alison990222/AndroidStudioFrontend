@@ -77,6 +77,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener {
         myRecyclerView = mView.findViewById(R.id.info_recyclerView);
         myRecyclerView.setHasFixedSize(true);
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         btn_edit=mView.findViewById(R.id.edit_info_btn);
         is_verify=mView.findViewById(R.id.is_verify);
         edit_user=mView.findViewById(R.id.info_username);
