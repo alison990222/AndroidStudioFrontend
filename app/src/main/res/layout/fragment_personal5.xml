@@ -22,80 +22,86 @@
             android:src="@drawable/user"
             android:layout_margin="5dp"
             android:layout_gravity="center"/>
+
         <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/info_username"
-            android:text="用户名"
+            android:layout_width="133dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:autoSizeTextType="uniform"
+            android:maxLines="2"
             android:background="@null"
             android:focusable="false"
-            android:layout_gravity="center"
-            />
+            android:maxLength="14"
+            android:hint="输入用户名\n(不超过14个字)"
+            android:text="用户名" />
 
         <LinearLayout
-            android:layout_width="68dp"
-            android:layout_height="wrap_content"
             android:id="@+id/pro_num"
-            android:orientation="vertical"
-            android:layout_marginStart="35dp"
-            android:layout_marginLeft="35dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_gravity="center">
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|right"
+
+
+            android:orientation="vertical">
+
             <TextView
+                android:id="@+id/star_or_proj_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/star_or_proj_num"
                 android:layout_gravity="center"
                 android:text="0" />
+
             <TextView
+                android:id="@+id/star_or_proj"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/star_or_proj"
-                android:text="My star"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:text="Star" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/follow_num"
             android:layout_width="64dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_gravity="center">
+            android:layout_gravity="center|right"
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/my_follow_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:text="0" />
+
             <TextView
                 android:id="@+id/my_follow_proj"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="My follow"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:text="Follow" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/follower_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/follower_num"
-            android:orientation="vertical"
-            android:layout_gravity="center">
+            android:layout_gravity="center|right"
+            android:orientation="vertical">
+
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/my_follower_num"
-                android:text="0"
-                android:layout_gravity="center"/>
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="0" />
+
+            <TextView
                 android:id="@+id/my_follower_proj"
-                android:text="My follower"
-                android:layout_gravity="center"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Follower" />
         </LinearLayout>
 
     </LinearLayout>
@@ -112,14 +118,23 @@
             android:layout_gravity="center"
             android:layout_marginStart="25dp"
             android:layout_marginLeft="25dp"/>
+
         <EditText
-            android:layout_width="wrap_content"
+            android:id="@+id/is_verify"
+            android:layout_width="196dp"
             android:layout_height="wrap_content"
-            android:id="@+id/info_verify"
-            android:text="真实信息"
+            android:layout_gravity="center"
             android:background="@null"
+            android:text="已认证 "
             android:focusable="false"
-            android:layout_gravity="center"/>
+            android:textColor="#000000" />
+
+        <Button
+            android:id="@+id/info_verify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="详情信息" />
 
     </LinearLayout>
 
@@ -136,14 +151,19 @@
             android:layout_marginLeft="25dp"
             android:text="个性签名："
             android:layout_gravity="center"/>
+
         <EditText
+            android:id="@+id/info_signature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/info_signature"
-            android:text="我的签名"
+            android:layout_gravity="center"
             android:background="@null"
             android:focusable="false"
-            android:layout_gravity="center"/>
+            android:autoSizeTextType="uniform"
+            android:maxLines="2"
+            android:hint="请输入签名(不超过30字)"
+            android:text="时间就像海绵里的水。"
+            android:maxLength="30"/>
     </LinearLayout>
 
     <LinearLayout

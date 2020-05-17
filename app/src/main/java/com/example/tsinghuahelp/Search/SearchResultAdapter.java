@@ -62,9 +62,20 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
             itemView.setOnClickListener(view -> {
                 int pos = getAdapterPosition();
                 SearchResult result = resultsList.get(pos);
-                Log.e("m","hihi"+result.getTitle());
-//                    mWordList.set(pos,"Clicked!"+s);
-//                    updateData(mWordList);;
+                String type=result.getType();
+                int id = result.getId();
+                if(type.equals("project")){
+                    //去往项目详情页面
+                    System.out.println("去往项目详情页面");
+                }
+                else if(type.equals("plan")){
+                    //去往计划详情页面
+                    System.out.println("去往计划详情页面");
+                }
+                else{
+                    //去往个人主页详情页面
+                    System.out.println("去往个人主页详情页面");
+                }
             });
         }
     }
