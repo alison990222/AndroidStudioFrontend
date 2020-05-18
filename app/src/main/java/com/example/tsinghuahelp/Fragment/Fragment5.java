@@ -1,5 +1,6 @@
 package com.example.tsinghuahelp.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,10 +23,12 @@ import com.example.tsinghuahelp.Adapter.InfoAdapter;
 import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.Search.SearchResult;
 import com.example.tsinghuahelp.Search.SearchResultAdapter;
+import com.example.tsinghuahelp.StarFollowAll;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.ButterKnife;
 
@@ -252,12 +255,21 @@ public class Fragment5 extends Fragment implements View.OnClickListener {
                 break;
             case R.id.pro_num:
                 System.out.println("hi,pro_num");
+                Intent proIntent = new Intent(getContext(), StarFollowAll.class);
+                proIntent.putExtra("type","star");
+                Objects.requireNonNull(getContext()).startActivity(proIntent);
                 break;
             case R.id.follow_num:
                 System.out.println("hi,follow_num");
+                Intent followIntent = new Intent(getContext(), StarFollowAll.class);
+                followIntent.putExtra("type","follow");
+                Objects.requireNonNull(getContext()).startActivity(followIntent);
                 break;
             case R.id.follower_num:
                 System.out.println("hi,follower_num");
+                Intent followerIntent = new Intent(getContext(), StarFollowAll.class);
+                followerIntent.putExtra("type","follower");
+                Objects.requireNonNull(getContext()).startActivity(followerIntent);
                 break;
 
         }
