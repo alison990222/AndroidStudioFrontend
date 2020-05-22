@@ -1,10 +1,12 @@
 package com.example.tsinghuahelp.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -21,14 +23,16 @@ import com.example.tsinghuahelp.Adapter.InfoAdapter;
 import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.Search.SearchResult;
 import com.example.tsinghuahelp.Search.SearchResultAdapter;
+import com.example.tsinghuahelp.StarFollowAll;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.ButterKnife;
 
-public class Fragment5 extends Fragment {
+public class Fragment5 extends Fragment implements View.OnClickListener {
     View mView;
     TabLayout tabLayout;
     RecyclerView myRecyclerView;
@@ -38,6 +42,22 @@ public class Fragment5 extends Fragment {
     private List<String> infoList;
     private List<SearchResult> proList;
     private List<SearchResult> planList;
+    Boolean isEdit=false;
+    Boolean iconChange = false;
+    Boolean usernameChange=false;
+    Boolean signatureChange = false;
+    Boolean personalChange = false;
+    Button btn_edit;
+    Button btn_verify;
+    EditText edit_user;
+    EditText edit_signature;
+    EditText edit_personal=null;
+    TextView is_verify;
+    com.mikhaellopez.circularimageview.CircularImageView edit_pic;
+    String oldUsername;
+    String oldSignature;
+    String oldPersonInfo;
+
 
 
     public Fragment5() {
@@ -61,12 +81,30 @@ public class Fragment5 extends Fragment {
         myRecyclerView.setHasFixedSize(true);
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        btn_edit=mView.findViewById(R.id.edit_info_btn);
+        is_verify=mView.findViewById(R.id.is_verify);
+        edit_user=mView.findViewById(R.id.info_username);
+        edit_signature=mView.findViewById(R.id.info_signature);
+        btn_verify=mView.findViewById(R.id.info_verify);
+        btn_verify.setOnClickListener(this);
+        btn_edit.setOnClickListener(this);
+        edit_signature.setOnClickListener(this);
+        edit_user.setOnClickListener(this);
+        edit_pic = mView.findViewById(R.id.info_pic);
+        edit_pic.setOnClickListener(this);
+        mView.findViewById(R.id.follow_num).setOnClickListener(this);
+        mView.findViewById(R.id.follower_num).setOnClickListener(this);
+        mView.findViewById(R.id.pro_num).setOnClickListener(this);
+
+
 
         //根据老师和学生信息判断，这里需要从后端提供数据，个人信息，我的报名，我的发文之类的
         //关于查看别人的主页，建议新建一个activity利用这个布局文件
         tabLayout.addTab(tabLayout.newTab().setText("关于我"));
         tabLayout.addTab(tabLayout.newTab().setText("我的报名"));
         tabLayout.addTab(tabLayout.newTab().setText("我的发文"));
+        oldUsername=edit_user.getText().toString();
+        oldSignature=edit_signature.getText().toString();
 
         infoList = new ArrayList<>();
 
@@ -93,17 +131,23 @@ public class Fragment5 extends Fragment {
         proAdapter = new SearchResultAdapter(getContext(),proList);
         planAdapter = new SearchResultAdapter(getContext(),planList);
         infoAdapter = new InfoAdapter(getContext(),infoList);
+
+
         myRecyclerView.setAdapter(infoAdapter);
         infoAdapter.setOnitemClickLintener(new InfoAdapter.OnitemClick() {
             @Override
             public void onItemClick(int position) {
                 LinearLayout layout = (LinearLayout) myRecyclerView.getChildAt(position);
-                EditText editText = layout.findViewById(R.id.personal_info_show);
-                editText.setFocusableInTouchMode(true);
-                editText.setFocusable(true);
-                editText.requestFocus();
-//                editText.setText("asdasda");
-                System.out.println("hihihi"+position);
+                edit_personal = layout.findViewById(R.id.personal_info_show);
+                if(isEdit){
+                    oldPersonInfo=edit_personal.getText().toString();
+                    personalChange=true;
+                    edit_personal.setFocusableInTouchMode(true);
+                    edit_personal.setFocusable(true);
+                    edit_personal.requestFocus();
+                    System.out.println("hi, personal info!");
+                }
+
             }
         });
 
@@ -136,4 +180,98 @@ public class Fragment5 extends Fragment {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.edit_info_btn:
+                if(!isEdit){
+                    isEdit=true;
+                    edit_user.setFocusableInTouchMode(true);
+                    edit_user.setFocusable(true);
+                    edit_user.requestFocus();
+                    edit_signature.setFocusableInTouchMode(true);
+                    edit_signature.setFocusable(true);
+                    edit_signature.requestFocus();
+                    btn_edit.setText("提交修改");
+                }
+                else{
+                    isEdit =false;
+                    edit_user.setFocusableInTouchMode(false);
+                    edit_user.setFocusable(false);
+                    edit_signature.setFocusableInTouchMode(false);
+                    edit_signature.setFocusable(false);
+                    if(edit_personal!=null) {
+                        edit_personal.setFocusableInTouchMode(false);
+                        edit_personal.setFocusable(false);
+                        String newPersonalInfo = edit_personal.getText().toString();
+                        if(!newPersonalInfo.equals(oldPersonInfo)){
+                            //todo
+                            personalChange=false;
+                            oldPersonInfo=newPersonalInfo;
+                            System.out.println("新的个人信息："+newPersonalInfo);
+                        }
+                    }
+                    if(iconChange){
+                        //todo
+                        iconChange=false;
+                        System.out.println("新的图片");
+                    }
+                    String newName = edit_user.getText().toString();
+                    if(!newName.equals(oldUsername)){
+                        //todo
+                        usernameChange=false;
+                        oldUsername=newName;
+                        System.out.println("新的名字："+newName);
+                    }
+                    String newSignature = edit_signature.getText().toString();
+                    if(!newSignature.equals(oldSignature)){
+                        //todo
+                        signatureChange=false;
+                        oldSignature=newSignature;
+                        System.out.println("新的签名："+newSignature);
+                    }
+                    btn_edit.setText("编辑");
+                }
+                break;
+            case R.id.info_pic:
+                if(isEdit){
+                    iconChange=true;
+                    System.out.println("hi, pic info");
+                }
+                break;
+            case R.id.info_username:
+                if(isEdit){
+                    usernameChange=true;
+                    System.out.println("hi, username info");
+                }
+                break;
+            case R.id.info_signature:
+                if(isEdit){
+                    signatureChange=true;
+                    System.out.println("hi,signature info");
+                }
+                break;
+            case R.id.info_verify:
+                break;
+            case R.id.pro_num:
+                System.out.println("hi,pro_num");
+                Intent proIntent = new Intent(getContext(), StarFollowAll.class);
+                proIntent.putExtra("type","star");
+                Objects.requireNonNull(getContext()).startActivity(proIntent);
+                break;
+            case R.id.follow_num:
+                System.out.println("hi,follow_num");
+                Intent followIntent = new Intent(getContext(), StarFollowAll.class);
+                followIntent.putExtra("type","follow");
+                Objects.requireNonNull(getContext()).startActivity(followIntent);
+                break;
+            case R.id.follower_num:
+                System.out.println("hi,follower_num");
+                Intent followerIntent = new Intent(getContext(), StarFollowAll.class);
+                followerIntent.putExtra("type","follower");
+                Objects.requireNonNull(getContext()).startActivity(followerIntent);
+                break;
+
+        }
+    }
 }

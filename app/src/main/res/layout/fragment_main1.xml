@@ -6,15 +6,22 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/textView"
+
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#749C27B0"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:textSize="30dp"
-        android:text="Tsinghua Help" />
+        android:background="#749C27B0">
+
+        <TextView
+            android:id="@+id/chat_username"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Tsinghua Help"
+            android:textColor="#4a4a4a"
+            android:textSize="25dp"></TextView>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView4"

@@ -22,21 +22,66 @@
 
 
     <EditText
+        android:id="@+id/projectName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:gravity="start|top"
+        android:hint="Topic" />
+
+
+    <EditText
         android:id="@+id/interestField"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="80dp"
-
+        android:layout_marginTop="140dp"
         android:hint="Interested Field" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:textColor="#020000"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:hint="身份" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/checkBox_undergraduate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="230dp"
+            android:text="本科生" />
+
+        <CheckBox
+            android:id="@+id/checkBox_master"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="230dp"
+            android:text="硕士生" />
+
+        <CheckBox
+            android:id="@+id/checkBox_phd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="230dp"
+            android:text="博士生" />
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/postDetail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="270dp"
         android:ems="10"
-        android:hint="type here..."
         android:gravity="start|top"
+        android:hint="type here..."
         android:inputType="textMultiLine" />
 
     <Button

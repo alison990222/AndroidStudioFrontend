@@ -11,6 +11,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,12 +40,15 @@ public class DetailActivityTeacher extends AppCompatActivity {
     TextView time;
     TextView department;
     TextView require;
-    TextView researchField;
-    TextView description;
+    EditText researchField;
+    EditText description;
     Button btnEdit;
     Button btnCheck;
     Button btnDelete;
-
+    Boolean isEdit=false;
+    private CheckBox undergraduate,master, phd;
+    private String oldResearchFieldname;
+    private String oldDescription;
     public static Handler msgHandler;
     @SuppressLint("HandlerLeak")
     @Override
@@ -60,13 +64,21 @@ public class DetailActivityTeacher extends AppCompatActivity {
 
         topic = (TextView)findViewById(R.id.projectName);
         department = (TextView)findViewById(R.id.projectDept);
-        description = (TextView)findViewById(R.id.projectDescript);
-        researchField = (TextView)findViewById(R.id.projectField);
+        description = (EditText)findViewById(R.id.projectDescript);
+        researchField = (EditText)findViewById(R.id.projectField);
         require = (TextView)findViewById(R.id.projectRequire);
         time = (TextView)findViewById(R.id.projectTime);
         teacher = (TextView)findViewById(R.id.projectTeacher);
-
+        undergraduate = (CheckBox)findViewById(R.id.checkBox_undergraduate);
+        master =(CheckBox)findViewById(R.id.checkBox_master);
+        phd = (CheckBox)findViewById(R.id.checkBox_phd);
+        undergraduate.setClickable(false);
+        master.setClickable(false);
+        phd.setClickable(false);
         topic.setText(intent.getStringExtra("title"));
+
+        oldResearchFieldname = researchField.getText().toString();
+        oldDescription = description.getText().toString();
 
         // 消息处理
         msgHandler = new Handler() {
@@ -84,7 +96,64 @@ public class DetailActivityTeacher extends AppCompatActivity {
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!isEdit){
+                    isEdit=true;
+                    researchField.setFocusableInTouchMode(true);
+                    researchField.setFocusable(true);
+                    researchField.requestFocus();
+                    description.setFocusableInTouchMode(true);
+                    description.setFocusable(true);
+                    description.requestFocus();
+                    master.setFocusableInTouchMode(true);
+                    master.setFocusable(true);
+                    master.requestFocus();
+                    master.setClickable(true);
+                    phd.setFocusableInTouchMode(true);
+                    phd.setFocusable(true);
+                    phd.requestFocus();
+                    phd.setClickable(true);
+                    undergraduate.setFocusableInTouchMode(true);
+                    undergraduate.setFocusable(true);
+                    undergraduate.requestFocus();
+                    undergraduate.setClickable(true);
+                    btnEdit.setText("提交修改");
+                }
+                else{
+                    isEdit =false;
+                    researchField.setFocusableInTouchMode(false);
+                    researchField.setFocusable(false);
+                    description.setFocusableInTouchMode(false);
+                    description.setFocusable(false);
+                    undergraduate.setFocusableInTouchMode(false);
+                    undergraduate.setFocusable(false);
+                    undergraduate.setClickable(false);
+                    phd.setFocusableInTouchMode(false);
+                    phd.setFocusable(false);
+                    phd.setClickable(false);
+                    master.setFocusableInTouchMode(false);
+                    master.setFocusable(false);
+                    master.setClickable(false);
 
+                    String requirements = "";
+                    if(undergraduate.isChecked())
+                        requirements += "本科生 ";
+                    if(master.isChecked())
+                        requirements += "硕士生 ";
+                    if(phd.isChecked())
+                        requirements += "博士生 ";
+
+                    String newResearchField = researchField.getText().toString();
+                    if(!newResearchField.equals(oldResearchFieldname)){
+                        oldResearchFieldname = newResearchField;
+                        System.out.println("新的研究方向："+newResearchField);
+                    }
+                    String newDescription = description.getText().toString();
+                    if(!newDescription.equals(oldDescription)){
+                        oldDescription = newDescription;
+                        System.out.println("新的项目描述："+ newDescription);
+                    }
+                    btnEdit.setText("编辑");
+                }
             }
         });
 

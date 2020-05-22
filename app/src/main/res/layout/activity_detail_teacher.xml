@@ -45,26 +45,46 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:textSize="15dp"
-            android:text="学院"/>
-
+            android:text="学院："/>
 
         <TextView
             android:id="@+id/projectTeacher"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:textSize="15dp"
-            android:text="导师"/>
+            android:text="导师："/>
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal">
     <TextView
-        android:id="@+id/projectField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:textSize="15dp"
-        android:text="研究方向"/>
+        android:text="研究方向："/>
+
+    <EditText
+        android:id="@+id/projectField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:focusable="false"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:autoSizeTextType="uniform"
+        android:maxLines="2"
+        android:hint="请输入研究方向"
+        android:text="xxx"
+        android:maxLength="30"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/projectRequire"
@@ -72,7 +92,38 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:textSize="15dp"
-        android:text="招生"/>
+        android:text="招生："/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/checkBox_undergraduate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:focusable="false"
+            android:text="本科生" />
+
+        <CheckBox
+            android:id="@+id/checkBox_master"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:focusable="false"
+            android:text="硕士生" />
+
+        <CheckBox
+            android:id="@+id/checkBox_phd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:focusable="false"
+            android:text="博士生" />
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -81,15 +132,19 @@
         android:textSize="15dp"
         android:text="细节：  "/>
 
-    <TextView
+    <EditText
         android:id="@+id/projectDescript"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:background="@drawable/textview_round_border"
         android:text="detail"
+        android:focusable="false"
+        android:layout_marginTop="5dp"
+        android:autoSizeTextType="uniform"
+        android:maxLines="2"
         android:textColor="#050101"
-        android:textSize="15dp" />
+        android:hint="请输入项目细节"
+        android:maxLength="30"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"

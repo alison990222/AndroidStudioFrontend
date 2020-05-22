@@ -23,7 +23,7 @@ android:orientation="vertical">
             android:text="Apple "
             android:textStyle="bold"
             android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             android:textColor="#000000"
             android:gravity="center_horizontal" />
 
@@ -35,7 +35,8 @@ android:orientation="vertical">
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:text="13.3 Inch, 256 GB"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+            android:textColor="#070000"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small.Inverse" />
 
         <TextView
             android:id="@+id/textViewDepartment"
@@ -46,8 +47,7 @@ android:orientation="vertical">
             android:layout_marginTop="5dp"
             android:text="4.7"
             android:textColor="#070000"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small.Inverse"
-            android:textStyle="bold" />
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small.Inverse" />
 
         <TextView
             android:id="@+id/textViewResearchField"
@@ -57,7 +57,7 @@ android:orientation="vertical">
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:text="INR 56990"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
              />
 
     </RelativeLayout>

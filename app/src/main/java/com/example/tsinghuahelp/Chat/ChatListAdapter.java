@@ -1,6 +1,7 @@
 package com.example.tsinghuahelp.Chat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,19 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Holder
             date = itemView.findViewById(R.id.msg_date);
             description = itemView.findViewById(R.id.msg_description);
             profile = itemView.findViewById(R.id.msg_pic);
+
+            itemView.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getAdapterPosition();
+                    ChatList chat = chatList.get(pos);
+
+                    Intent chatIntent = new Intent(mCtx, ChatRoom.class);
+                    chatIntent.putExtra("title",chat.getUsername());
+                    mCtx.startActivity(chatIntent);
+
+                }
+            });
         }
     }
 

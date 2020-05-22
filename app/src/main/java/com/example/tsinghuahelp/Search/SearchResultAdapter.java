@@ -2,6 +2,7 @@ package com.example.tsinghuahelp.Search;
 
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tsinghuahelp.DetailActivityTeacher;
+import com.example.tsinghuahelp.OtherUserHomeActivity;
 import com.example.tsinghuahelp.R;
 
 import java.util.List;
@@ -62,9 +65,26 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
             itemView.setOnClickListener(view -> {
                 int pos = getAdapterPosition();
                 SearchResult result = resultsList.get(pos);
-                Log.e("m","hihi"+result.getTitle());
-//                    mWordList.set(pos,"Clicked!"+s);
-//                    updateData(mWordList);;
+                String type=result.getType();
+                int id = result.getId();
+                if(type.equals("project")){
+                    //去往项目详情页面
+                    System.out.println("去往项目详情页面");
+                    Intent detailIntent = new Intent(mCtx, DetailActivityTeacher.class);//ActivityDetail.class
+                    detailIntent.putExtra("title",result.getTitle());
+                    mCtx.startActivity(detailIntent);
+                }
+                else if(type.equals("plan")){
+                    //去往计划详情页面
+                    System.out.println("去往计划详情页面");
+                }
+                else{
+                    //去往个人主页详情页面
+                    System.out.println("去往个人主页详情页面");
+                    Intent detailIntent = new Intent(mCtx, OtherUserHomeActivity.class);//ActivityDetail.class
+//                    detailIntent.putExtra("title",result.getTitle());
+                    mCtx.startActivity(detailIntent);
+                }
             });
         }
     }
