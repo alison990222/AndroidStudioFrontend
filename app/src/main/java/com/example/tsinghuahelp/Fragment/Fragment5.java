@@ -1,7 +1,20 @@
 package com.example.tsinghuahelp.Fragment;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.ContentUris;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +24,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,6 +45,8 @@ import com.example.tsinghuahelp.Search.SearchResultAdapter;
 import com.example.tsinghuahelp.StarFollowAll;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -237,6 +258,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener {
                 if(isEdit){
                     iconChange=true;
                     System.out.println("hi, pic info");
+                    changeIcon();
                 }
                 break;
             case R.id.info_username:
@@ -249,6 +271,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener {
                 if(isEdit){
                     signatureChange=true;
                     System.out.println("hi,signature info");
+                    changeIcon();
                 }
                 break;
             case R.id.info_verify:
@@ -274,4 +297,152 @@ public class Fragment5 extends Fragment implements View.OnClickListener {
 
         }
     }
+
+    File tempFile;
+    Uri imageUri;
+    public static final int TAKE_PHOTO = 1;
+    public static final int CHOOSE_PHOTO = 2;
+
+    private void changeIcon(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("选择图片");
+        builder.setMessage("可以通过相册和照相来修改头像！");
+        builder.setPositiveButton("图库", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{ Manifest.permission. WRITE_EXTERNAL_STORAGE }, 1);
+                } else {
+                    openAlbum();
+                }
+            }
+        });
+        builder.setNegativeButton("拍照", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                tempFile = new File(Objects.requireNonNull(getContext()).getExternalCacheDir(), "tempImg.jpg");
+                try{
+                    if(tempFile.exists()){
+                        tempFile.delete();
+                    }
+                    tempFile.createNewFile();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+                if(Build.VERSION.SDK_INT<24){
+                    imageUri=Uri.fromFile(tempFile);
+                }else{
+                    imageUri= FileProvider.getUriForFile(getContext(),"com.example.cameraalbumtest.fileprovider",tempFile);
+                }
+                Intent intent=new Intent("android.media.action.IMAGE_CAPTURE");
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                startActivityForResult(intent, TAKE_PHOTO);
+            }
+        });
+        builder.create();//创建
+        builder.show();//显示
+    }
+
+    private void openAlbum() {
+        Intent intent = new Intent("android.intent.action.GET_CONTENT");
+        intent.setType("image/*");
+        startActivityForResult(intent, CHOOSE_PHOTO); // 打开相册
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openAlbum();
+                } else {
+                    Toast.makeText(getContext(), "You denied the permission", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case TAKE_PHOTO:
+                if (resultCode == Activity.RESULT_OK) {
+                    try {
+                        Bitmap bitmap = BitmapFactory.decodeStream(Objects.requireNonNull(getActivity()).getContentResolver().openInputStream(imageUri));
+                        edit_pic.setImageBitmap(bitmap);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            case CHOOSE_PHOTO:
+                if (resultCode == Activity.RESULT_OK) {
+                    if (Build.VERSION.SDK_INT >= 19) {
+                        // 4.4及以上系统使用这个方法处理图片
+                        handleImageOnKitKat(data);
+                    } else {
+                        // 4.4以下系统使用这个方法处理图片
+                        handleImageBeforeKitKat(data);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void handleImageOnKitKat(Intent data) {
+        String imagePath = null;
+        Uri uri = data.getData();
+        Log.d("TAG", "handleImageOnKitKat: uri is " + uri);
+        if (DocumentsContract.isDocumentUri(getContext(), uri)) {
+            String docId = DocumentsContract.getDocumentId(uri);
+            if("com.android.providers.media.documents".equals(uri.getAuthority())) {
+                String id = docId.split(":")[1];
+                String selection = MediaStore.Images.Media._ID + "=" + id;
+                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
+            } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
+                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
+                imagePath = getImagePath(contentUri, null);
+            }
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            imagePath = getImagePath(uri, null);
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            imagePath = uri.getPath();
+        }
+        displayImage(imagePath);
+    }
+
+    private void handleImageBeforeKitKat(Intent data) {
+        Uri uri = data.getData();
+        String imagePath = getImagePath(uri, null);
+        displayImage(imagePath);
+    }
+
+    private String getImagePath(Uri uri, String selection) {
+        String path = null;
+        Cursor cursor = Objects.requireNonNull(getActivity()).getContentResolver().query(uri, null, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+            cursor.close();
+        }
+        return path;
+    }
+
+    private void displayImage(String imagePath) {
+        if (imagePath != null) {
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            edit_pic.setImageBitmap(bitmap);
+        } else {
+            Toast.makeText(getContext(), "failed to get image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 }
