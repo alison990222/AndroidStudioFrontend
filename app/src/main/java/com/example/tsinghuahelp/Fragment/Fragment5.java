@@ -47,6 +47,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -275,6 +276,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.info_verify:
+                showVerifyInfo();
                 break;
             case R.id.pro_num:
                 System.out.println("hi,pro_num");
@@ -297,6 +299,71 @@ public class Fragment5 extends Fragment implements View.OnClickListener {
 
         }
     }
+
+
+    public void showVerifyInfo(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = LayoutInflater.from(getContext().getApplicationContext());
+        View view = inflater.inflate(R.layout.verify_info, null);
+        final EditText mTrueName = (EditText) view.findViewById(R.id.true_name);
+        final EditText mSchool = view.findViewById(R.id.school);
+        final EditText mDepartment = view.findViewById(R.id.department);
+        final EditText mGrade = view.findViewById(R.id.grade);
+        final boolean[] is_modify = {false};
+
+        final AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(view).setPositiveButton("返回", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).setNegativeButton("修改信息", null).setTitle("验证信息").create();
+        //这里必须要先调show()方法，后面的getButton才有效
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!is_modify[0]) {
+                    mTrueName.setFocusableInTouchMode(true);
+                    mTrueName.setFocusable(true);
+                    mTrueName.requestFocus();
+                    mSchool.setFocusableInTouchMode(true);
+                    mSchool.setFocusable(true);
+                    mSchool.requestFocus();
+                    mDepartment.setFocusableInTouchMode(true);
+                    mDepartment.setFocusable(true);
+                    mDepartment.requestFocus();
+                    mGrade.setFocusableInTouchMode(true);
+                    mGrade.setFocusable(true);
+                    mGrade.requestFocus();
+                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setText("提交修改");
+                    is_modify[0] =true;
+                }
+                else{
+                    mTrueName.setFocusableInTouchMode(false);
+                    mTrueName.setFocusable(false);
+                    mSchool.setFocusableInTouchMode(false);
+                    mSchool.setFocusable(false);
+                    mDepartment.setFocusableInTouchMode(false);
+                    mDepartment.setFocusable(false);
+                    mGrade.setFocusableInTouchMode(false);
+                    mGrade.setFocusable(false);
+                    String newName = mTrueName.getText().toString();
+                    String school = mSchool.getText().toString();
+                    String department = mDepartment.getText().toString();
+                    String grade = mGrade.getText().toString();
+                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setText("修改信息");
+                    is_modify[0] =false;
+                    System.out.println(newName+" "+school+" "+department+" "+grade);
+                    //todo 发送更新消息
+                    Toast.makeText(getContext(),"已提交修改",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+
 
     File tempFile;
     Uri imageUri;
