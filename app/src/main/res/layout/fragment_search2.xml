@@ -9,42 +9,59 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="10">
 
+        <LinearLayout
+            android:layout_width="75dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:weightSum="3">
+        <TextView
+            android:background="@drawable/spinner_border"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:text="Teacher"
+            android:layout_weight="2"
+            />
         <Spinner
             android:id="@+id/search_spinner"
-            android:layout_width="25dp"
-            android:layout_height="36dp"
-            android:layout_margin="10dp"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:entries="@array/search_spinner_list"/>
+            android:background="@drawable/ic_spinner"
+            android:entries="@array/search_spinner_list" />
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/search_et_input"
             android:layout_width="245dp"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
-            android:layout_marginEnd="1dp"
-            android:layout_weight="1"
+            android:layout_weight="6"
             android:background="@drawable/search_edit_bg"
-            android:drawableLeft="@drawable/search"
             android:drawablePadding="5dp"
             android:hint="请输入关键字"
             android:imeOptions="actionSearch"
             android:inputType="text"
-            android:textSize="16sp"
-            android:layout_marginRight="1dp" />
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/button"
-            android:layout_width="40dp"
-            android:layout_height="36dp"
-            android:layout_margin="10dp"
-            android:layout_marginLeft="1dp"
             android:layout_weight="1"
-            android:text="搜索"
-            android:layout_marginStart="1dp" />
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/search" />
 
 
     </LinearLayout>
