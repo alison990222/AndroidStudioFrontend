@@ -3,12 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-    <EditText
+    <TextView
         android:id="@+id/personal_info_show"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="个人信息"
-        android:background="@null"
-        android:focusable="false"
-        android:hint="请输入个人信息"/>
+        android:text="个人信息" />
 </LinearLayout>

@@ -5,219 +5,247 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-    android:layout_marginStart="10dp"
-    android:orientation="vertical"
-    android:layout_marginLeft="10dp">
-
-    <LinearLayout
+    android:orientation="vertical">
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:layout_weight="2"
-        android:weightSum="8">
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/info_pic"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/user"
-            android:layout_margin="5dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"/>
+        android:layout_height="50dp"
+        android:background="#749C27B0">
 
-        <EditText
-            android:id="@+id/info_username"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="4"
-            android:autoSizeTextType="uniform"
-            android:background="@null"
-            android:focusable="false"
-            android:hint="输入用户名\n(不超过14个字)"
-            android:maxLength="14"
-            android:maxLines="2"
-            android:text="用户名" />
-
-        <LinearLayout
-            android:id="@+id/pro_num"
-            android:layout_width="55dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|right"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/star_or_proj_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="0" />
-
-            <TextView
-                android:id="@+id/star_or_proj"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Star"
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/follow_num"
-            android:layout_weight="1"
-            android:layout_width="64dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|right"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/my_follow_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="0" />
-
-            <TextView
-                android:id="@+id/my_follow_proj"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Follow"
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/follower_num"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|right"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/my_follower_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="0" />
-
-            <TextView
-                android:id="@+id/my_follower_proj"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Follower"
-                android:textSize="12sp"/>
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:layout_weight="1"
-        android:weightSum="4">
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="20dp"
-            android:text="认证信息："
-            android:layout_gravity="center"
-
-            android:layout_weight="1"/>
-
-        <EditText
-            android:id="@+id/is_verify"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@null"
-            android:text="已认证 "
-            android:focusable="false"
-            android:textColor="#000000"
-            android:layout_weight="2"/>
-
-        <Button
-            android:id="@+id/info_verify"
-            android:layout_width="0dp"
+            android:id="@+id/chat_username"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="详情信息"
+            android:text="Info"
+            android:textColor="#4a4a4a"
+            android:textSize="25dp">
+
+        </TextView>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:weightSum="12"
+
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:background="@android:color/white">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1.5"
+            android:weightSum="8">
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/info_pic"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/user"
+                android:scaleType="centerCrop"
+
+                android:layout_gravity="center"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/info_username"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="4"
+                android:maxLines="2"
+                android:textSize="16sp"
+                android:text="用户名"
+                android:textColor="@android:color/black"/>
+
+            <LinearLayout
+                android:id="@+id/pro_num"
+                android:layout_width="55dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/star_or_proj_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/star_or_proj"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Star"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/follow_num"
+                android:layout_weight="1"
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/my_follow_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/my_follow_proj"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Follow"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/follower_num"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/my_follower_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/my_follower_proj"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Follower"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="认证信息："
+                android:layout_gravity="center"
+                android:layout_centerVertical="true"
+                android:id="@+id/text"
+                />
+
+            <TextView
+                android:layout_toRightOf="@+id/text"
+                android:id="@+id/verify_info"
+                android:layout_marginRight="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="已认证"
+                android:maxLines="2"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="5dp"
+                android:layout_toEndOf="@+id/text"
+                android:layout_centerVertical="true"/>
+
+            <Button
+                android:id="@+id/verify_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:text="查看" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_marginBottom="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="个性签名："
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:id="@+id/info_signature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:maxLines="2"
+                android:text="时间就像海绵里的水。"
+                android:maxLength="30"
+                android:textColor="@android:color/black"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_marginBottom="10dp">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:text="编辑"
+                android:id="@+id/edit_info_btn"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:text="追踪"
+                android:id="@+id/follow_btn"
+                android:layout_weight="1"
+                android:visibility="gone"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:text="私信"
+                android:id="@+id/chat_btn"
+                android:layout_weight="1"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"/>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:layout_weight="1"
-        android:layout_marginBottom="5dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:text="个性签名："
-            android:layout_gravity="center"/>
-
-        <EditText
-            android:id="@+id/info_signature"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@null"
-            android:focusable="false"
-            android:autoSizeTextType="uniform"
-            android:maxLines="2"
-            android:hint="请输入签名(不超过30字)"
-            android:text="时间就像海绵里的水。"
-            android:maxLength="30"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:layout_weight="1"
-        android:layout_marginBottom="10dp">
-        <Button
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/info_recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="编辑"
-            android:id="@+id/edit_info_btn"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="追踪"
-            android:id="@+id/follow_btn"
-            android:layout_weight="1"
-            android:visibility="gone"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="私信"
-            android:id="@+id/chat_btn"
-            android:layout_weight="1"
-            android:visibility="gone"/>
+            android:layout_height="0dp"
+            android:scrollbars="vertical"
+            android:layout_weight="6.5">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+
 
     </LinearLayout>
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/info_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:scrollbars="vertical"
-        android:layout_weight="9">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
-
-
 </LinearLayout>

@@ -14,8 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".StarFollowAll"></activity>
-        <activity android:name=".OtherUserHomeActivity" />
+        <activity android:name=".PersonInfo.EditDetailPage"></activity>
+        <activity android:name=".PersonInfo.EditInfoActivity" />
+        <activity android:name=".StarFollowAll" />
+        <activity android:name=".PersonInfo.OtherUserHomeActivity" />
         <activity android:name=".mainPage" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".DetailActivity" />
@@ -29,6 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.cameraalbumtest.fileprovider"
