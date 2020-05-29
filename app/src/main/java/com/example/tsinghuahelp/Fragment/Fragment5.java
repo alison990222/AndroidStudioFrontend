@@ -1,6 +1,7 @@
 package com.example.tsinghuahelp.Fragment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.DialogInterface;
@@ -13,6 +14,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -50,7 +53,11 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -90,6 +97,16 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
     TextView num_follower;
 
 
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler=new Handler(){
+        @Override public void handleMessage(Message msg) { // TODO Auto-generated method stub
+            // super.handleMessage(msg);
+             Log.e("m_tag","收到信息度1");
+            Bitmap bitmap=(Bitmap) msg.obj;
+            edit_pic.setImageBitmap(bitmap);
+            }
+    };
+
     public Fragment5() {
         // Required empty public constructor
     }
@@ -98,6 +115,39 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
     public void onResume(){
         super.onResume();
         icon_url = "http://a2.att.hudong.com/36/48/19300001357258133412489354717.jpg";
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(icon_url);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setConnectTimeout(5000);
+                    connection.setReadTimeout(5000);
+                    connection.setRequestProperty("charset","UTF-8");
+                    StringBuilder s = new StringBuilder();
+                    String str;
+                    Bitmap bitmap1;
+                    if (connection.getResponseCode()==200){
+                        InputStream in = connection.getInputStream();
+                        bitmap1 = BitmapFactory.decodeStream(in);
+                        System.out.println("返回200");
+                        Message message=new Message();
+                        message.obj=bitmap1;
+                        assert bitmap1 != null;
+                        System.out.println(bitmap1.toString());
+                        //ivImage.setImageBitmap(bitmap);
+                        mHandler.sendMessage(message);
+                    }
+                    System.out.println("没返回返回200");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
         name="lw";
         real_name="真实姓名";
         school="Tsinghua";
@@ -145,6 +195,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
         num_follow=mView.findViewById(R.id.my_follow_num);
         num_follower=mView.findViewById(R.id.my_follower_num);
 
+        edit_pic=mView.findViewById(R.id.info_pic);
         edit_signature=mView.findViewById(R.id.info_signature);
         btn_verify=mView.findViewById(R.id.verify_btn);
         btn_verify.setOnClickListener(this);
