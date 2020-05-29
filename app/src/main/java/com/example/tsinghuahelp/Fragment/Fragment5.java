@@ -45,6 +45,7 @@ import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.Search.SearchResult;
 import com.example.tsinghuahelp.Search.SearchResultAdapter;
 import com.example.tsinghuahelp.StarFollowAll;
+import com.example.tsinghuahelp.utils.MyDialog;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.File;
@@ -278,67 +279,24 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
     }
 
 
-    public void showVerifyInfo(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        LayoutInflater inflater = LayoutInflater.from(getContext().getApplicationContext());
-        View view = inflater.inflate(R.layout.verify_info, null);
-        final EditText mTrueName = (EditText) view.findViewById(R.id.true_name);
-        final EditText mSchool = view.findViewById(R.id.school);
-        final EditText mDepartment = view.findViewById(R.id.department);
-        final EditText mGrade = view.findViewById(R.id.grade);
-        final boolean[] is_modify = {false};
-
-        final AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(view).setPositiveButton("返回", new DialogInterface.OnClickListener() {
+    public void showVerifyInfo() {
+        String message="姓名："+real_name+"\n学校："+school+"\n院系："+department+"\n年级："+grade;
+        final MyDialog dialog = new MyDialog(getContext());
+        dialog.setMessage(message)
+                .setTitle("验证信息")
+                .setSingle(true).setOnClickBottomListener(new MyDialog.OnClickBottomListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onPositiveClick() {
                 dialog.dismiss();
+                Toast.makeText(getContext(),"xxxx",Toast.LENGTH_SHORT).show();
             }
-        }).setNegativeButton("修改信息", null).setTitle("验证信息").create();
-        //这里必须要先调show()方法，后面的getButton才有效
-        dialog.show();
 
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if(!is_modify[0]) {
-                    mTrueName.setFocusableInTouchMode(true);
-                    mTrueName.setFocusable(true);
-                    mTrueName.requestFocus();
-                    mSchool.setFocusableInTouchMode(true);
-                    mSchool.setFocusable(true);
-                    mSchool.requestFocus();
-                    mDepartment.setFocusableInTouchMode(true);
-                    mDepartment.setFocusable(true);
-                    mDepartment.requestFocus();
-                    mGrade.setFocusableInTouchMode(true);
-                    mGrade.setFocusable(true);
-                    mGrade.requestFocus();
-                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setText("提交修改");
-                    is_modify[0] =true;
-                }
-                else{
-                    mTrueName.setFocusableInTouchMode(false);
-                    mTrueName.setFocusable(false);
-                    mSchool.setFocusableInTouchMode(false);
-                    mSchool.setFocusable(false);
-                    mDepartment.setFocusableInTouchMode(false);
-                    mDepartment.setFocusable(false);
-                    mGrade.setFocusableInTouchMode(false);
-                    mGrade.setFocusable(false);
-                    String newName = mTrueName.getText().toString();
-                    String school = mSchool.getText().toString();
-                    String department = mDepartment.getText().toString();
-                    String grade = mGrade.getText().toString();
-                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setText("修改信息");
-                    is_modify[0] =false;
-                    System.out.println(newName+" "+school+" "+department+" "+grade);
-                    //todo 发送更新消息
-                    Toast.makeText(getContext(),"已提交修改",Toast.LENGTH_SHORT).show();
-                }
+            public void onNegtiveClick() {
+                dialog.dismiss();
+                Toast.makeText(getContext(),"ssss",Toast.LENGTH_SHORT).show();
             }
-        });
-
+        }).show();
     }
-
 
 }

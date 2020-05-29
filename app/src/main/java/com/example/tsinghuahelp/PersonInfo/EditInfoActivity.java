@@ -140,6 +140,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
             case R.id.quit_btn:
                 break;
             case R.id.save_btn:
+                //todo 发送修改信息
                 break;
         }
     }
