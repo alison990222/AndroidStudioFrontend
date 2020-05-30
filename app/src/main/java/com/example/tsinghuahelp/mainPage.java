@@ -18,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class mainPage extends AppCompatActivity {
+    public static boolean type=false;
 
     @BindView(R.id.viewpager)
     ViewPager viewPager;

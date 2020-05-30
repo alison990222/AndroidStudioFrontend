@@ -87,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("", String.valueOf(selected));
                 radioBtn = (RadioButton) findViewById(selected);
                 Toast.makeText(MainActivity.this, radioBtn.getText(), Toast.LENGTH_SHORT).show();
+                if(radioBtn.getText().equals("学生")){
+                    mainPage.type=false;
+                }
+                else{mainPage.type=true;}
 
                 HashMap<String,String> h = new HashMap<>();
                 h.put("username",mUsername.getText().toString());

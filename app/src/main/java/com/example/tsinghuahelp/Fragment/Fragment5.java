@@ -2,54 +2,39 @@ package com.example.tsinghuahelp.Fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.ContentUris;
-import android.content.DialogInterface;
+
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
-import com.bumptech.glide.Glide;
+
 import com.example.tsinghuahelp.Adapter.InfoAdapter;
 import com.example.tsinghuahelp.PersonInfo.EditInfoActivity;
 import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.Search.SearchResult;
 import com.example.tsinghuahelp.Search.SearchResultAdapter;
 import com.example.tsinghuahelp.StarFollowAll;
+import com.example.tsinghuahelp.mainPage;
+import com.example.tsinghuahelp.utils.CommonInterface;
 import com.example.tsinghuahelp.utils.MyDialog;
 import com.google.android.material.tabs.TabLayout;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,6 +46,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 import butterknife.ButterKnife;
 
@@ -86,6 +75,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
     String follower_num;
     String person_info;
     boolean verify;
+    boolean click_edit=false;
     Button btn_edit;
     Button btn_verify;
     TextView edit_user;
@@ -95,15 +85,37 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
     TextView num_star_or_proj;
     TextView num_follow;
     TextView num_follower;
+    Bitmap bitmap;
 
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler=new Handler(){
-        @Override public void handleMessage(Message msg) { // TODO Auto-generated method stub
-            // super.handleMessage(msg);
-             Log.e("m_tag","收到信息度1");
-            Bitmap bitmap=(Bitmap) msg.obj;
-            edit_pic.setImageBitmap(bitmap);
+        @Override public void handleMessage(Message msg) {
+             super.handleMessage(msg);
+             switch (msg.what){
+                 case 0:
+                     Toast.makeText(getContext(),"后端信息获取失败",Toast.LENGTH_SHORT).show();
+                     break;
+                 case 1:
+                     Log.e("m_tag","收到信息更新页");
+                     if(verify){is_verify.setText("已验证");}
+                     else{is_verify.setText("未验证");}
+                     edit_user.setText(name);
+                     edit_signature.setText(signature);
+                     num_follow.setText(follow_num);
+                     num_star_or_proj.setText(star_pro_num);
+                     num_follower.setText(follower_num);
+                     infoList.clear();
+                     infoList.add(person_info);
+                     infoAdapter.notifyDataSetChanged();
+                     break;
+                 case 2:
+                     Log.e("m_tag","收到信息更新图片");
+                     Bitmap bitmap=(Bitmap) msg.obj;
+                     edit_pic.setImageBitmap(bitmap);
+                     break;
+
+             }
             }
     };
 
@@ -114,61 +126,10 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
     @Override
     public void onResume(){
         super.onResume();
-        icon_url = "http://a2.att.hudong.com/36/48/19300001357258133412489354717.jpg";
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    URL url = new URL(icon_url);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod("GET");
-                    connection.setConnectTimeout(5000);
-                    connection.setReadTimeout(5000);
-                    connection.setRequestProperty("charset","UTF-8");
-                    StringBuilder s = new StringBuilder();
-                    String str;
-                    Bitmap bitmap1;
-                    if (connection.getResponseCode()==200){
-                        InputStream in = connection.getInputStream();
-                        bitmap1 = BitmapFactory.decodeStream(in);
-                        System.out.println("返回200");
-                        Message message=new Message();
-                        message.obj=bitmap1;
-                        assert bitmap1 != null;
-                        System.out.println(bitmap1.toString());
-                        //ivImage.setImageBitmap(bitmap);
-                        mHandler.sendMessage(message);
-                    }
-                    System.out.println("没返回返回200");
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-        name="lw";
-        real_name="真实姓名";
-        school="Tsinghua";
-        department="Software";
-        grade="本科";
-        signature="小说真好看";
-        verify=true;
-        follow_num="1";
-        star_pro_num="2";
-        follower_num="10";
-        person_info="红红火火恍恍惚惚\n哈哈哈哈哈哈哈哈哈哈哈哈哈\n这里都是乱写的";
-        is_verify.setText("已验证");
-        edit_user.setText(name);
-        edit_signature.setText(signature);
-        num_follow.setText(follow_num);
-        num_star_or_proj.setText(star_pro_num);
-        num_follower.setText(follower_num);
-//        Glide.with(Objects.requireNonNull(getContext())).load(icon_url).into(edit_pic);
-        infoList.clear();
-        infoList.add(person_info);
-        infoAdapter.notifyDataSetChanged();
+        if(click_edit){
+            fresh_page();
+            click_edit=false;
+        }
     }
 
     @Override
@@ -205,35 +166,19 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
         mView.findViewById(R.id.follower_num).setOnClickListener(this);
         mView.findViewById(R.id.pro_num).setOnClickListener(this);
 
+//        fresh_page();
 
-        //根据老师和学生信息判断，这里需要从后端提供数据，个人信息，我的报名，我的发文之类的
-        //关于查看别人的主页，建议新建一个activity利用这个布局文件
-//        icon_url = "http://a2.att.hudong.com/36/48/19300001357258133412489354717.jpg";
-//        name="lw";
-//        real_name="真实姓名";
-//        school="Tsinghua";
-//        department="Software";
-//        grade="本科";
-//        signature="小说真好看";
-//        verify=true;
-//        follow_num="1";
-//        star_pro_num="2";
-//        follower_num="10";
-//        person_info="红红火火恍恍惚惚\n哈哈哈哈哈哈哈哈哈哈哈哈哈\n这里都是乱写的";
-//        is_verify.setText("已验证");
-//        edit_user.setText(name);
-//        edit_signature.setText(signature);
-//        num_follow.setText(follow_num);
-//        num_star_or_proj.setText(star_pro_num);
-//        num_follower.setText(follower_num);
-//        infoList.clear();
-//        infoList.add(person_info);
-//        infoAdapter.notifyDataSetChanged();
-//
-
-        tabLayout.addTab(tabLayout.newTab().setText("关于我"));
-        tabLayout.addTab(tabLayout.newTab().setText("我的报名"));
-        tabLayout.addTab(tabLayout.newTab().setText("我的发文"));
+        if(!mainPage.type){
+            tabLayout.addTab(tabLayout.newTab().setText("关于我"));
+            tabLayout.addTab(tabLayout.newTab().setText("我的报名"));
+            tabLayout.addTab(tabLayout.newTab().setText("我的发文"));
+            starORpro.setText("Star");
+        }
+        else{
+            tabLayout.addTab(tabLayout.newTab().setText("关于我"));
+            tabLayout.addTab(tabLayout.newTab().setText("我的项目"));
+            starORpro.setText("Project");
+        }
 
 
         infoList = new ArrayList<>();
@@ -301,6 +246,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.edit_info_btn:
+                click_edit=true;
                 Intent intent=new Intent(getContext(),EditInfoActivity.class);
                 startActivity(intent);
                 break;
@@ -349,5 +295,82 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
             }
         }).show();
     }
+
+    private void fresh_page(){
+        CommonInterface.sendOkHttpGetRequest("/api/user/home", new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("error", e.toString());
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String resStr = response.body().string();
+                Log.e("response", resStr);
+                try {
+                    // 解析json，然后进行自己的内部逻辑处理
+                    JSONObject jsonObject = new JSONObject(resStr);
+                    JSONObject data=jsonObject.getJSONObject("data");
+                    icon_url = data.getString("icon_url");
+                    name=data.getString("username");
+                    real_name=data.getString("real_name");
+                    school=data.getString("school");
+                    department=data.getString("department");
+                    grade=data.getString("grade");
+                    signature=data.getString("signature");
+                    verify=data.getBoolean("verification");
+                    follow_num=data.getString("follow_num");
+                    star_pro_num=data.getString("star_or_pro_num");
+                    follower_num=data.getString("followee_num");
+                    person_info=data.getString("personal_info");
+                    Message message=new Message();
+                    message.what=1;
+                    mHandler.sendMessage(message);
+                    fresh_icon();
+                } catch (JSONException e) {
+                    Message message=new Message();
+                    message.what=0;
+                    mHandler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    private void fresh_icon(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    icon_url="http://47.94.145.111:8080/api/user/getIcon/3";
+                    URL url = new URL(icon_url);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setConnectTimeout(5000);
+                    connection.setReadTimeout(5000);
+                    connection.setRequestProperty("charset","UTF-8");
+                    if (connection.getResponseCode()==200){
+                        InputStream in = connection.getInputStream();
+                        bitmap = BitmapFactory.decodeStream(in);
+                        Message message=new Message();
+                        message.what=2;
+                        mHandler.sendMessage(message);
+                    }
+                    else{
+                        Message message=new Message();
+                        message.what=0;
+                        mHandler.sendMessage(message);
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private void fresh_prolist(){}
+
+    private void fresh_planlist(){}
 
 }
