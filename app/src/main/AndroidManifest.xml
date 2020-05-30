@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".PersonInfo.EditDetailPage"></activity>
         <activity android:name=".PersonInfo.EditInfoActivity" />
-        <activity android:name=".StarFollowAll" />
+        <activity android:name=".PersonInfo.StarFollowAll" />
         <activity android:name=".PersonInfo.OtherUserHomeActivity" />
         <activity android:name=".mainPage" />
         <activity android:name=".RegisterActivity" />

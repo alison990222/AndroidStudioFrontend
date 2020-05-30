@@ -1,6 +1,5 @@
 package com.example.tsinghuahelp.Fragment;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 
 import android.content.Intent;
@@ -26,20 +25,20 @@ import com.example.tsinghuahelp.PersonInfo.EditInfoActivity;
 import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.Search.SearchResult;
 import com.example.tsinghuahelp.Search.SearchResultAdapter;
-import com.example.tsinghuahelp.StarFollowAll;
+import com.example.tsinghuahelp.PersonInfo.StarFollowAll;
 import com.example.tsinghuahelp.mainPage;
 import com.example.tsinghuahelp.utils.CommonInterface;
 import com.example.tsinghuahelp.utils.MyDialog;
 import com.google.android.material.tabs.TabLayout;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.File;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -111,8 +110,15 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
                      break;
                  case 2:
                      Log.e("m_tag","收到信息更新图片");
-                     Bitmap bitmap=(Bitmap) msg.obj;
                      edit_pic.setImageBitmap(bitmap);
+                     break;
+                 case 3:
+                     Log.e("m_tag","收到我的项目更新");
+                     proAdapter.notifyDataSetChanged();
+                     break;
+                 case 4:
+                     Log.e("m_tag","收到我的计划更新");
+                     planAdapter.notifyDataSetChanged();
                      break;
 
              }
@@ -166,7 +172,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
         mView.findViewById(R.id.follower_num).setOnClickListener(this);
         mView.findViewById(R.id.pro_num).setOnClickListener(this);
 
-//        fresh_page();
+        fresh_page();
 
         if(!mainPage.type){
             tabLayout.addTab(tabLayout.newTab().setText("关于我"));
@@ -187,21 +193,11 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
 
         proList = new ArrayList<>();
 
-        proList.add(new SearchResult("移动应用与开发","王老师",
-                "软件学院", "巨难无比，请谨慎选课","project",0));
-        proList.add(new SearchResult("移动应用与开发","王老师",
-                "软件学院", "巨难无比，请谨慎选课","project",0));
-        proList.add(new SearchResult("移动应用与开发","王老师",
-                "软件学院", "巨难无比，请谨慎选课","project",0));
-        proList.add(new SearchResult("移动应用与开发","王老师",
-                "软件学院", "巨难无比，请谨慎选课","project",0));
+        fresh_prolist();
 
         planList = new ArrayList<>();
 
-        planList.add(new SearchResult("想一台智能机械小车","刘薇",
-                "软件学院", "嵌入式课程需要orz","plan",0));
-        planList.add(new SearchResult("想一台智能机械小车","刘薇",
-                "软件学院", "嵌入式课程需要orz","plan",0));
+        fresh_planlist();
 
         proAdapter = new SearchResultAdapter(getContext(),proList);
         planAdapter = new SearchResultAdapter(getContext(),planList);
@@ -309,25 +305,33 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
                 Log.e("response", resStr);
                 try {
                     // 解析json，然后进行自己的内部逻辑处理
-                    JSONObject jsonObject = new JSONObject(resStr);
+                    JSONObject jsonObject = JSONObject.parseObject(resStr);
                     JSONObject data=jsonObject.getJSONObject("data");
                     icon_url = data.getString("icon_url");
                     name=data.getString("username");
-                    real_name=data.getString("real_name");
-                    school=data.getString("school");
-                    department=data.getString("department");
-                    grade=data.getString("grade");
-                    signature=data.getString("signature");
+//                    real_name=data.getString("real_name");
+//                    school=data.getString("school");
+//                    department=data.getString("department");
+//                    grade=data.getString("grade");
+//                    signature=data.getString("signature");
+//                    person_info=data.getString("personal_info");
+                    real_name="Alice";
+                    school="Tsinghua";
+                    department="Software";
+                    grade="doctor";
+                    signature="时间就像海绵里的水";
+                    person_info="我对软件开发很感兴趣，曾经做过：\n -Cosine大学生竞赛平台\n -“找导师”移动应用开发";
+
                     verify=data.getBoolean("verification");
-                    follow_num=data.getString("follow_num");
-                    star_pro_num=data.getString("star_or_pro_num");
-                    follower_num=data.getString("followee_num");
-                    person_info=data.getString("personal_info");
+                    follow_num=data.getInteger("follow_num").toString();
+                    star_pro_num=data.getInteger("star_or_pro_num").toString();
+                    follower_num=data.getInteger("followee_num").toString();
+
                     Message message=new Message();
                     message.what=1;
                     mHandler.sendMessage(message);
                     fresh_icon();
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     Message message=new Message();
                     message.what=0;
                     mHandler.sendMessage(message);
@@ -369,8 +373,101 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
         }).start();
     }
 
-    private void fresh_prolist(){}
+    private void fresh_prolist(){
+        proList.clear();
+        String url="/api/student/get_my_project";
+        if(mainPage.type){url="/api/teacher/get_my_project";}
+        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("error", e.toString());
+            }
 
-    private void fresh_planlist(){}
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String resStr = response.body().string();
+                Log.e("response", resStr);
+                try {
+                    // 解析json，然后进行自己的内部逻辑处理
+                    JSONObject jsonObject = JSONObject.parseObject(resStr);
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    for (int i=0;i<jsonArray.size();i++){
+                        JSONObject object= (JSONObject) jsonArray.get(i);
+                        String o_title = object.getString("title");
+                        String o_teacher = object.getString("teacher");
+                        String o_department = object.getString("department");
+                        String o_description=object.getString("description");
+                        int o_id = object.getInteger("id");
+                        proList.add(new SearchResult(o_title,o_teacher,
+                                o_department, o_description,"project",o_id));
+                    }
+
+                    proList.add(new SearchResult("移动应用与开发","王老师",
+                            "软件学院", "巨难无比，请谨慎选课","project",0));
+                    proList.add(new SearchResult("移动应用与开发","王老师",
+                            "软件学院", "巨难无比，请谨慎选课","project",0));
+                    proList.add(new SearchResult("移动应用与开发","王老师",
+                            "软件学院", "巨难无比，请谨慎选课","project",0));
+                    proList.add(new SearchResult("移动应用与开发","王老师",
+                            "软件学院", "巨难无比，请谨慎选课","project",0));
+
+
+                    Message message=new Message();
+                    message.what=3;
+                    mHandler.sendMessage(message);
+                } catch (Exception e) {
+                    Message message=new Message();
+                    message.what=0;
+                    mHandler.sendMessage(message);
+                }
+            }
+        });
+
+    }
+
+    private void fresh_planlist(){
+        planList.clear();
+        String url="/api/student/get_my_plan";
+        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("error", e.toString());
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String resStr = response.body().string();
+                Log.e("response", resStr);
+                try {
+                    // 解析json，然后进行自己的内部逻辑处理
+                    JSONObject jsonObject = JSONObject.parseObject(resStr);
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    for (int i=0;i<jsonArray.size();i++){
+                        JSONObject object= (JSONObject) jsonArray.get(i);
+                        String o_title = object.getString("title");
+                        String o_student = object.getString("student");
+                        String o_department = object.getString("department");
+                        String o_description=object.getString("description");
+                        int o_id = object.getInteger("id");
+                        planList.add(new SearchResult(o_title,o_student,
+                                o_department, o_description,"plan",o_id));
+                    }
+
+                    planList.add(new SearchResult("想一台智能机械小车","刘薇",
+                            "软件学院", "嵌入式课程需要orz","plan",0));
+                    planList.add(new SearchResult("想一台智能机械小车","刘薇",
+                            "软件学院", "嵌入式课程需要orz","plan",0));
+
+                    Message message=new Message();
+                    message.what=4;
+                    mHandler.sendMessage(message);
+                } catch (Exception e) {
+                    Message message=new Message();
+                    message.what=0;
+                    mHandler.sendMessage(message);
+                }
+            }
+        });
+    }
 
 }
