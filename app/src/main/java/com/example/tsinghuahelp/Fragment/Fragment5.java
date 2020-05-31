@@ -85,6 +85,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
     TextView num_follow;
     TextView num_follower;
     Bitmap bitmap;
+    int user_id;
 
 
     @SuppressLint("HandlerLeak")
@@ -244,6 +245,16 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
             case R.id.edit_info_btn:
                 click_edit=true;
                 Intent intent=new Intent(getContext(),EditInfoActivity.class);
+                intent.putExtra("icon_url",icon_url);
+                intent.putExtra("id",user_id);
+                intent.putExtra("name",name);
+                intent.putExtra("real_name",real_name);
+                intent.putExtra("school",school);
+                intent.putExtra("department",department);
+                intent.putExtra("grade",grade);
+                intent.putExtra("signature",signature);
+                intent.putExtra("verify",verify);
+                intent.putExtra("person_info",person_info);
                 startActivity(intent);
                 break;
             case R.id.verify_btn:
@@ -315,6 +326,8 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
 //                    grade=data.getString("grade");
 //                    signature=data.getString("signature");
 //                    person_info=data.getString("personal_info");
+//                    user_id=data.getIntValue("id");
+                    user_id=3;
                     real_name="Alice";
                     school="Tsinghua";
                     department="Software";

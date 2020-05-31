@@ -69,7 +69,7 @@ public class FollowUserAdapter extends RecyclerView.Adapter<FollowUserAdapter.Fo
                 int id = result.getId();
                 System.out.println("去往个人主页详情页面");
                 Intent detailIntent = new Intent(mCtx, OtherUserHomeActivity.class);//ActivityDetail.class
-//                    detailIntent.putExtra("title",result.getTitle());
+                detailIntent.putExtra("id",result.getId());
                 mCtx.startActivity(detailIntent);
 
             });

@@ -19,6 +19,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -31,11 +33,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.example.tsinghuahelp.R;
+import com.example.tsinghuahelp.Search.SearchResult;
+import com.example.tsinghuahelp.utils.CommonInterface;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Objects;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 
 public class EditInfoActivity extends AppCompatActivity implements View.OnClickListener {
@@ -47,8 +63,9 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
     String grade;
     String signature;
     String person_info;
-    String id;
+    int id;
     boolean verify;
+    Bitmap bitmap;
 
     TextView edit_id;
     TextView edit_name;
@@ -58,21 +75,39 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
     PopupWindow popupWindow;
     com.mikhaellopez.circularimageview.CircularImageView icon_pic;
 
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler=new Handler(){
+        @Override public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    Toast.makeText(EditInfoActivity.this, "后端信息获取失败", Toast.LENGTH_SHORT).show();
+                    break;
+                case 1:
+                    Log.e("m_tag","收到信息更新图片");
+                    icon_pic.setImageBitmap(bitmap);
+                    break;
+            }
+        }
+    };
+
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_info);
-        icon_url = "http://a2.att.hudong.com/36/48/19300001357258133412489354717.jpg";
-        name="lw";
-        real_name="真实姓名";
-        school="Tsinghua";
-        department="Software";
-        grade="本科";
-        signature="小说真好看";
-        verify=false;
-        id="1";
+        Intent intent=getIntent() ;
+        icon_url = intent.getStringExtra("icon_url");
+        fresh_icon();
+        name=intent.getStringExtra("name");
+        real_name=intent.getStringExtra("real_name");
+        school=intent.getStringExtra("school");
+        department=intent.getStringExtra("department");
+        grade=intent.getStringExtra("grade");
+        signature=intent.getStringExtra("signature");
+        verify=intent.getBooleanExtra("verify",false);
+        id=intent.getIntExtra("id",0);
         person_info="红红火火恍恍惚惚\n哈哈哈哈哈哈哈哈哈哈哈哈哈\n这里都是乱写的";
 
         edit_id=findViewById(R.id.id_edit);
@@ -341,6 +376,78 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
         } else {
             Toast.makeText(EditInfoActivity.this, "failed to get image", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void fresh_icon(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    icon_url="http://47.94.145.111:8080/api/user/getIcon/3";
+                    URL url = new URL(icon_url);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setConnectTimeout(5000);
+                    connection.setReadTimeout(5000);
+                    connection.setRequestProperty("charset","UTF-8");
+                    if (connection.getResponseCode()==200){
+                        InputStream in = connection.getInputStream();
+                        bitmap = BitmapFactory.decodeStream(in);
+                        Message message=new Message();
+                        message.what=2;
+                        mHandler.sendMessage(message);
+                    }
+                    else{
+                        Message message=new Message();
+                        message.what=0;
+                        mHandler.sendMessage(message);
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private void update(){
+        String url="/api/student/get_my_plan";
+        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("error", e.toString());
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String resStr = response.body().string();
+                Log.e("response", resStr);
+                try {
+                    // 解析json，然后进行自己的内部逻辑处理
+                    JSONObject jsonObject = JSONObject.parseObject(resStr);
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    for (int i=0;i<jsonArray.size();i++){
+                        JSONObject object= (JSONObject) jsonArray.get(i);
+                        String o_title = object.getString("title");
+                        String o_student = object.getString("student");
+                        String o_department = object.getString("department");
+                        String o_description=object.getString("description");
+                        int o_id = object.getInteger("id");
+
+                    }
+
+
+                    Message message=new Message();
+                    message.what=4;
+                    mHandler.sendMessage(message);
+                } catch (Exception e) {
+                    Message message=new Message();
+                    message.what=0;
+                    mHandler.sendMessage(message);
+                }
+            }
+        });
     }
 
 
