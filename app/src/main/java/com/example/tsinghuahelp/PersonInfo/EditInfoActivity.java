@@ -224,6 +224,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.quit_btn:
+                logout();
                 break;
             case R.id.save_btn:
                 HashMap<String,String> send_info = new HashMap<>();
@@ -249,25 +250,19 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         sendbitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
         File file = new File(Objects.requireNonNull(EditInfoActivity.this).getExternalCacheDir(),"send_temp.jpg");
-//        File file2 = new File(getApplicationContext().getFilesDir().getAbsolutePath()+"/send_temp.jpg");
         try {
             if(file.exists()){
                 file.delete();
             }
             file.createNewFile();
-//            file2.createNewFile();
             FileOutputStream fos = new FileOutputStream(file);
             InputStream is = new ByteArrayInputStream(baos.toByteArray());
-//            FileOutputStream fos2 = new FileOutputStream(file2);
-//            InputStream is2 = new ByteArrayInputStream(baos.toByteArray());
             int x = 0;
             byte[] b = new byte[1024 * 100];
             while ((x = is.read(b)) != -1) {
                 fos.write(b, 0, x);
-//                fos2.write(b, 0, x);
             }
             fos.close();
-//            fos2.close();
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("error", "转成file出错啦！！！！！！");
@@ -579,5 +574,34 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
         },send_info);
     }
 
+    private void logout(){
+        String url="/api/user/logout";
+        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("error", e.toString());
+            }
 
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String resStr = response.body().string();
+                Log.e("response", resStr);
+                try {
+                    // 解析json，然后进行自己的内部逻辑处理
+                    JSONObject jsonObject = JSONObject.parseObject(resStr);
+                    String resp = jsonObject.getString("response");
+                    if (!resp.equals("valid")) {
+                        throw new Exception();
+                    }
+                    Message message = new Message();
+                    message.what = 2;
+                    mHandler.sendMessage(message);
+                } catch (Exception e) {
+                    Message message = new Message();
+                    message.what = 0;
+                    mHandler.sendMessage(message);
+                }
+            }
+        });
+    }
 }

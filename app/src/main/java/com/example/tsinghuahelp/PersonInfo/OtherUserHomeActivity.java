@@ -85,6 +85,7 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                     break;
                 case 1:
                     Log.e("m_tag","收到信息更新页");
+                    fresh_prolist();
                     if(verify){is_verify.setText("已验证");}
                     else{is_verify.setText("未验证");}
                     other_username.setText(name);
@@ -146,11 +147,6 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
         infoList.add("我对软件开发很感兴趣，曾经做过：\n -Cosine大学生竞赛平台\n -“找导师”移动应用开发");
         pList = new ArrayList<>();
 
-        pList.add(new SearchResult("移动应用与开发","王老师",
-                "软件学院", "巨难无比，请谨慎选课","project",0));
-        pList.add(new SearchResult("移动应用与开发","王老师",
-                "软件学院", "巨难无比，请谨慎选课","project",0));
-
         pAdapter = new SearchResultAdapter(this,pList);
         infoAdapter = new InfoAdapter(this,infoList);
 
@@ -177,6 +173,8 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onTabReselected(TabLayout.Tab tab) {}
         });
+
+        fresh_page();
 
 
     }
@@ -368,8 +366,13 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                 try {
                     // 解析json，然后进行自己的内部逻辑处理
                     JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    JSONObject data = jsonObject.getJSONObject("data");
-                    //todo
+                    String resp = jsonObject.getString("response");
+                    if (!resp.equals("valid")) {
+                        throw new Exception();
+                    }
+                    else {
+                        Toast.makeText(OtherUserHomeActivity.this,"追踪成功",Toast.LENGTH_SHORT).show();
+                    }
 
                 } catch (Exception e) {
                     Message message=new Message();
