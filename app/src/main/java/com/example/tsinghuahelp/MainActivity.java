@@ -21,11 +21,11 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.tsinghuahelp.utils.CommonInterface;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -107,14 +107,17 @@ public class MainActivity extends AppCompatActivity {
                         String resStr = response.body().string();
                         MainActivity.this.runOnUiThread(() -> Toast.makeText(MainActivity.this, resStr, Toast.LENGTH_LONG).show());
                         Log.e("response", resStr);
-//                        try {
-//                            // 解析json，然后进行自己的内部逻辑处理
-////                            JSONObject jsonObject = new JSONObject(resStr);
-////                            String chocolateChip = CookieManager.getInstance().getCookie(response);
-//
-//                        } catch (JSONException e) {
-//
-//                        }
+                        try {
+                            com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
+                            JSONObject data=jsonObject.getJSONObject("data");
+                            mainPage.type = data.getBoolean("type");
+                            // 解析json，然后进行自己的内部逻辑处理
+//                            JSONObject jsonObject = new JSONObject(resStr);
+//                            String chocolateChip = CookieManager.getInstance().getCookie(response);
+
+                        } catch (Exception e) {
+
+                        }
                     }
                 },h);
 

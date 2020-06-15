@@ -198,7 +198,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
 
         planList = new ArrayList<>();
 
-        fresh_planlist();
+        if(!mainPage.type){fresh_planlist();}
 
         proAdapter = new SearchResultAdapter(getContext(),proList);
         planAdapter = new SearchResultAdapter(getContext(),planList);

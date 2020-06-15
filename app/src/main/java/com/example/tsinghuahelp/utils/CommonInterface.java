@@ -6,6 +6,7 @@ import android.view.View;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,9 +15,12 @@ import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class CommonInterface {
     public static void addViewsListener(Activity activity, int viewId, View.OnClickListener onClickListener) {
@@ -86,6 +90,23 @@ public class CommonInterface {
         request = new Request.Builder().url(server_url + url).post(requestBody).build();
         okHttpClient.newCall(request).enqueue(callback);
     }
+
+    public static void sendOkHttpPostIconRequest(String url, okhttp3.Callback callback,File file) {
+        OkHttpClient client = new OkHttpClient.Builder().cookieJar(cookieJar).build();
+        // form 表单形式上传
+        MultipartBody.Builder requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        if (file != null) {
+            // MediaType.parse() 里面是上传的文件类型。
+            RequestBody body = RequestBody.create(MediaType.parse("image/jpeg"), file);
+            String filename = file.getName();
+            // 参数分别为， 请求key ，文件名称 ， RequestBody
+            requestBody.addFormDataPart("file", filename, body);
+        }
+
+        request = new Request.Builder().url(server_url + url).post(requestBody.build()).build();
+        client.newCall(request).enqueue(callback);
+    }
+
 
 
 
