@@ -111,7 +111,7 @@ public class Fragment2 extends Fragment {
     }
 
     private void search() {
-        
+
     }
 
 }
