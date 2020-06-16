@@ -61,7 +61,7 @@ public class StarFollowAll extends AppCompatActivity {
                     proAdapter.notifyDataSetChanged();
                     break;
                 case 2:
-                    Log.e("m_tag","收到我的项目更新");
+                    Log.e("m_tag","收到follow更新");
                     followUserAdapter.notifyDataSetChanged();
                     break;
             }
@@ -79,13 +79,8 @@ public class StarFollowAll extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        proList.add(new SearchResult("移动应用与开发","王老师",
-                "软件学院", "巨难无比，请谨慎选课","project",0));
-        proList.add(new SearchResult("移动应用与开发","王老师",
-                "软件学院", "巨难无比，请谨慎选课","project",0));
 
-        followUserList.add(new FollowUser(false,0,"wyq"));
-        followUserList.add(new FollowUser(false,0,"zxt"));
+
 
 
         Intent intent = this.getIntent();
@@ -113,7 +108,7 @@ public class StarFollowAll extends AppCompatActivity {
             followUserAdapter = new FollowUserAdapter(this,followUserList);
             recyclerView.setAdapter(followUserAdapter);
         }
-
+        fresh();
 
     }
 
@@ -162,6 +157,12 @@ public class StarFollowAll extends AppCompatActivity {
                         proList.add(new SearchResult(o_title,o_teacher,
                                 o_department, o_description,"project",o_id));
                     }
+
+                    proList.add(new SearchResult("移动应用与开发","王老师",
+                            "软件学院", "巨难无比，请谨慎选课","project",0));
+                    proList.add(new SearchResult("移动应用与开发","王老师",
+                            "软件学院", "巨难无比，请谨慎选课","project",0));
+
                     Message message=new Message();
                     message.what=1;
                     mHandler.sendMessage(message);
@@ -197,6 +198,10 @@ public class StarFollowAll extends AppCompatActivity {
                         int o_id = object.getInteger("id");
                         followUserList.add(new FollowUser(o_type,o_id,o_username));
                     }
+
+                    followUserList.add(new FollowUser(false,0,"wyq"));
+                    followUserList.add(new FollowUser(false,0,"zxt"));
+
                     Message message=new Message();
                     message.what=2;
                     mHandler.sendMessage(message);

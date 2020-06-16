@@ -1,6 +1,9 @@
 package com.example.tsinghuahelp.Fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,23 +30,36 @@ public class Fragment2 extends Fragment {
 
     View mView;
     private RecyclerView recyclerView;
-
     private Spinner spinner;
-
     private SearchResultAdapter adapter;
-
     private List<SearchResult> resultsList;
-
     private String choose = "All";
 
     public Fragment2() {
         // Required empty public constructor
     }
 
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler=new Handler(){
+        @Override public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 0:
+                    Toast.makeText(getContext(),"后端信息获取失败",Toast.LENGTH_SHORT).show();
+                    break;
+                case 1:
+                    Log.e("m_tag","收到更新");
+                    adapter.notifyDataSetChanged();
+                    break;
+            }
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        get_recommend();
 
         resultsList = new ArrayList<>();
 
@@ -56,6 +72,9 @@ public class Fragment2 extends Fragment {
         resultsList.add(new SearchResult("想一台智能机械小车","刘薇",
                 "软件学院", "嵌入式课程需要orz","plan",0));
 
+    }
+
+    private void get_recommend() {
     }
 
     @Override
@@ -89,6 +108,10 @@ public class Fragment2 extends Fragment {
         });
 
         return mView;
+    }
+
+    private void search() {
+        
     }
 
 }

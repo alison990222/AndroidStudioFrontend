@@ -48,19 +48,19 @@
         android:id="@+id/item_icon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:paddingTop="35dp"
-        android:paddingBottom="35dp"
         android:layout_below="@+id/title"
-        android:orientation="vertical">
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:paddingTop="35dp"
+        android:paddingBottom="35dp">
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/icon_img"
             android:layout_width="88dp"
             android:layout_height="88dp"
+            android:layout_gravity="center"
             android:scaleType="centerCrop"
-            android:src="@drawable/user"
-            android:layout_gravity="center"/>
+            android:src="@drawable/user" />
 
 
         <TextView
@@ -106,7 +106,8 @@
             android:paddingLeft="15dp"
             android:singleLine="true"
             android:textColor="@color/gray2"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            android:paddingStart="15dp" />
 
         <ImageView
             android:id="@+id/id_forward"
@@ -116,7 +117,8 @@
             android:padding="8dp"
             android:scaleType="centerCrop"
             android:src="@drawable/arrow_forward"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:layout_marginEnd="7dp" />
     </LinearLayout>
 
     <View
@@ -321,21 +323,39 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/line5"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/gray2"
         android:layout_below="@+id/item_info"/>
 
-    <Button
-        android:id="@+id/quit_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="70dp"
-        android:background="#9ab5ff"
-        android:gravity="center"
-        android:hint="退出登录" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/line5"
+        android:layout_marginTop="152dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/password_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginBottom="70dp"
+            android:background="#9ab5ff"
+            android:hint="修改密码" />
+
+        <Button
+            android:id="@+id/quit_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="61dp"
+            android:layout_marginBottom="70dp"
+            android:layout_toRightOf="@+id/password_btn"
+            android:background="#9ab5ff"
+            android:hint="退出登录" />
+
+
+    </RelativeLayout>
 
 
 </RelativeLayout>
