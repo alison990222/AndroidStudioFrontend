@@ -44,35 +44,27 @@ public class ChatRoom extends AppCompatActivity {
         username.setText(intent.getStringExtra("title"));
 
         MessageChatModel model1 = new MessageChatModel(
-                "Hello. How are you today?",
+                "Hello. 有时间来参观实验室?",
                 "10:00 PM",
                 0
         );
         MessageChatModel model2 = new MessageChatModel(
-                "Hey! I'm fine. Thanks for asking!",
+                "好啊，几点有空!",
                 "10:00 PM",
                 1
         );
         MessageChatModel model3 = new MessageChatModel(
-                "Sweet! So, what do you wanna do today?",
+                "都可",
                 "10:00 PM",
                 0
         );
         MessageChatModel model4 = new MessageChatModel(
-                "Nah, I dunno. Play soccer.. or learn more coding perhaps?",
+                "那下午去?",
                 "10:00 PM",
                 1
         );
 
 
-        messageChatModelList.add(model1);
-        messageChatModelList.add(model2);
-        messageChatModelList.add(model3);
-        messageChatModelList.add(model4);
-        messageChatModelList.add(model1);
-        messageChatModelList.add(model2);
-        messageChatModelList.add(model3);
-        messageChatModelList.add(model4);
         messageChatModelList.add(model1);
         messageChatModelList.add(model2);
         messageChatModelList.add(model3);
