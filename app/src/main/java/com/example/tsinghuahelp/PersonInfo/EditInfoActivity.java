@@ -19,6 +19,9 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -31,11 +34,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.example.tsinghuahelp.R;
+import com.example.tsinghuahelp.Search.SearchResult;
+import com.example.tsinghuahelp.utils.CommonInterface;
+import com.example.tsinghuahelp.utils.MyDialog;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.Objects;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 
 public class EditInfoActivity extends AppCompatActivity implements View.OnClickListener {
@@ -47,8 +69,17 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
     String grade;
     String signature;
     String person_info;
-    String id;
+    int id;
     boolean verify;
+    Bitmap bitmap;
+    File send_temp;
+
+    boolean change_icon=false;
+    boolean change_name=false;
+    boolean change_signature=false;
+    boolean change_person_info=false;
+    boolean change_verify=false;
+
 
     TextView edit_id;
     TextView edit_name;
@@ -58,22 +89,77 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
     PopupWindow popupWindow;
     com.mikhaellopez.circularimageview.CircularImageView icon_pic;
 
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler=new Handler(){
+        @Override public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    Toast.makeText(EditInfoActivity.this, "后端信息获取失败", Toast.LENGTH_SHORT).show();
+                    break;
+                case 1:
+                    Log.e("m_tag","收到信息更新图片");
+                    icon_pic.setImageBitmap(bitmap);
+                    break;
+                case 2:
+                    Log.e("m_tag","决定是否退出");
+                    if(!change_icon&&!change_name&&!change_person_info&&!change_signature&&!change_verify){
+                        finish();
+                    }
+                    else{
+                        showWarningInfo();
+                    }
+                    break;
+                case 3:
+                    finish();
+                    break;
+            }
+        }
+    };
+
+    private void showWarningInfo() {
+        String message="您的更新尚未提交完毕！";
+        final MyDialog dialog = new MyDialog(this);
+        dialog.setMessage(message)
+                .setTitle("提示")
+                .setPositive("我知道了")
+                .setNegtive("我要退出")
+                .setOnClickBottomListener(new MyDialog.OnClickBottomListener() {
+            @Override
+            public void onPositiveClick() {
+                dialog.dismiss();
+                Toast.makeText(EditInfoActivity.this,"xxxx",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNegtiveClick() {
+                dialog.dismiss();
+                Toast.makeText(EditInfoActivity.this,"ssss",Toast.LENGTH_SHORT).show();
+                Message message=new Message();
+                message.what=3;
+                mHandler.sendMessage(message);
+            }
+        }).show();
+    }
+
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_info);
-        icon_url = "http://a2.att.hudong.com/36/48/19300001357258133412489354717.jpg";
-        name="lw";
-        real_name="真实姓名";
-        school="Tsinghua";
-        department="Software";
-        grade="本科";
-        signature="小说真好看";
-        verify=false;
-        id="1";
-        person_info="红红火火恍恍惚惚\n哈哈哈哈哈哈哈哈哈哈哈哈哈\n这里都是乱写的";
+        Intent intent=getIntent() ;
+        icon_url = intent.getStringExtra("icon_url");
+        fresh_icon();
+        name=intent.getStringExtra("name");
+        real_name=intent.getStringExtra("real_name");
+        school=intent.getStringExtra("school");
+        department=intent.getStringExtra("department");
+        grade=intent.getStringExtra("grade");
+        signature=intent.getStringExtra("signature");
+        verify=intent.getBooleanExtra("verify",false);
+        id=intent.getIntExtra("id",0);
+        person_info=intent.getStringExtra("person_info");
 
         edit_id=findViewById(R.id.id_edit);
         edit_name=findViewById(R.id.name_edit);
@@ -90,8 +176,9 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.quit_btn).setOnClickListener(this);
         findViewById(R.id.backward_btn).setOnClickListener(this);
         findViewById(R.id.save_btn).setOnClickListener(this);
+        findViewById(R.id.password_btn).setOnClickListener(this);
 
-        edit_id.setText(id);
+        edit_id.setText(String.valueOf(id));
         edit_name.setText(name);
         edit_signature.setText(signature);
         edit_info.setText(person_info);
@@ -138,11 +225,85 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.quit_btn:
+                logout();
+                break;
+            case R.id.password_btn:
+                intent=new Intent(this,EditDetailPage.class);
+                intent.putExtra("msg",4);
+                startActivityForResult(intent,4);
                 break;
             case R.id.save_btn:
-                //todo 发送修改信息
+                HashMap<String,String> send_info = new HashMap<>();
+                send_info.put("username",name);
+                send_info.put("signature",signature);
+                send_info.put("personal_info",person_info);
+                send_info.put("realname",real_name);
+                send_info.put("school",school);
+                send_info.put("department",department);
+                send_info.put("grade",grade);
+
+                if(change_icon){update_icon();}
+                if(change_name){update("update_username",send_info);}
+                if(change_verify){update("verification",send_info);}
+                if(change_signature){update("update_signature",send_info);}
+                if(change_person_info){update("update_personal_info",send_info);}
                 break;
         }
+    }
+
+    public File getFile(Bitmap sendbitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        sendbitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        File file = new File(Objects.requireNonNull(EditInfoActivity.this).getExternalCacheDir(),"send_temp.jpg");
+        try {
+            if(file.exists()){
+                file.delete();
+            }
+            file.createNewFile();
+            FileOutputStream fos = new FileOutputStream(file);
+            InputStream is = new ByteArrayInputStream(baos.toByteArray());
+            int x = 0;
+            byte[] b = new byte[1024 * 100];
+            while ((x = is.read(b)) != -1) {
+                fos.write(b, 0, x);
+            }
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("error", "转成file出错啦！！！！！！");
+        }
+        return file;
+    }
+
+    private void update_icon() {
+        CommonInterface.sendOkHttpPostIconRequest("/api/user/update_icon", new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("error", e.toString());
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String resStr = response.body().string();
+                Log.e("response", resStr);
+                try {
+                    // 解析json，然后进行自己的内部逻辑处理
+                    JSONObject jsonObject = JSONObject.parseObject(resStr);
+                    String resp=jsonObject.getString("response");
+                    if(!resp.equals("valid")){throw new Exception();}
+                    change_icon=false;
+                    Message message=new Message();
+                    message.what=2;
+                    mHandler.sendMessage(message);
+                } catch (Exception e) {
+                    Message message=new Message();
+                    message.what=0;
+                    message.obj="update_icon";
+                    mHandler.sendMessage(message);
+                }
+            }
+        },send_temp);
+
     }
 
     File tempFile;
@@ -242,6 +403,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                     name=data.getStringExtra("msg");
                     edit_name.setText(name);
                     Log.d("返回", name);
+                    change_name=true;
                 }
                 break;
             case 1:
@@ -251,6 +413,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                     department=data.getStringExtra("department");
                     grade=data.getStringExtra("grade");
                     edit_verify.setText(school+department+grade+real_name);
+                    change_verify=true;
                 }
                 break;
             case 2:
@@ -258,6 +421,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                     signature=data.getStringExtra("msg");
                     edit_signature.setText(signature);
                     Log.d("返回", signature);
+                    change_signature=true;
                 }
                 break;
             case 3:
@@ -265,6 +429,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                     person_info=data.getStringExtra("msg");
                     edit_info.setText(person_info);
                     Log.d("返回", person_info);
+                    change_person_info=true;
                 }
                 break;
             case TAKE_PHOTO:
@@ -272,6 +437,8 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                     try {
                         Bitmap bitmap = BitmapFactory.decodeStream(Objects.requireNonNull(EditInfoActivity.this).getContentResolver().openInputStream(imageUri));
                         icon_pic.setImageBitmap(bitmap);
+                        send_temp=getFile(bitmap);
+                        change_icon=true;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -279,6 +446,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case CHOOSE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
+                    change_icon=true;
                     if (Build.VERSION.SDK_INT >= 19) {
                         // 4.4及以上系统使用这个方法处理图片
                         handleImageOnKitKat(data);
@@ -338,10 +506,106 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
         if (imagePath != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
             icon_pic.setImageBitmap(bitmap);
+            send_temp=getFile(bitmap);
         } else {
             Toast.makeText(EditInfoActivity.this, "failed to get image", Toast.LENGTH_SHORT).show();
         }
     }
 
+    private void fresh_icon(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(icon_url);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setConnectTimeout(5000);
+                    connection.setReadTimeout(5000);
+                    connection.setRequestProperty("charset","UTF-8");
+                    if (connection.getResponseCode()==200){
+                        InputStream in = connection.getInputStream();
+                        bitmap = BitmapFactory.decodeStream(in);
+                        Message message=new Message();
+                        message.what=1;
+                        mHandler.sendMessage(message);
+                    }
+                    else{
+                        Message message=new Message();
+                        message.what=0;
+                        mHandler.sendMessage(message);
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
 
+    private void update(String type,HashMap<String,String> send_info){
+        String url = "/api/user/"+type;
+        CommonInterface.sendOkHttpPostRequest(url, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("error", e.toString());
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String resStr = response.body().string();
+                Log.e("response", resStr);
+                try {
+                    // 解析json，然后进行自己的内部逻辑处理
+                    JSONObject jsonObject = JSONObject.parseObject(resStr);
+                    String resp=jsonObject.getString("response");
+                    if(!resp.equals("valid")){throw new Exception();}
+                    if(type.equals("update_username")){change_name=false;}
+                    else if(type.equals("verification")){change_verify=false;}
+                    else if(type.equals("update_signature")){change_signature=false;}
+                    else if(type.equals("update_personal_info")){change_person_info=false;}
+                    Message message=new Message();
+                    message.what=2;
+                    mHandler.sendMessage(message);
+                } catch (Exception e) {
+                    Message message=new Message();
+                    message.what=0;
+                    message.obj=url;
+                    mHandler.sendMessage(message);
+                }
+            }
+        },send_info);
+    }
+
+    private void logout(){
+        String url="/api/user/logout";
+        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("error", e.toString());
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String resStr = response.body().string();
+                Log.e("response", resStr);
+                try {
+                    // 解析json，然后进行自己的内部逻辑处理
+                    JSONObject jsonObject = JSONObject.parseObject(resStr);
+                    String resp = jsonObject.getString("response");
+                    if (!resp.equals("valid")) {
+                        throw new Exception();
+                    }
+                    Message message = new Message();
+                    message.what = 2;
+                    mHandler.sendMessage(message);
+                } catch (Exception e) {
+                    Message message = new Message();
+                    message.what = 0;
+                    mHandler.sendMessage(message);
+                }
+            }
+        });
+    }
 }

@@ -12,7 +12,6 @@
         android:background="#749C27B0">
 
         <TextView
-            android:id="@+id/chat_username"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -28,16 +27,18 @@
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"
+        android:paddingTop="10dp"
         android:weightSum="12"
-
         android:orientation="vertical"
-        android:layout_marginLeft="10dp"
         android:background="@android:color/white">
 
 
 
         <LinearLayout
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="horizontal"
@@ -139,6 +140,10 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="horizontal"
@@ -177,6 +182,10 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="horizontal"
@@ -194,12 +203,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:maxLines="2"
-                android:text="时间就像海绵里的水。"
+                android:text=""
                 android:maxLength="30"
                 android:textColor="@android:color/black"/>
         </LinearLayout>
 
         <LinearLayout
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="horizontal"
@@ -230,13 +243,29 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray1"/>
+
         <com.google.android.material.tabs.TabLayout
+
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            app:tabIndicatorColor="@color/gray1"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray1"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
             android:id="@+id/info_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"

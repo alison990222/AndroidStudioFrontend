@@ -2,15 +2,31 @@ package com.example.tsinghuahelp.PersonInfo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.tsinghuahelp.R;
+import com.example.tsinghuahelp.utils.CommonInterface;
+import com.example.tsinghuahelp.utils.MyDialog;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class EditDetailPage extends AppCompatActivity {
     private TextView tl_title;
@@ -19,8 +35,58 @@ public class EditDetailPage extends AppCompatActivity {
     private EditText edit_school;
     private EditText edit_department;
     private EditText edit_grade;
+    private EditText edit_old_password;
+    private EditText edit_new_password;
     int msg;
 
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler=new Handler(){
+        @Override public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    Toast.makeText(EditDetailPage.this, "后端信息获取失败", Toast.LENGTH_SHORT).show();
+                    break;
+                case 1:
+                    Log.e("m_tag","更新密码成功");
+                    finish();
+                    break;
+                case 2:
+                    showWarningInfo("密码错误或更新失败！");
+                    break;
+                case 3:
+                    finish();
+                    break;
+            }
+        }
+    };
+
+
+    private void showWarningInfo(String detail) {
+        String message=detail;
+        final MyDialog dialog = new MyDialog(this);
+        dialog.setMessage(message)
+                .setTitle("提示")
+                .setPositive("我知道了")
+                .setNegtive("我要退出")
+                .setOnClickBottomListener(new MyDialog.OnClickBottomListener() {
+                    @Override
+                    public void onPositiveClick() {
+                        dialog.dismiss();
+                        Toast.makeText(EditDetailPage.this,"xxxx",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNegtiveClick() {
+                        dialog.dismiss();
+                        Toast.makeText(EditDetailPage.this,"ssss",Toast.LENGTH_SHORT).show();
+                        Message message=new Message();
+                        message.what=3;
+                        mHandler.sendMessage(message);
+                    }
+                }).show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +99,9 @@ public class EditDetailPage extends AppCompatActivity {
         edit_grade=findViewById(R.id.et_edit_grade);
         edit_realname=findViewById(R.id.et_edit_name);
         edit_school=findViewById(R.id.et_edit_school);
+        edit_new_password=findViewById(R.id.et_edit_new_password);
+        edit_old_password=findViewById(R.id.et_edit_old_password);
+
         Intent intent = getIntent();
         msg=intent.getIntExtra("msg",0);
         switch (msg){
@@ -61,6 +130,11 @@ public class EditDetailPage extends AppCompatActivity {
                 tl_title.setText("编辑个人信息");
                 edit.setText(intent.getStringExtra("str"));
                 break;
+            case 4:
+                tl_title.setText("修改密码");
+                findViewById(R.id.oneline).setVisibility(View.GONE);
+                findViewById(R.id.twoline).setVisibility(View.VISIBLE);
+                break;
 
         }
 
@@ -68,18 +142,61 @@ public class EditDetailPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent back = new Intent();
-                if(msg!=1){
-                    Log.d("返回", edit.getText().toString());
-                    back.putExtra("msg",edit.getText().toString());}
-                else {
-                    back.putExtra("realname",edit_realname.getText().toString());
-                    back.putExtra("school",edit_school.getText().toString());
-                    back.putExtra("department",edit_department.getText().toString());
-                    back.putExtra("grade",edit_grade.getText().toString());
+                if(msg==1) {
+                    back.putExtra("realname", edit_realname.getText().toString());
+                    back.putExtra("school", edit_school.getText().toString());
+                    back.putExtra("department", edit_department.getText().toString());
+                    back.putExtra("grade", edit_grade.getText().toString());
+                    setResult(RESULT_OK, back);
+                    finish();
                 }
-                setResult(RESULT_OK, back);
-                finish();
+                else if(msg==4){
+                    update_password();
+                }
+                else {
+                    Log.d("返回", edit.getText().toString());
+                    back.putExtra("msg", edit.getText().toString());
+                    setResult(RESULT_OK, back);
+                    finish();
+                }
+
             }
         });
+    }
+
+    private void update_password() {
+        String url = "/api/user/update_password";
+        HashMap<String,String> h = new HashMap<>();
+        h.put("old_password",edit_old_password.getText().toString());
+        h.put("new_password",edit_new_password.getText().toString());
+        CommonInterface.sendOkHttpPostRequest(url, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("error", e.toString());
+                Message message=new Message();
+                message.what=0;
+                mHandler.sendMessage(message);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String resStr = response.body().string();
+                Log.e("response", resStr);
+                try {
+                    // 解析json，然后进行自己的内部逻辑处理
+                    JSONObject jsonObject = JSONObject.parseObject(resStr);
+                    String resp=jsonObject.getString("response");
+                    if(!resp.equals("valid")){throw new Exception();}
+                    Message message=new Message();
+                    message.what=1;
+                    mHandler.sendMessage(message);
+                } catch (Exception e) {
+                    Message message=new Message();
+                    message.what=2;
+                    mHandler.sendMessage(message);
+                }
+            }
+        },h);
+
     }
 }

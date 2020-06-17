@@ -182,4 +182,65 @@ android:background="@color/gray2">
     </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/twoline"
+        android:visibility="gone">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_marginTop="10dp"
+            android:weightSum="11"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:layout_marginEnd="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="原密码："
+                android:layout_weight="2"
+                android:gravity="center"
+                android:background="@color/gray2"/>
+            <EditText
+                android:layout_weight="9"
+                android:id="@+id/et_edit_old_password"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:focusableInTouchMode="true"
+                android:background="@null"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_marginTop="10dp"
+            android:weightSum="11"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:layout_marginEnd="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="新密码："
+                android:layout_weight="2"
+                android:gravity="center"
+                android:background="@color/gray2"/>
+            <EditText
+                android:layout_weight="9"
+                android:id="@+id/et_edit_new_password"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:focusableInTouchMode="true"
+                android:background="@null"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    </LinearLayout>

@@ -1,12 +1,10 @@
 package com.example.tsinghuahelp.Follow;
 
-//public class FollowUserAdapter {
-//}
-
 
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +14,7 @@ import androidx.annotation.NonNull;
 
 import com.example.tsinghuahelp.PersonInfo.OtherUserHomeActivity;
 import com.example.tsinghuahelp.R;
+import com.example.tsinghuahelp.utils.SetImageByUrl;
 
 import java.util.List;
 
@@ -40,8 +39,10 @@ public class FollowUserAdapter extends RecyclerView.Adapter<FollowUserAdapter.Fo
     @Override
     public void onBindViewHolder(@NonNull FollowUserViewHolder holder, int position) {
         FollowUser user = userList.get(position);
-        holder.icon.setImageResource(R.drawable.user);
-        //todo 根据url设置图片
+        SetImageByUrl getImageByUrl = new SetImageByUrl();
+
+        String url = user.getIconUrl();
+        getImageByUrl.setImage(holder.icon,url);
         holder.followName.setText(user.getFollowUsername());
     }
 
@@ -67,7 +68,7 @@ public class FollowUserAdapter extends RecyclerView.Adapter<FollowUserAdapter.Fo
                 int id = result.getId();
                 System.out.println("去往个人主页详情页面");
                 Intent detailIntent = new Intent(mCtx, OtherUserHomeActivity.class);//ActivityDetail.class
-//                    detailIntent.putExtra("title",result.getTitle());
+                detailIntent.putExtra("id",result.getId());
                 mCtx.startActivity(detailIntent);
 
             });
