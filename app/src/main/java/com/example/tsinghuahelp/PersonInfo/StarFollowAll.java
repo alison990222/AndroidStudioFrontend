@@ -197,7 +197,9 @@ public class StarFollowAll extends AppCompatActivity {
                         followUserList.add(new FollowUser(o_type,o_id,o_username));
                     }
 
-//                    followUserList.add(new FollowUser(false,0,"wyq"));
+                    followUserList.add(new FollowUser(false,3,"wyq"));
+                    followUserList.add(new FollowUser(false,3,"lw"));
+                    followUserList.add(new FollowUser(false,3,"zxt"));
 
                     Message message=new Message();
                     message.what=2;

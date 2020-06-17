@@ -13,8 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -106,7 +109,8 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
                      num_star_or_proj.setText(star_pro_num);
                      num_follower.setText(follower_num);
                      infoList.clear();
-                     infoList.add(person_info);
+                     if(person_info==null||person_info.length()==0){infoList.add("无");}
+                     else{infoList.add(person_info);}
                      infoAdapter.notifyDataSetChanged();
                      break;
                  case 2:
@@ -175,6 +179,12 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
 
         fresh_page();
 
+        LinearLayout linearLayout = (LinearLayout) tabLayout.getChildAt(0);
+        linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+        linearLayout.setDividerDrawable(ContextCompat.getDrawable(getContext(),
+                R.drawable.layout_divider_vertical));
+
+
         if(!mainPage.type){
             tabLayout.addTab(tabLayout.newTab().setText("关于我"));
             tabLayout.addTab(tabLayout.newTab().setText("我的报名"));
@@ -190,7 +200,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
 
         infoList = new ArrayList<>();
 
-//        infoList.add("我对软件开发很感兴趣，曾经做过：\n -Cosine大学生竞赛平台\n -“找导师”移动应用开发");
+
 
         proList = new ArrayList<>();
 

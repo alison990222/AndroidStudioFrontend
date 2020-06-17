@@ -1,6 +1,7 @@
 package com.example.tsinghuahelp.PersonInfo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -128,6 +129,11 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
         btn_track.setVisibility(View.VISIBLE);
         btn_chat.setVisibility(View.VISIBLE);
 
+        btn_verify.setOnClickListener(this);
+        btn_track.setOnClickListener(this);
+        btn_chat.setOnClickListener(this);
+
+
 
         myRecyclerView = findViewById(R.id.info_recyclerView);
         myRecyclerView.setHasFixedSize(true);
@@ -138,6 +144,11 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
         user_id=intent.getIntExtra("id",0);
 
         plan_or_pro="我的发文";
+
+        LinearLayout linearLayout = (LinearLayout) tabLayout.getChildAt(0);
+        linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+        linearLayout.setDividerDrawable(ContextCompat.getDrawable(this,
+                R.drawable.layout_divider_vertical));
 
         tabLayout.addTab(tabLayout.newTab().setText("关于我"));
         tabLayout.addTab(tabLayout.newTab().setText(plan_or_pro));
