@@ -194,7 +194,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:maxLines="2"
-                android:text="时间就像海绵里的水。"
+                android:text=""
                 android:maxLength="30"
                 android:textColor="@android:color/black"/>
         </LinearLayout>

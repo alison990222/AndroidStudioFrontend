@@ -51,8 +51,8 @@
         android:layout_below="@+id/title"
         android:background="@android:color/white"
         android:orientation="vertical"
-        android:paddingTop="35dp"
-        android:paddingBottom="35dp">
+        android:paddingTop="25dp"
+        android:paddingBottom="25dp">
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/icon_img"
@@ -102,7 +102,7 @@
             android:layout_weight="1"
             android:background="@null"
             android:gravity="center_vertical"
-            android:hint="1"
+            android:hint="0"
             android:paddingLeft="15dp"
             android:singleLine="true"
             android:textColor="@color/gray2"
@@ -205,7 +205,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:background="@null"
-            android:hint="清华大学软件学院七字班"
+            android:hint="未验证"
             android:singleLine="true"
             android:paddingLeft="15dp"
             android:textColor="@color/gray2"
@@ -255,7 +255,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:background="@null"
-            android:hint="时间就像海绵里的水"
+            android:hint=""
             android:singleLine="true"
             android:paddingLeft="15dp"
             android:textColor="@color/gray2"
@@ -305,7 +305,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:background="@null"
-            android:hint="我对软件开发很感兴趣"
+            android:hint=""
             android:singleLine="true"
             android:paddingLeft="15dp"
             android:textColor="@color/gray2"
@@ -333,14 +333,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/line5"
-        android:layout_marginTop="152dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="70dp"
+        android:paddingTop="25dp"
         android:gravity="center">
 
         <Button
             android:id="@+id/password_btn"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_marginBottom="70dp"
             android:background="#9ab5ff"
             android:hint="修改密码" />
 
@@ -349,7 +350,6 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginLeft="61dp"
-            android:layout_marginBottom="70dp"
             android:layout_toRightOf="@+id/password_btn"
             android:background="#9ab5ff"
             android:hint="退出登录" />

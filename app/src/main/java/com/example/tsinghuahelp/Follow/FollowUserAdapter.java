@@ -41,8 +41,7 @@ public class FollowUserAdapter extends RecyclerView.Adapter<FollowUserAdapter.Fo
         FollowUser user = userList.get(position);
         SetImageByUrl getImageByUrl = new SetImageByUrl();
 
-        String url = "http://47.94.145.111:8080/api/user/getIcon/3";
-//        String url = user.getIconUrl();
+        String url = user.getIconUrl();
         getImageByUrl.setImage(holder.icon,url);
         holder.followName.setText(user.getFollowUsername());
     }

@@ -176,6 +176,7 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.quit_btn).setOnClickListener(this);
         findViewById(R.id.backward_btn).setOnClickListener(this);
         findViewById(R.id.save_btn).setOnClickListener(this);
+        findViewById(R.id.password_btn).setOnClickListener(this);
 
         edit_id.setText(String.valueOf(id));
         edit_name.setText(name);
@@ -226,10 +227,14 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
             case R.id.quit_btn:
                 logout();
                 break;
+            case R.id.password_btn:
+                intent=new Intent(this,EditDetailPage.class);
+                intent.putExtra("msg",4);
+                startActivityForResult(intent,4);
+                break;
             case R.id.save_btn:
                 HashMap<String,String> send_info = new HashMap<>();
                 send_info.put("username",name);
-//                send_info.put("password",password);
                 send_info.put("signature",signature);
                 send_info.put("personal_info",person_info);
                 send_info.put("realname",real_name);
@@ -512,7 +517,6 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void run() {
                 try {
-                    icon_url="http://47.94.145.111:8080/api/user/getIcon/3";
                     URL url = new URL(icon_url);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");

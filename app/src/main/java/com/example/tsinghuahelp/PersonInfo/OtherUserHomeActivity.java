@@ -144,7 +144,7 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
 
         infoList = new ArrayList<>();
 
-        infoList.add("我对软件开发很感兴趣，曾经做过：\n -Cosine大学生竞赛平台\n -“找导师”移动应用开发");
+//        infoList.add("我对软件开发很感兴趣，曾经做过：\n -Cosine大学生竞赛平台\n -“找导师”移动应用开发");
         pList = new ArrayList<>();
 
         pAdapter = new SearchResultAdapter(this,pList);
@@ -197,22 +197,14 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                     JSONObject data=jsonObject.getJSONObject("data");
                     icon_url = data.getString("icon_url");
                     name=data.getString("username");
-//                    real_name=data.getString("real_name");
-//                    school=data.getString("school");
-//                    department=data.getString("department");
-//                    grade=data.getString("grade");
-//                    signature_str=data.getString("signature");
-//                    person_info=data.getString("personal_info");
-
-                    real_name="Alice";
-                    school="Tsinghua";
-                    department="Software";
-                    grade="doctor";
-                    signature_str="时间就像海绵里的水";
-                    person_info="我对软件开发很感兴趣，曾经做过：\n -Cosine大学生竞赛平台\n -“找导师”移动应用开发";
+                    real_name=data.getString("real_name");
+                    school=data.getString("school");
+                    department=data.getString("department");
+                    grade=data.getString("grade");
+                    signature_str=data.getString("signature");
+                    person_info=data.getString("personal_info");
                     verify=data.getBoolean("verification");
                     type=data.getBoolean("type");
-
 
                     Message message=new Message();
                     message.what=1;
@@ -232,7 +224,6 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
             @Override
             public void run() {
                 try {
-                    icon_url="http://47.94.145.111:8080/api/user/getIcon/3";
                     URL url = new URL(icon_url);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
@@ -288,15 +279,9 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                                 o_department, o_description,"project",o_id));
                     }
 
-                    pList.add(new SearchResult("移动应用与开发","王老师",
-                            "软件学院", "巨难无比，请谨慎选课","project",0));
-                    pList.add(new SearchResult("移动应用与开发","王老师",
-                            "软件学院", "巨难无比，请谨慎选课","project",0));
-                    pList.add(new SearchResult("移动应用与开发","王老师",
-                            "软件学院", "巨难无比，请谨慎选课","project",0));
-                    pList.add(new SearchResult("移动应用与开发","王老师",
-                            "软件学院", "巨难无比，请谨慎选课","project",0));
-
+//                    pList.add(new SearchResult("移动应用与开发","王老师",
+//                            "软件学院", "巨难无比，请谨慎选课","project",0));
+//
 
                     Message message=new Message();
                     message.what=3;

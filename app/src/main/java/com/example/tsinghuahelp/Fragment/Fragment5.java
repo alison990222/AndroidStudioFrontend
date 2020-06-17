@@ -190,7 +190,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
 
         infoList = new ArrayList<>();
 
-        infoList.add("我对软件开发很感兴趣，曾经做过：\n -Cosine大学生竞赛平台\n -“找导师”移动应用开发");
+//        infoList.add("我对软件开发很感兴趣，曾经做过：\n -Cosine大学生竞赛平台\n -“找导师”移动应用开发");
 
         proList = new ArrayList<>();
 
@@ -320,21 +320,13 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
                     JSONObject data=jsonObject.getJSONObject("data");
                     icon_url = data.getString("icon_url");
                     name=data.getString("username");
-//                    real_name=data.getString("real_name");
-//                    school=data.getString("school");
-//                    department=data.getString("department");
-//                    grade=data.getString("grade");
-//                    signature=data.getString("signature");
-//                    person_info=data.getString("personal_info");
-//                    user_id=data.getIntValue("id");
-                    user_id=3;
-                    real_name="Alice";
-                    school="Tsinghua";
-                    department="Software";
-                    grade="doctor";
-                    signature="时间就像海绵里的水";
-                    person_info="我对软件开发很感兴趣，曾经做过：\n -Cosine大学生竞赛平台\n -“找导师”移动应用开发";
-
+                    real_name=data.getString("real_name");
+                    school=data.getString("school");
+                    department=data.getString("department");
+                    grade=data.getString("grade");
+                    signature=data.getString("signature");
+                    person_info=data.getString("personal_info");
+                    user_id=data.getIntValue("id");
                     verify=data.getBoolean("verification");
                     follow_num=data.getInteger("follow_num").toString();
                     star_pro_num=data.getInteger("star_or_pro_num").toString();
@@ -358,7 +350,6 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
             @Override
             public void run() {
                 try {
-                    icon_url="http://47.94.145.111:8080/api/user/getIcon/3";
                     URL url = new URL(icon_url);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
@@ -415,14 +406,8 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
                                 o_department, o_description,"project",o_id));
                     }
 
-                    proList.add(new SearchResult("移动应用与开发","王老师",
-                            "软件学院", "巨难无比，请谨慎选课","project",0));
-                    proList.add(new SearchResult("移动应用与开发","王老师",
-                            "软件学院", "巨难无比，请谨慎选课","project",0));
-                    proList.add(new SearchResult("移动应用与开发","王老师",
-                            "软件学院", "巨难无比，请谨慎选课","project",0));
-                    proList.add(new SearchResult("移动应用与开发","王老师",
-                            "软件学院", "巨难无比，请谨慎选课","project",0));
+//                    proList.add(new SearchResult("移动应用与开发","王老师",
+//                            "软件学院", "巨难无比，请谨慎选课","project",0));
 
 
                     Message message=new Message();
@@ -466,10 +451,9 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
                                 o_department, o_description,"plan",o_id));
                     }
 
-                    planList.add(new SearchResult("想一台智能机械小车","刘薇",
-                            "软件学院", "嵌入式课程需要orz","plan",0));
-                    planList.add(new SearchResult("想一台智能机械小车","刘薇",
-                            "软件学院", "嵌入式课程需要orz","plan",0));
+//                    planList.add(new SearchResult("想一台智能机械小车","刘薇",
+//                            "软件学院", "嵌入式课程需要orz","plan",0));
+
 
                     Message message=new Message();
                     message.what=4;
