@@ -77,7 +77,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
     String follower_num;
     String person_info;
     boolean verify;
-    boolean click_edit=false;
+    public static boolean change=false;
     Button btn_edit;
     Button btn_verify;
     TextView edit_user;
@@ -137,9 +137,9 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
     @Override
     public void onResume(){
         super.onResume();
-        if(click_edit){
+        if(change){
             fresh_page();
-            click_edit=false;
+            change=false;
         }
     }
 
@@ -253,7 +253,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.edit_info_btn:
-                click_edit=true;
+                change=true;
                 Intent intent=new Intent(getContext(),EditInfoActivity.class);
                 intent.putExtra("icon_url",icon_url);
                 intent.putExtra("id",user_id);

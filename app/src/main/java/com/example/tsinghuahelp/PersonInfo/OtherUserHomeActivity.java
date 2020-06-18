@@ -24,6 +24,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.tsinghuahelp.Adapter.InfoAdapter;
 import com.example.tsinghuahelp.Chat.ChatRoom;
+import com.example.tsinghuahelp.Fragment.Fragment5;
 import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.Search.SearchResult;
 import com.example.tsinghuahelp.Search.SearchResultAdapter;
@@ -111,6 +112,8 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                     break;
                 case 4:
                     Log.e("m_tag","按钮更新");
+                    Fragment5.change=true;
+                    StarFollowAll.change=true;
                     if(relation){relation=false;btn_track.setText("追踪");}
                     else{
                         relation=true;

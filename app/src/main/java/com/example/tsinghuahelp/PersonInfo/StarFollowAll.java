@@ -49,6 +49,7 @@ public class StarFollowAll extends AppCompatActivity {
     private List<FollowUser> followUserList = new ArrayList<FollowUser>();
     private List<SearchResult> proList = new ArrayList<SearchResult>();
     int mtype;
+    public static boolean change=false;
     @SuppressLint("HandlerLeak")
     private Handler mHandler=new Handler(){
         @Override public void handleMessage(Message msg) {
@@ -68,6 +69,15 @@ public class StarFollowAll extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(change){
+            fresh();
+            change=false;
+        }
+    }
 
 
     @Override
