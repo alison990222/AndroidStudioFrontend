@@ -79,14 +79,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 int selected = radioGroup.getCheckedRadioButtonId();
-                Log.e("", String.valueOf(selected));
                 radioBtn = (RadioButton) findViewById(selected);
-                Toast.makeText(MainActivity.this, radioBtn.getText(), Toast.LENGTH_SHORT).show();
                 if(radioBtn.getText().equals("学生")){
                     mainPage.type=false;
                 }
@@ -95,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String,String> h = new HashMap<>();
                 h.put("username",mUsername.getText().toString());
                 h.put("password",mPassword.getText().toString());
+
 
                 CommonInterface.sendOkHttpPostRequest("/api/user/login", new Callback() {
                     @Override
@@ -105,25 +104,33 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         String resStr = response.body().string();
-                        MainActivity.this.runOnUiThread(() -> Toast.makeText(MainActivity.this, resStr, Toast.LENGTH_LONG).show());
-                        Log.e("response", resStr);
                         try {
                             com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
-                            JSONObject data=jsonObject.getJSONObject("data");
-                            mainPage.type = data.getBoolean("type");
-                            // 解析json，然后进行自己的内部逻辑处理
-//                            JSONObject jsonObject = new JSONObject(resStr);
-//                            String chocolateChip = CookieManager.getInstance().getCookie(response);
+                            if(jsonObject.get("response").equals("valid")){
+                                JSONObject data=jsonObject.getJSONObject("data");
+                                mainPage.type = data.getBoolean("type");
 
+                                Intent mainIntent = new Intent(MainActivity.this, mainPage.class);
+                                startActivity(mainIntent);
+                            }
+                            else if(jsonObject.get("detail").equals("已登录")){
+                                JSONObject data=jsonObject.getJSONObject("data");
+                                mainPage.type = data.getBoolean("type");
+                                Intent mainIntent = new Intent(MainActivity.this, mainPage.class);
+                                startActivity(mainIntent);
+                            }
+                            else { //jsonObject.get("response").toString()=="invalid"
+                                MainActivity.this.runOnUiThread(() -> Toast.makeText(MainActivity.this, "账号密码错误", Toast.LENGTH_LONG).show());
+                                Log.e("responseinval", resStr);
+                            }
                         } catch (Exception e) {
-
+                            Log.e("error", e.toString());
                         }
                     }
                 },h);
 
-                Intent mainIntent = new Intent(MainActivity.this, mainPage.class);
-                startActivity(mainIntent);
             }
+
         });
     }
 

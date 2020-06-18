@@ -120,6 +120,8 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
         findViewById(R.id.follower_num).setVisibility(View.INVISIBLE);
         findViewById(R.id.follow_num).setVisibility(View.INVISIBLE);
         findViewById(R.id.edit_info_btn).setVisibility(View.GONE);
+        findViewById(R.id.toolbar).setVisibility(View.GONE);
+        findViewById(R.id.title).setVisibility(View.VISIBLE);
         other_username=findViewById(R.id.info_username);
         is_verify=findViewById(R.id.verify_info);
         btn_verify=findViewById(R.id.verify_btn);
@@ -132,7 +134,7 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
         btn_verify.setOnClickListener(this);
         btn_track.setOnClickListener(this);
         btn_chat.setOnClickListener(this);
-
+        findViewById(R.id.backward_btn).setOnClickListener(this);
 
 
         myRecyclerView = findViewById(R.id.info_recyclerView);
@@ -321,7 +323,9 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                 chatIntent.putExtra("title",name);
                 startActivity(chatIntent);
                 break;
-
+            case R.id.backward_btn:
+                finish();
+                break;
         }
     }
 

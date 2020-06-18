@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.UserHandle;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,8 +80,12 @@ public class StarFollowAll extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
-
+        findViewById(R.id.backward_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 
         Intent intent = this.getIntent();

@@ -36,14 +36,22 @@ public class mainPage extends AppCompatActivity {
 
         // 以下为fragment相关设置
         FragmentManager fm = getSupportFragmentManager();
-
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new Fragment1());
-        fragments.add(new Fragment2());
-//        fragments.add(new Fragment3());
-        fragments.add(new Fragment3Teacher());
-        fragments.add(new Fragment4());
-        fragments.add(new Fragment5());
+
+        if(type == false){ // student
+            fragments.add(new Fragment1());
+            fragments.add(new Fragment2());
+            fragments.add(new Fragment3());
+            fragments.add(new Fragment4());
+            fragments.add(new Fragment5());
+        }
+        else{ // teacher
+            fragments.add(new Fragment1());
+            fragments.add(new Fragment2());
+            fragments.add(new Fragment3Teacher());
+            fragments.add(new Fragment4());
+            fragments.add(new Fragment5());
+        }
 
         viewPager.setAdapter(new MyFragmentAdapter(fm, fragments));
 

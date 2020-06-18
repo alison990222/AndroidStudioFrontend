@@ -38,13 +38,20 @@ public class FragmentNavbar  extends AppCompatActivity {
         ButterKnife.bind(this);
 
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.add(R.id.content, fragment1);
-        transaction.add(R.id.content, fragment2);
-//        transaction.add(R.id.content, fragment3);  // post page for student
-        transaction.add(R.id.content, fragment3teacher);
-        transaction.add(R.id.content, fragment4);
-        transaction.add(R.id.content, fragment5);
-
+        if(mainPage.type == false){  // student
+            transaction.add(R.id.content, fragment1);
+            transaction.add(R.id.content, fragment2);
+            transaction.add(R.id.content, fragment3);  // post page for student
+            transaction.add(R.id.content, fragment4);
+            transaction.add(R.id.content, fragment5);
+        }
+        else{
+            transaction.add(R.id.content, fragment1);
+            transaction.add(R.id.content, fragment2);
+            transaction.add(R.id.content, fragment3teacher);
+            transaction.add(R.id.content, fragment4);
+            transaction.add(R.id.content, fragment5);
+        }
 
         navigationMenu.setOnNavigationItemSelectedListener(item -> {
             FragmentTransaction trans = fm.beginTransaction();

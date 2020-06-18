@@ -26,6 +26,7 @@ import com.example.tsinghuahelp.MainActivity;
 import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.mainPage;
 import com.example.tsinghuahelp.utils.CommonInterface;
+import com.example.tsinghuahelp.utils.MyDialog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -100,16 +101,21 @@ public class Fragment3Teacher extends Fragment {
 
 
                 String finalRequirements = requirements;
-                btnPost.setOnClickListener(new View.OnClickListener() {
+
+                HashMap<String,String> h = new HashMap<>();
+                h.put("title",projectName.getText().toString());
+                h.put("research_direction",researchField.getText().toString());
+                h.put("requirement", finalRequirements);
+                h.put("description",detail.getText().toString());
+
+
+                final MyDialog dialog = new MyDialog(getContext());
+                dialog.setMessage("发布后可在详情页进行修改删除")
+                        .setTitle("是否确定发布此贴文？")
+                        .setSingle(true).setOnClickBottomListener(new MyDialog.OnClickBottomListener() {
                     @Override
-                    public void onClick(View v) {
-
-                        HashMap<String,String> h = new HashMap<>();
-                        h.put("title",projectName.getText().toString());
-                        h.put("research_direction",researchField.getText().toString());
-                        h.put("requirement", finalRequirements);
-                        h.put("description",detail.getText().toString());
-
+                    public void onPositiveClick() {
+                        dialog.dismiss();
                         CommonInterface.sendOkHttpPostRequest("/api/teacher/upload_recruit", new Callback() {
 
                             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -118,24 +124,30 @@ public class Fragment3Teacher extends Fragment {
 
                             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                                 String resStr = response.body().string();
-                                getActivity().runOnUiThread(() -> Toast.makeText(getContext(), resStr, Toast.LENGTH_LONG).show());
-                                Log.e("response", resStr);
+                                com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
+                                try{
+                                    if(jsonObject.get("response").equals("valid")){
+                                        getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "success", Toast.LENGTH_LONG).show());
+                                        Intent in=new Intent(getContext(), mainPage.class);
+                                        startActivity(in);
+                                    }
+                                    else{
+                                        getActivity().runOnUiThread(() -> Toast.makeText(getContext(), resStr, Toast.LENGTH_LONG).show());
+                                    }
+                                }
+                                catch (Exception e){
+                                    Log.e("error",e.toString());
+                                }
                             }
                         },h);
                     }
-                });
 
-//                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-//                dialog.setTitle("是否确定发布此贴文？");
-//                dialog.setMessage("发布后可在详情页进行修改删除");
-//                dialog.setPositiveButton(R.string.confirm,new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        Intent in=new Intent(getContext(), mainPage.class);
-//                        startActivity(in);
-//                    }
-//                });
-//                dialog.show();
+                    @Override
+                    public void onNegtiveClick() {
+                        dialog.dismiss();
+                        Toast.makeText(getContext(),"ssss",Toast.LENGTH_SHORT).show();
+                    }
+                }).show();
             }
         });
 
