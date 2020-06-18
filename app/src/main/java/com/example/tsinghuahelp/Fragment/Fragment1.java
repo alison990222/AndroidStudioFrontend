@@ -136,7 +136,6 @@ public class Fragment1 extends Fragment {
         Log.d("oncvieeeew","bbb");
         Log.d("oncvi",postsList.toString());
 
-
         return mView;
     }
 

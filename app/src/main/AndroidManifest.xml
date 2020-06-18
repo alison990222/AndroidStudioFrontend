@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PersonInfo.EditDetailPage"></activity>
+        <activity android:name=".PersonInfo.EditDetailPage" />
         <activity android:name=".PersonInfo.EditInfoActivity" />
         <activity android:name=".PersonInfo.StarFollowAll" />
         <activity android:name=".PersonInfo.OtherUserHomeActivity" />

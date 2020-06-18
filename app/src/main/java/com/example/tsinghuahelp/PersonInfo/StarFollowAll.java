@@ -49,6 +49,7 @@ public class StarFollowAll extends AppCompatActivity {
     private List<FollowUser> followUserList = new ArrayList<FollowUser>();
     private List<SearchResult> proList = new ArrayList<SearchResult>();
     int mtype;
+    public static boolean change=false;
     @SuppressLint("HandlerLeak")
     private Handler mHandler=new Handler(){
         @Override public void handleMessage(Message msg) {
@@ -68,6 +69,15 @@ public class StarFollowAll extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(change){
+            fresh();
+            change=false;
+        }
+    }
 
 
     @Override
@@ -163,9 +173,6 @@ public class StarFollowAll extends AppCompatActivity {
                                 o_department, o_description,"project",o_id));
                     }
 
-//                    proList.add(new SearchResult("移动应用与开发","王老师",
-//                            "软件学院", "巨难无比，请谨慎选课","project",0));
-
                     Message message=new Message();
                     message.what=1;
                     mHandler.sendMessage(message);
@@ -201,10 +208,6 @@ public class StarFollowAll extends AppCompatActivity {
                         int o_id = object.getInteger("id");
                         followUserList.add(new FollowUser(o_type,o_id,o_username));
                     }
-
-                    followUserList.add(new FollowUser(false,3,"wyq"));
-                    followUserList.add(new FollowUser(false,3,"lw"));
-                    followUserList.add(new FollowUser(false,3,"zxt"));
 
                     Message message=new Message();
                     message.what=2;

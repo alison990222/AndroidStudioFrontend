@@ -24,6 +24,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.tsinghuahelp.Adapter.InfoAdapter;
 import com.example.tsinghuahelp.Chat.ChatRoom;
+import com.example.tsinghuahelp.Fragment.Fragment5;
 import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.Search.SearchResult;
 import com.example.tsinghuahelp.Search.SearchResultAdapter;
@@ -74,6 +75,8 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
     String person_info;
     boolean verify;
     Bitmap bitmap;
+    boolean relation;
+    public static final int FAIL_CODE=0;
 
 
     @SuppressLint("HandlerLeak")
@@ -81,14 +84,15 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
         @Override public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
-                case 0:
-                    Toast.makeText(OtherUserHomeActivity.this,"后端信息获取失败",Toast.LENGTH_SHORT).show();
+                case FAIL_CODE:
+                    Toast.makeText(OtherUserHomeActivity.this,msg.obj.toString(),Toast.LENGTH_SHORT).show();
                     break;
                 case 1:
                     Log.e("m_tag","收到信息更新页");
                     fresh_prolist();
                     if(verify){is_verify.setText("已验证");}
                     else{is_verify.setText("未验证");}
+                    if(relation) {btn_track.setText("取消追踪");}
                     other_username.setText(name);
                     signature.setText(signature_str);
                     infoList.clear();
@@ -105,6 +109,16 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                 case 3:
                     Log.e("m_tag","收到我的项目更新");
                     pAdapter.notifyDataSetChanged();
+                    break;
+                case 4:
+                    Log.e("m_tag","按钮更新");
+                    Fragment5.change=true;
+                    StarFollowAll.change=true;
+                    if(relation){relation=false;btn_track.setText("追踪");}
+                    else{
+                        relation=true;
+                        btn_track.setText("取消追踪");
+                    }
                     break;
             }
         }
@@ -130,6 +144,7 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
         btn_chat=findViewById(R.id.chat_btn);
         btn_track.setVisibility(View.VISIBLE);
         btn_chat.setVisibility(View.VISIBLE);
+        icon=findViewById(R.id.info_pic);
 
         btn_verify.setOnClickListener(this);
         btn_track.setOnClickListener(this);
@@ -157,7 +172,6 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
 
         infoList = new ArrayList<>();
 
-//        infoList.add("我对软件开发很感兴趣，曾经做过：\n -Cosine大学生竞赛平台\n -“找导师”移动应用开发");
         pList = new ArrayList<>();
 
         pAdapter = new SearchResultAdapter(this,pList);
@@ -218,6 +232,7 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                     person_info=data.getString("personal_info");
                     verify=data.getBoolean("verification");
                     type=data.getBoolean("type");
+                    relation=data.getBoolean("relation");
 
                     Message message=new Message();
                     message.what=1;
@@ -225,7 +240,8 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                     fresh_icon();
                 } catch (Exception e) {
                     Message message=new Message();
-                    message.what=0;
+                    message.what=FAIL_CODE;
+                    message.obj="页面信息获取失败！";
                     mHandler.sendMessage(message);
                 }
             }
@@ -237,6 +253,7 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
             @Override
             public void run() {
                 try {
+                    System.out.println(icon_url);
                     URL url = new URL(icon_url);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
@@ -252,7 +269,8 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                     }
                     else{
                         Message message=new Message();
-                        message.what=0;
+                        message.what=FAIL_CODE;
+                        message.obj="图片信息获取失败";
                         mHandler.sendMessage(message);
                     }
                 } catch (MalformedURLException e) {
@@ -292,16 +310,13 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                                 o_department, o_description,"project",o_id));
                     }
 
-//                    pList.add(new SearchResult("移动应用与开发","王老师",
-//                            "软件学院", "巨难无比，请谨慎选课","project",0));
-//
-
                     Message message=new Message();
                     message.what=3;
                     mHandler.sendMessage(message);
                 } catch (Exception e) {
                     Message message=new Message();
-                    message.what=0;
+                    message.what=FAIL_CODE;
+                    message.obj="项目计划信息获取失败！";
                     mHandler.sendMessage(message);
                 }
             }
@@ -351,8 +366,9 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
 
     public void goFollow(){
         HashMap<String,String> h = new HashMap<>();
-        h.put("id",user_id.toString());
+        h.put("user_id",user_id.toString());
         String url="/api/user/go_follow";
+        if(relation){url="/api/user/cancel_follow";}
         CommonInterface.sendOkHttpPostRequest(url, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -371,12 +387,16 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                         throw new Exception();
                     }
                     else {
-                        Toast.makeText(OtherUserHomeActivity.this,"追踪成功",Toast.LENGTH_SHORT).show();
+                        Message message=new Message();
+                        message.what=4;
+                        mHandler.sendMessage(message);
                     }
 
                 } catch (Exception e) {
+                    System.out.println(e);
                     Message message=new Message();
-                    message.what=0;
+                    message.what=FAIL_CODE;
+                    message.obj="追踪失败！";
                     mHandler.sendMessage(message);
                 }
             }
