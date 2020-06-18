@@ -461,10 +461,6 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
                                 o_department, o_description,"plan",o_id));
                     }
 
-//                    planList.add(new SearchResult("想一台智能机械小车","刘薇",
-//                            "软件学院", "嵌入式课程需要orz","plan",0));
-
-
                     Message message=new Message();
                     message.what=4;
                     mHandler.sendMessage(message);
