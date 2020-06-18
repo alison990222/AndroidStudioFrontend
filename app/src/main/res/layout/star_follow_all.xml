@@ -4,17 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray2"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/textView"
+    <LinearLayout
+        android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#749C27B0"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:textSize="30dp"
-        android:text="我的关注" />
+        android:layout_height="52dp"
+        android:background="@android:color/white">
+        <ImageView
+            android:id="@+id/backward_btn"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:ellipsize="none"
+            android:layout_gravity="center"
+            android:singleLine="true"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="marquee"
+            android:gravity="center_horizontal|center"
+            android:singleLine="true"
+            android:text="我的关注"
+            android:textColor="@android:color/black"
+            android:textSize="20dp" />
+
+        <TextView
+            android:visibility="invisible"
+            android:id="@+id/save_btn"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:paddingRight="5dp"
+            android:singleLine="true"
+            android:text="保存"
+            android:textColor="@android:color/black"
+            android:textSize="18dp"/>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/star_or_follow_recycle"
