@@ -44,6 +44,8 @@ public class FollowUserAdapter extends RecyclerView.Adapter<FollowUserAdapter.Fo
         String url = user.getIconUrl();
         getImageByUrl.setImage(holder.icon,url);
         holder.followName.setText(user.getFollowUsername());
+        if(user.getType()){holder.followName.setText("teacher");}
+        else{holder.followName.setText("student");}
     }
 
     @Override
@@ -55,12 +57,15 @@ public class FollowUserAdapter extends RecyclerView.Adapter<FollowUserAdapter.Fo
 
         com.mikhaellopez.circularimageview.CircularImageView icon;
         TextView followName;
+        TextView type;
 
         public FollowUserViewHolder(View itemView) {
             super(itemView);
 
             icon = itemView.findViewById(R.id.follow_pic);
             followName=itemView.findViewById(R.id.follow_name);
+            type=itemView.findViewById(R.id.type);
+
 
             itemView.setOnClickListener(view -> {
                 int pos = getAdapterPosition();

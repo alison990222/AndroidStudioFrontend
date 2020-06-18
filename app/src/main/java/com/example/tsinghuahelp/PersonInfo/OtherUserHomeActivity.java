@@ -74,6 +74,7 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
     String person_info;
     boolean verify;
     Bitmap bitmap;
+    boolean relation;
 
 
     @SuppressLint("HandlerLeak")
@@ -89,6 +90,7 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                     fresh_prolist();
                     if(verify){is_verify.setText("已验证");}
                     else{is_verify.setText("未验证");}
+                    if(relation) {btn_track.setText("取消追踪");}
                     other_username.setText(name);
                     signature.setText(signature_str);
                     infoList.clear();
@@ -218,6 +220,7 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                     person_info=data.getString("personal_info");
                     verify=data.getBoolean("verification");
                     type=data.getBoolean("type");
+                    relation=data.getBoolean("relation");
 
                     Message message=new Message();
                     message.what=1;
@@ -353,6 +356,7 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
         HashMap<String,String> h = new HashMap<>();
         h.put("id",user_id.toString());
         String url="/api/user/go_follow";
+        if(relation){url="/api/user/cancel_follow";}
         CommonInterface.sendOkHttpPostRequest(url, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -371,7 +375,7 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                         throw new Exception();
                     }
                     else {
-                        Toast.makeText(OtherUserHomeActivity.this,"追踪成功",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(OtherUserHomeActivity.this,"操作成功",Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
