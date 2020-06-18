@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.tsinghuahelp.MainActivity;
 import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.Search.SearchResult;
 import com.example.tsinghuahelp.utils.CommonInterface;
@@ -111,7 +112,11 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                     }
                     break;
                 case 3:
-                    finish();
+                    Intent intent = new Intent();
+                    intent.setClass(EditInfoActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);//设置不要刷新将要跳到的界面
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//它可以关掉所要到的界面中间的activity
+                    startActivity(intent);
                     break;
             }
         }
@@ -597,9 +602,10 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                     if (!resp.equals("valid")) {
                         throw new Exception();
                     }
+                    else{Log.e("response", "返回了valid，成功登出了");
                     Message message = new Message();
-                    message.what = 2;
-                    mHandler.sendMessage(message);
+                        message.what = 3;
+                        mHandler.sendMessage(message);}
                 } catch (Exception e) {
                     Message message = new Message();
                     message.what = 0;

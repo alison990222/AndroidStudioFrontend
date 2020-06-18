@@ -44,8 +44,8 @@ public class FollowUserAdapter extends RecyclerView.Adapter<FollowUserAdapter.Fo
         String url = user.getIconUrl();
         getImageByUrl.setImage(holder.icon,url);
         holder.followName.setText(user.getFollowUsername());
-        if(user.getType()){holder.followName.setText("teacher");}
-        else{holder.followName.setText("student");}
+        if(user.getType()){holder.type.setText("teacher");}
+        else{holder.type.setText("student");}
     }
 
     @Override
