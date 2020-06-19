@@ -314,9 +314,10 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                         String o_name = object.getString("name");
                         String o_department = object.getString("department");
                         String o_description=object.getString("description");
+                        String o_type=object.getString("type");
                         int o_id = object.getInteger("id");
                         pList.add(new SearchResult(o_title,o_name,
-                                o_department, o_description,"project",o_id));
+                                o_department, o_description,o_type,o_id));
                     }
 
                     Message message=new Message();
