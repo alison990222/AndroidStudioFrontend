@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONObject;
 import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.utils.CommonInterface;
+import com.example.tsinghuahelp.utils.Global;
 import com.example.tsinghuahelp.utils.MyDialog;
 
 import org.jetbrains.annotations.NotNull;
@@ -45,17 +46,17 @@ public class EditDetailPage extends AppCompatActivity {
         @Override public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case 0:
-                    Toast.makeText(EditDetailPage.this, "后端信息获取失败", Toast.LENGTH_SHORT).show();
+                case Global.FAIL_CODE:
+                    Toast.makeText(EditDetailPage.this, msg.obj.toString(), Toast.LENGTH_SHORT).show();
                     break;
-                case 1:
+                case Global.UPDATE_PASS_CODE:
                     Log.e("m_tag","更新密码成功");
                     finish();
                     break;
-                case 2:
+                case Global.UPDATE_FAIL_CODE:
                     showWarningInfo("密码错误或更新失败！");
                     break;
-                case 3:
+                case Global.FINISH_CODE:
                     finish();
                     break;
             }
@@ -82,7 +83,7 @@ public class EditDetailPage extends AppCompatActivity {
                         dialog.dismiss();
                         Toast.makeText(EditDetailPage.this,"ssss",Toast.LENGTH_SHORT).show();
                         Message message=new Message();
-                        message.what=3;
+                        message.what=Global.FINISH_CODE;
                         mHandler.sendMessage(message);
                     }
                 }).show();
@@ -174,7 +175,8 @@ public class EditDetailPage extends AppCompatActivity {
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.e("error", e.toString());
                 Message message=new Message();
-                message.what=0;
+                message.what=Global.FAIL_CODE;
+                message.obj=e.toString();
                 mHandler.sendMessage(message);
             }
 
@@ -188,11 +190,11 @@ public class EditDetailPage extends AppCompatActivity {
                     String resp=jsonObject.getString("response");
                     if(!resp.equals("valid")){throw new Exception();}
                     Message message=new Message();
-                    message.what=1;
+                    message.what=Global.UPDATE_PASS_CODE;
                     mHandler.sendMessage(message);
                 } catch (Exception e) {
                     Message message=new Message();
-                    message.what=2;
+                    message.what=Global.UPDATE_FAIL_CODE;
                     mHandler.sendMessage(message);
                 }
             }

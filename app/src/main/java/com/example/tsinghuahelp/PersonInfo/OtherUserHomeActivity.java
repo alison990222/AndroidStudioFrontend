@@ -30,6 +30,7 @@ import com.example.tsinghuahelp.Search.SearchResult;
 import com.example.tsinghuahelp.Search.SearchResultAdapter;
 import com.example.tsinghuahelp.mainPage;
 import com.example.tsinghuahelp.utils.CommonInterface;
+import com.example.tsinghuahelp.utils.Global;
 import com.example.tsinghuahelp.utils.MyDialog;
 import com.google.android.material.tabs.TabLayout;
 
@@ -76,7 +77,7 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
     boolean verify;
     Bitmap bitmap;
     boolean relation;
-    public static final int FAIL_CODE=0;
+
 
 
     @SuppressLint("HandlerLeak")
@@ -84,10 +85,10 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
         @Override public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
-                case FAIL_CODE:
+                case Global.FAIL_CODE:
                     Toast.makeText(OtherUserHomeActivity.this,msg.obj.toString(),Toast.LENGTH_SHORT).show();
                     break;
-                case 1:
+                case Global.FRESH_HOME_CODE:
                     Log.e("m_tag","收到信息更新页");
                     fresh_prolist();
                     if(verify){is_verify.setText("已验证");}
@@ -102,15 +103,15 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                         Objects.requireNonNull(tabLayout.getTabAt(1)).setText("我的项目");
                     }
                     break;
-                case 2:
+                case Global.FRESH_ICON_CODE:
                     Log.e("m_tag","收到信息更新图片");
                     icon.setImageBitmap(bitmap);
                     break;
-                case 3:
+                case Global.FRESH_PROJ_CODE:
                     Log.e("m_tag","收到我的项目更新");
                     pAdapter.notifyDataSetChanged();
                     break;
-                case 4:
+                case Global.FRESH_BUTT_CODE:
                     Log.e("m_tag","按钮更新");
                     Fragment5.change=true;
                     StarFollowAll.change=true;
@@ -212,6 +213,10 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.e("error", e.toString());
+                Message message=new Message();
+                message.what=Global.FAIL_CODE;
+                message.obj=e.toString();
+                mHandler.sendMessage(message);
             }
 
             @Override
@@ -235,12 +240,12 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                     relation=data.getBoolean("relation");
 
                     Message message=new Message();
-                    message.what=1;
+                    message.what=Global.FRESH_HOME_CODE;
                     mHandler.sendMessage(message);
                     fresh_icon();
                 } catch (Exception e) {
                     Message message=new Message();
-                    message.what=FAIL_CODE;
+                    message.what=Global.FAIL_CODE;
                     message.obj="页面信息获取失败！";
                     mHandler.sendMessage(message);
                 }
@@ -264,12 +269,12 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                         InputStream in = connection.getInputStream();
                         bitmap = BitmapFactory.decodeStream(in);
                         Message message=new Message();
-                        message.what=2;
+                        message.what=Global.FRESH_ICON_CODE;
                         mHandler.sendMessage(message);
                     }
                     else{
                         Message message=new Message();
-                        message.what=FAIL_CODE;
+                        message.what=Global.FAIL_CODE;
                         message.obj="图片信息获取失败";
                         mHandler.sendMessage(message);
                     }
@@ -289,6 +294,10 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.e("error", e.toString());
+                Message message=new Message();
+                message.what=Global.FAIL_CODE;
+                message.obj=e.toString();
+                mHandler.sendMessage(message);
             }
 
             @Override
@@ -311,11 +320,11 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                     }
 
                     Message message=new Message();
-                    message.what=3;
+                    message.what=Global.FRESH_PROJ_CODE;
                     mHandler.sendMessage(message);
                 } catch (Exception e) {
                     Message message=new Message();
-                    message.what=FAIL_CODE;
+                    message.what=Global.FAIL_CODE;
                     message.obj="项目计划信息获取失败！";
                     mHandler.sendMessage(message);
                 }
@@ -373,6 +382,10 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.e("error", e.toString());
+                Message message=new Message();
+                message.what=Global.FAIL_CODE;
+                message.obj=e.toString();
+                mHandler.sendMessage(message);
             }
 
             @Override
@@ -388,14 +401,14 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                     }
                     else {
                         Message message=new Message();
-                        message.what=4;
+                        message.what=Global.FRESH_BUTT_CODE;
                         mHandler.sendMessage(message);
                     }
 
                 } catch (Exception e) {
                     System.out.println(e);
                     Message message=new Message();
-                    message.what=FAIL_CODE;
+                    message.what=Global.FAIL_CODE;
                     message.obj="追踪失败！";
                     mHandler.sendMessage(message);
                 }

@@ -31,6 +31,7 @@ import com.example.tsinghuahelp.Search.SearchResultAdapter;
 import com.example.tsinghuahelp.PersonInfo.StarFollowAll;
 import com.example.tsinghuahelp.mainPage;
 import com.example.tsinghuahelp.utils.CommonInterface;
+import com.example.tsinghuahelp.utils.Global;
 import com.example.tsinghuahelp.utils.MyDialog;
 import com.google.android.material.tabs.TabLayout;
 
@@ -91,15 +92,16 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
     int user_id;
 
 
+
     @SuppressLint("HandlerLeak")
     private Handler mHandler=new Handler(){
         @Override public void handleMessage(Message msg) {
              super.handleMessage(msg);
              switch (msg.what){
-                 case 0:
-                     Toast.makeText(getContext(),"后端信息获取失败",Toast.LENGTH_SHORT).show();
+                 case Global.FAIL_CODE:
+                     Toast.makeText(getContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();
                      break;
-                 case 1:
+                 case Global.FRESH_HOME_CODE:
                      Log.e("m_tag","收到信息更新页");
                      if(verify){is_verify.setText("已验证");}
                      else{is_verify.setText("未验证");}
@@ -113,15 +115,15 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
                      else{infoList.add(person_info);}
                      infoAdapter.notifyDataSetChanged();
                      break;
-                 case 2:
+                 case Global.FRESH_ICON_CODE:
                      Log.e("m_tag","收到信息更新图片");
                      edit_pic.setImageBitmap(bitmap);
                      break;
-                 case 3:
+                 case Global.FRESH_PROJ_CODE:
                      Log.e("m_tag","收到我的项目更新");
                      proAdapter.notifyDataSetChanged();
                      break;
-                 case 4:
+                 case Global.FRESH_PLAN_CODE:
                      Log.e("m_tag","收到我的计划更新");
                      planAdapter.notifyDataSetChanged();
                      break;
@@ -185,7 +187,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
                 R.drawable.layout_divider_vertical));
 
 
-        if(!mainPage.type){
+        if(!Global.TYPE){
             tabLayout.addTab(tabLayout.newTab().setText("关于我"));
             tabLayout.addTab(tabLayout.newTab().setText("我的报名"));
             tabLayout.addTab(tabLayout.newTab().setText("我的发文"));
@@ -208,7 +210,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
 
         planList = new ArrayList<>();
 
-        if(!mainPage.type){fresh_planlist();}
+        if(!Global.TYPE){fresh_planlist();}
 
         proAdapter = new SearchResultAdapter(getContext(),proList);
         planAdapter = new SearchResultAdapter(getContext(),planList);
@@ -318,6 +320,10 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.e("error", e.toString());
+                Message message=new Message();
+                message.what=Global.FAIL_CODE;
+                message.obj=e.toString();
+                mHandler.sendMessage(message);
             }
 
             @Override
@@ -343,12 +349,13 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
                     follower_num=data.getInteger("followee_num").toString();
 
                     Message message=new Message();
-                    message.what=1;
+                    message.what=Global.FRESH_HOME_CODE;
                     mHandler.sendMessage(message);
                     fresh_icon();
                 } catch (Exception e) {
                     Message message=new Message();
-                    message.what=0;
+                    message.what=Global.FAIL_CODE;
+                    message.obj="获取用户信息失败！";
                     mHandler.sendMessage(message);
                 }
             }
@@ -370,12 +377,13 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
                         InputStream in = connection.getInputStream();
                         bitmap = BitmapFactory.decodeStream(in);
                         Message message=new Message();
-                        message.what=2;
+                        message.what=Global.FRESH_ICON_CODE;
                         mHandler.sendMessage(message);
                     }
                     else{
                         Message message=new Message();
-                        message.what=0;
+                        message.what=Global.FAIL_CODE;
+                        message.obj="获取头像失败！";
                         mHandler.sendMessage(message);
                     }
                 } catch (MalformedURLException e) {
@@ -390,11 +398,15 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
     private void fresh_prolist(){
         proList.clear();
         String url="/api/student/get_my_project";
-        if(mainPage.type){url="/api/teacher/get_my_project";}
+        if(Global.TYPE){url="/api/teacher/get_my_project";}
         CommonInterface.sendOkHttpGetRequest(url, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.e("error", e.toString());
+                Message message=new Message();
+                message.what=Global.FAIL_CODE;
+                message.obj=e.toString();
+                mHandler.sendMessage(message);
             }
 
             @Override
@@ -416,16 +428,14 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
                                 o_department, o_description,"project",o_id));
                     }
 
-//                    proList.add(new SearchResult("移动应用与开发","王老师",
-//                            "软件学院", "巨难无比，请谨慎选课","project",0));
-
 
                     Message message=new Message();
-                    message.what=3;
+                    message.what=Global.FRESH_PROJ_CODE;
                     mHandler.sendMessage(message);
                 } catch (Exception e) {
                     Message message=new Message();
-                    message.what=0;
+                    message.what=Global.FAIL_CODE;
+                    message.obj="获取我的项目失败！";
                     mHandler.sendMessage(message);
                 }
             }
@@ -440,6 +450,10 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.e("error", e.toString());
+                Message message=new Message();
+                message.what=Global.FAIL_CODE;
+                message.obj=e.toString();
+                mHandler.sendMessage(message);
             }
 
             @Override
@@ -462,11 +476,12 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
                     }
 
                     Message message=new Message();
-                    message.what=4;
+                    message.what=Global.FRESH_PLAN_CODE;
                     mHandler.sendMessage(message);
                 } catch (Exception e) {
                     Message message=new Message();
-                    message.what=0;
+                    message.what=Global.FAIL_CODE;
+                    message.obj="获取我的计划失败！";
                     mHandler.sendMessage(message);
                 }
             }

@@ -26,6 +26,7 @@ import com.example.tsinghuahelp.Search.SearchResult;
 import com.example.tsinghuahelp.Search.SearchResultAdapter;
 import com.example.tsinghuahelp.mainPage;
 import com.example.tsinghuahelp.utils.CommonInterface;
+import com.example.tsinghuahelp.utils.Global;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -55,14 +56,14 @@ public class StarFollowAll extends AppCompatActivity {
         @Override public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
-                case 0:
-                    Toast.makeText(StarFollowAll.this,"后端信息获取失败",Toast.LENGTH_SHORT).show();
+                case Global.FAIL_CODE:
+                    Toast.makeText(StarFollowAll.this,msg.obj.toString(),Toast.LENGTH_SHORT).show();
                     break;
-                case 1:
+                case Global.FRESH_PROJ_CODE:
                     Log.e("m_tag","收到我的项目更新");
                     proAdapter.notifyDataSetChanged();
                     break;
-                case 2:
+                case Global.FRESH_FOLL_CODE:
                     Log.e("m_tag","收到follow更新");
                     followUserAdapter.notifyDataSetChanged();
                     break;
@@ -105,7 +106,7 @@ public class StarFollowAll extends AppCompatActivity {
             //从服务器获取项目
             mtype=0;
             textView.setText("关注项目");
-            if(mainPage.type){textView.setText("我的项目");}
+            if(Global.TYPE){textView.setText("我的项目");}
             proAdapter = new SearchResultAdapter(this,proList);
             recyclerView.setAdapter(proAdapter);
         }
@@ -131,7 +132,7 @@ public class StarFollowAll extends AppCompatActivity {
         switch (mtype){
             case 0:
                 String url="/api/user/get_star";
-                if(mainPage.type){url="/api/teacher/get_my_project";}
+                if(Global.TYPE){url="/api/teacher/get_my_project";}
                 fresh_pro(url);
                 break;
             case 1:
@@ -152,6 +153,10 @@ public class StarFollowAll extends AppCompatActivity {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.e("error", e.toString());
+                Message message=new Message();
+                message.what=Global.FAIL_CODE;
+                message.obj=e.toString();
+                mHandler.sendMessage(message);
             }
 
             @Override
@@ -174,11 +179,12 @@ public class StarFollowAll extends AppCompatActivity {
                     }
 
                     Message message=new Message();
-                    message.what=1;
+                    message.what=Global.FRESH_PROJ_CODE;
                     mHandler.sendMessage(message);
                 } catch (Exception e) {
                     Message message=new Message();
-                    message.what=0;
+                    message.what=Global.FAIL_CODE;
+                    message.obj="获取项目失败！";
                     mHandler.sendMessage(message);
                 }
             }
@@ -191,6 +197,10 @@ public class StarFollowAll extends AppCompatActivity {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.e("error", e.toString());
+                Message message=new Message();
+                message.what=Global.FAIL_CODE;
+                message.obj=e.toString();
+                mHandler.sendMessage(message);
             }
 
             @Override
@@ -210,11 +220,12 @@ public class StarFollowAll extends AppCompatActivity {
                     }
 
                     Message message=new Message();
-                    message.what=2;
+                    message.what=Global.FRESH_FOLL_CODE;
                     mHandler.sendMessage(message);
                 } catch (Exception e) {
                     Message message=new Message();
-                    message.what=0;
+                    message.what=Global.FAIL_CODE;
+                    message.obj="获取follow用户失败！";
                     mHandler.sendMessage(message);
                 }
             }

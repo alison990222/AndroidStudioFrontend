@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import com.example.tsinghuahelp.Adapter.MyFragmentAdapter;
 import com.example.tsinghuahelp.Fragment.*;
+import com.example.tsinghuahelp.utils.Global;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class mainPage extends AppCompatActivity {
-    public static boolean type=false;
 
     @BindView(R.id.viewpager)
     ViewPager viewPager;
@@ -38,7 +38,7 @@ public class mainPage extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         List<Fragment> fragments = new ArrayList<>();
 
-        if(type == false){ // student
+        if(!Global.TYPE){ // student
             fragments.add(new Fragment1());
             fragments.add(new Fragment2());
             fragments.add(new Fragment3());
