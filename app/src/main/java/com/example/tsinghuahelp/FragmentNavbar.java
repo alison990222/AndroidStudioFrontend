@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.tsinghuahelp.Fragment.*;
 
+import com.example.tsinghuahelp.utils.Global;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import butterknife.BindView;
@@ -38,7 +39,7 @@ public class FragmentNavbar  extends AppCompatActivity {
         ButterKnife.bind(this);
 
         FragmentTransaction transaction = fm.beginTransaction();
-        if(mainPage.type == false){  // student
+        if(Global.TYPE == false){  // student
             transaction.add(R.id.content, fragment1);
             transaction.add(R.id.content, fragment2);
             transaction.add(R.id.content, fragment3);  // post page for student

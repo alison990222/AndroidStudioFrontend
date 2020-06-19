@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import com.alibaba.fastjson.JSONObject;
 import com.example.tsinghuahelp.CheckUser.CheckUser;
 import com.example.tsinghuahelp.utils.CommonInterface;
+import com.example.tsinghuahelp.utils.Global;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -126,7 +127,7 @@ public class DetailActivityTeacher extends AppCompatActivity implements View.OnC
         btnEdit.setOnClickListener(this);
 
         // if it's the owner of the post
-        if (mainPage.type == false) {  // student
+        if (Global.TYPE == false) {  // student
             btnDelete.setVisibility(View.INVISIBLE);
             btnCheck.setVisibility(View.INVISIBLE);
             btnEdit.setVisibility(View.INVISIBLE);

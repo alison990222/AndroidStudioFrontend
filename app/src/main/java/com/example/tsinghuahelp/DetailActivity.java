@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.tsinghuahelp.news.Posts;
 import com.example.tsinghuahelp.utils.CommonInterface;
+import com.example.tsinghuahelp.utils.Global;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -88,7 +89,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         btnEdit.setOnClickListener(this);
 
         // if it's the owner of the post
-        if (mainPage.type == false) {  // student
+        if (Global.TYPE == false) {  // student
 
         } else {
 
