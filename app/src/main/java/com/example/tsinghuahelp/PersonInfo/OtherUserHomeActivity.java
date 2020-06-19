@@ -343,6 +343,7 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
                 showVerifyInfo();
                 break;
             case R.id.chat_btn:
+                if(user_id==Global.CURRENT_ID){Toast.makeText(this,"不可以私信自己哦！",Toast.LENGTH_SHORT).show();return;}
                 Intent chatIntent = new Intent(this, ChatRoom.class);
                 chatIntent.putExtra("title",name);
                 startActivity(chatIntent);
@@ -374,6 +375,7 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
 
 
     public void goFollow(){
+        if(user_id==Global.CURRENT_ID){Toast.makeText(this,"不可以追踪自己哦！",Toast.LENGTH_SHORT).show();return;}
         HashMap<String,String> h = new HashMap<>();
         h.put("user_id",user_id.toString());
         String url="/api/user/go_follow";

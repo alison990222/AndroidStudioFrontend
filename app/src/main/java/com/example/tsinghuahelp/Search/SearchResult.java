@@ -36,10 +36,12 @@ public class SearchResult {
     }
 
     public String getDepartment() {
+        if(department==null||department.length()<1){return "未验证";}
         return department;
     }
 
     public String getDescriptionOrPersonalInfo() {
+        if(descriptionOrPersonalInfo==null||descriptionOrPersonalInfo.length()<1){return "未填写";}
         return descriptionOrPersonalInfo;
     }
 
