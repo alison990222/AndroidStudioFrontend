@@ -26,6 +26,7 @@ import com.example.tsinghuahelp.Search.SearchResultAdapter;
 import com.example.tsinghuahelp.mainPage;
 import com.example.tsinghuahelp.news.PostAdapter;
 import com.example.tsinghuahelp.utils.CommonInterface;
+import com.example.tsinghuahelp.utils.Global;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -58,10 +59,10 @@ public class Fragment2 extends Fragment {
         @Override public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
-                case 0:
-                    Toast.makeText(getContext(),"后端信息获取失败",Toast.LENGTH_SHORT).show();
+                case Global.FAIL_CODE:
+                    Toast.makeText(getContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();
                     break;
-                case 1:
+                case Global.FRESH_HOME_CODE:
                     Log.e("m_tag","收到更新");
                     adapter.notifyDataSetChanged();
                     break;
@@ -74,12 +75,10 @@ public class Fragment2 extends Fragment {
 
         super.onCreate(savedInstanceState);
         resultsList = new ArrayList<>();
-        if(!mainPage.type) {
+        if(!Global.TYPE) {
             get_recommend();
         }
 
-//        resultsList.add(new SearchResult("移动应用与开发","王老师",
-//                "软件学院", "巨难无比，请谨慎选课","project",0));
 
     }
 
@@ -90,6 +89,10 @@ public class Fragment2 extends Fragment {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.e("error", e.toString());
+                Message message=new Message();
+                message.what=Global.FAIL_CODE;
+                message.obj=e.toString();
+                mHandler.sendMessage(message);
             }
 
             @Override
@@ -113,11 +116,12 @@ public class Fragment2 extends Fragment {
                     }
 
                     Message message=new Message();
-                    message.what=1;
+                    message.what=Global.FRESH_HOME_CODE;
                     mHandler.sendMessage(message);
                 } catch (Exception e) {
                     Message message=new Message();
-                    message.what=0;
+                    message.what=Global.FAIL_CODE;
+                    message.obj="获取推荐失败！";
                     mHandler.sendMessage(message);
                 }
             }
@@ -178,6 +182,10 @@ public class Fragment2 extends Fragment {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.e("error", e.toString());
+                Message message=new Message();
+                message.what=Global.FAIL_CODE;
+                message.obj=e.toString();
+                mHandler.sendMessage(message);
             }
 
             @Override
@@ -201,11 +209,12 @@ public class Fragment2 extends Fragment {
                     }
 
                     Message message=new Message();
-                    message.what=1;
+                    message.what=Global.FRESH_HOME_CODE;
                     mHandler.sendMessage(message);
                 } catch (Exception e) {
                     Message message=new Message();
-                    message.what=0;
+                    message.what=Global.FAIL_CODE;
+                    message.obj="获取搜索失败！";
                     mHandler.sendMessage(message);
                 }
             }

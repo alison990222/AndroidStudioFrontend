@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.tsinghuahelp.utils.CommonInterface;
+import com.example.tsinghuahelp.utils.Global;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -86,9 +87,9 @@ public class MainActivity extends AppCompatActivity {
                 int selected = radioGroup.getCheckedRadioButtonId();
                 radioBtn = (RadioButton) findViewById(selected);
                 if(radioBtn.getText().equals("学生")){
-                    mainPage.type=false;
+                    Global.TYPE=false;
                 }
-                else{mainPage.type=true;}
+                else{Global.TYPE=true;}
 
                 HashMap<String,String> h = new HashMap<>();
                 h.put("username",mUsername.getText().toString());
@@ -108,14 +109,15 @@ public class MainActivity extends AppCompatActivity {
                             com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
                             if(jsonObject.get("response").equals("valid")){
                                 JSONObject data=jsonObject.getJSONObject("data");
-                                mainPage.type = data.getBoolean("type");
+                                Global.TYPE = data.getBoolean("type");
 
                                 Intent mainIntent = new Intent(MainActivity.this, mainPage.class);
                                 startActivity(mainIntent);
                             }
                             else if(jsonObject.get("detail").equals("已登录")){
                                 JSONObject data=jsonObject.getJSONObject("data");
-                                mainPage.type = data.getBoolean("type");
+                                Global.TYPE = data.getBoolean("type");
+                                Global.CURRENT_ID=data.getInteger("user_id");
                                 Intent mainIntent = new Intent(MainActivity.this, mainPage.class);
                                 startActivity(mainIntent);
                             }
