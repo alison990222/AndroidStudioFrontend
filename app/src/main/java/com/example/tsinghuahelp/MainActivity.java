@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                             if(jsonObject.get("response").equals("valid")){
                                 JSONObject data=jsonObject.getJSONObject("data");
                                 Global.TYPE = data.getBoolean("type");
-
+                                Global.CURRENT_ID=data.getInteger("user_id");
                                 Intent mainIntent = new Intent(MainActivity.this, mainPage.class);
                                 startActivity(mainIntent);
                             }
@@ -123,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                             else { //jsonObject.get("response").toString()=="invalid"
                                 MainActivity.this.runOnUiThread(() -> Toast.makeText(MainActivity.this, "账号密码错误", Toast.LENGTH_LONG).show());
-                                Log.e("responseinval", resStr);
                             }
                         } catch (Exception e) {
                             Log.e("error", e.toString());

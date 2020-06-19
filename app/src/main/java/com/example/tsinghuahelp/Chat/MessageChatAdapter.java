@@ -33,11 +33,10 @@ public class MessageChatAdapter extends RecyclerView.Adapter  {
         MessageChatModel message = (MessageChatModel) messageChatModelList.get(position);
         if (message.getViewType() == 0) {
             // If the current user is the sender of the message
-            Log.e("getItemViewType","0");
             return VIEW_TYPE_MESSAGE_SENT;
         } else {
             // If some other user sent the message
-            Log.e("getItemViewType","1");
+//            Log.e("getItemViewType","1");
             return VIEW_TYPE_MESSAGE_RECEIVED;
         }
 

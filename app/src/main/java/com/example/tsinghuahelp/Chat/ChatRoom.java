@@ -1,29 +1,71 @@
 package com.example.tsinghuahelp.Chat;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSONArray;
 import com.example.tsinghuahelp.R;
+import com.example.tsinghuahelp.news.Posts;
+import com.example.tsinghuahelp.utils.CommonInterface;
+import com.example.tsinghuahelp.utils.Global;
+import com.example.tsinghuahelp.utils.WebSocket;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class ChatRoom extends AppCompatActivity {
-    List<MessageChatModel> messageChatModelList =  new ArrayList<>();
-    RecyclerView recyclerView;
-    MessageChatAdapter adapter ;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
-    EditText messageET;
-    ImageView sendBtn;
-    TextView username;
+public class ChatRoom extends AppCompatActivity {
+    private List<MessageChatModel> messageChatModelList =  new ArrayList<>();
+    private RecyclerView recyclerView;
+    static MessageChatAdapter adapter ;
+
+    private EditText messageET;
+    private ImageView sendBtn;
+    private TextView username;
+    private String userID;
+
+    @SuppressLint("HandlerLeak")
+    public static Handler msgHandler=new Handler(){
+        @Override public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 0:
+                    Log.d("error","backend not connected");
+                    break;
+                case 1:
+                    adapter.notifyDataSetChanged();
+                    break;
+            }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,33 +84,18 @@ public class ChatRoom extends AppCompatActivity {
         Intent intent = this.getIntent();
 
         username.setText(intent.getStringExtra("title"));
-
-        MessageChatModel model1 = new MessageChatModel(
-                "Hello. 有时间来参观实验室?",
-                "10:00 PM",
-                0
-        );
-        MessageChatModel model2 = new MessageChatModel(
-                "好啊，几点有空!",
-                "10:00 PM",
-                1
-        );
-        MessageChatModel model3 = new MessageChatModel(
-                "都可",
-                "10:00 PM",
-                0
-        );
-        MessageChatModel model4 = new MessageChatModel(
-                "那下午去?",
-                "10:00 PM",
-                1
-        );
+        userID = intent.getStringExtra("id").toString();
 
 
-        messageChatModelList.add(model1);
-        messageChatModelList.add(model2);
-        messageChatModelList.add(model3);
-        messageChatModelList.add(model4);
+        // 关键权限必须动态申请
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+
+        String socketURL = "ws://47.94.145.111:8080/websocket/" +  String.valueOf(Global.CURRENT_ID);
+        Log.d("m",socketURL);
+        WebSocket.initSocket(socketURL);
+
+        fresh_page(userID);
 
         recyclerView.smoothScrollToPosition(messageChatModelList.size());
         adapter = new MessageChatAdapter(messageChatModelList, ChatRoom.this );
@@ -80,17 +107,73 @@ public class ChatRoom extends AppCompatActivity {
             public void onClick(View v) {
                 String msg = messageET.getText().toString();
 
+                JSONObject obj = new JSONObject();
+                try {
+                    obj.put("message", msg);
+                    obj.put("to",userID);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                WebSocket.send(obj);
+
+                SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
+                sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");// a为am/pm的标记
+                Date date = new Date();// 获取当前时间
+
                 MessageChatModel model = new MessageChatModel(
                         msg,
-                        "10:00 PM",
+                        sdf.format(date),
                         0
                 );
+
                 messageChatModelList.add(model);
                 recyclerView.smoothScrollToPosition(messageChatModelList.size());
                 adapter.notifyDataSetChanged();
                 messageET.setText("");
+            }
+        });
 
+    }
+    private void fresh_page(String userID){
+        String url = "/api/chat/get_chat_content/" + String.valueOf(userID);
+        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("error", e.toString());
+            }
 
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String resStr = response.body().string();
+//                Log.d("chatmsg",resStr);
+                try {
+                    com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
+                    JSONArray data = jsonObject.getJSONArray("data");
+
+                    int viewType = 0;
+                    for (int i = 0; i < data.size(); i++) {
+                        com.alibaba.fastjson.JSONObject object = (com.alibaba.fastjson.JSONObject) data.get(i);
+                        if(object.get("type").toString().equals("sender"))
+                            viewType = 1;
+                        else
+                            viewType = 0;
+                        messageChatModelList.add( new MessageChatModel(
+                                object.get("content").toString(),
+                                object.get("time").toString(),
+                                viewType
+                        ));
+
+                    }
+                    Message message=new Message();
+                    message.what=1;
+                    msgHandler.sendMessage(message);
+
+                } catch (Exception e) {
+                    Log.e("error", e.toString());
+                    Message message=new Message();
+                    message.what=0;
+                    msgHandler.sendMessage(message);
+                }
             }
         });
 

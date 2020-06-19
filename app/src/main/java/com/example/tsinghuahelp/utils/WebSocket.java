@@ -3,6 +3,7 @@ package com.example.tsinghuahelp.utils;
 import android.os.Message;
 import android.util.Log;
 
+import com.example.tsinghuahelp.Chat.ChatRoom;
 import com.example.tsinghuahelp.RegisterActivity;
 
 import org.java_websocket.client.WebSocketClient;
@@ -17,9 +18,10 @@ public class WebSocket {
 
     private static WebSocketClient socketClient = null;
 
-    private static String SOCKET_URL = "ws://34.238.156.247:8080/websocket/888888";
+//    private static String SOCKET_URL = "ws://47.94.145.111:8080/websocket/2";
 
-    public static void initSocket() {
+    private String SOCKET_URL;
+    public static void initSocket(String SOCKET_URL) {
         try {
             URI u = new URI(SOCKET_URL);
             socketClient = new WebSocketClient(u) {
@@ -33,14 +35,14 @@ public class WebSocket {
                     Message msg = new Message();
                     msg.what = 1;
                     msg.obj = message;
-                    RegisterActivity.msgHandler.sendMessage(msg);
+                    ChatRoom.msgHandler.sendMessage(msg);
                 }
 
                 @Override
                 public void onClose(int code, String reason, boolean remote) {
                     socketClient = null;
                     if (code != 1000)   // 1000为正常关闭，不是意外关闭
-                        WebSocket.reconnect();
+                        WebSocket.reconnect(SOCKET_URL);
                 }
 
                 @Override
@@ -54,11 +56,11 @@ public class WebSocket {
         }
     }
 
-    public static void reconnect() {
+    public static void reconnect(String SOCKET_URL) {
         new Thread(() -> {
             try {
                 while (socketClient == null || !socketClient.isOpen()) {
-                    initSocket();
+                    initSocket(SOCKET_URL);
                     Thread.sleep(RE_TIME * 1000);
                     Log.e("socket", "服务器连接错误！" + RE_TIME + "秒后重连。");
                 }
