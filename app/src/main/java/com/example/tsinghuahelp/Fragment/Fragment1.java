@@ -1,6 +1,7 @@
 package com.example.tsinghuahelp.Fragment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -42,7 +43,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 
-public class Fragment1 extends Fragment {
+public class Fragment1 extends Fragment  {
 
     private View mView;
 
@@ -50,11 +51,27 @@ public class Fragment1 extends Fragment {
     private PostAdapter adapter;
 
     private List<Posts> postsList;
-    public static Handler msgHandler;
+//    public static Handler msgHandler;
 
     public Fragment1() {
 
     }
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler=new Handler(){
+        @Override public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 0:
+                    Log.d("error","backend not connected");
+                    break;
+                case 1:
+                    adapter.notifyDataSetChanged();
+
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,50 +79,10 @@ public class Fragment1 extends Fragment {
         super.onCreate(savedInstanceState);
         postsList = new ArrayList<>();
 
-        // 消息处理
-        msgHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-            }
-        };
-
         // 关键权限必须动态申请
         if (ContextCompat.checkSelfPermission(this.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
 
-        CommonInterface.sendOkHttpGetRequest("/api/user/projects", new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                try {
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    JSONArray data = jsonObject.getJSONArray("data");
-                    Log.d("in res",resStr);
-
-                    for (int i = 0; i < data.size(); i++) {
-                        JSONObject object = (JSONObject) data.get(i);
-                        postsList.add(
-                                new Posts(
-                                        object.getString("teacher"),
-                                        object.getString("project_title"),
-                                        "移动应用",
-                                        object.getString("department"),
-                                        "60000",
-                                        object.getString("requirement")));
-                    }
-                    Log.d("in res22",postsList.toString());
-
-                } catch (Exception e) {
-                    Log.e("error", e.toString());
-                }
-            }
-        });
     }
 
 
@@ -122,31 +99,64 @@ public class Fragment1 extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        try {
-            Thread.sleep(500); //1000為1秒
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        fresh_page();
 
         adapter = new PostAdapter(getContext(),postsList);
 
         recyclerView.setAdapter(adapter);
 
-        fresh_page();
-        Log.d("oncvieeeew","bbb");
-        Log.d("oncvi",postsList.toString());
-
         return mView;
     }
 
-
-
-    public void onStart() {
-
-        super.onStart();
-    }
-
     private void fresh_page(){
+        CommonInterface.sendOkHttpGetRequest("/api/user/projects", new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("error", e.toString());
+            }
 
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String resStr = response.body().string();
+                try {
+                    JSONObject jsonObject = JSONObject.parseObject(resStr);
+                    JSONArray data = jsonObject.getJSONArray("data");
+
+                    for (int i = 0; i < data.size(); i++) {
+                        JSONObject object = (JSONObject) data.get(i);
+                        postsList.add(
+                                new Posts(
+                                        object.getString("teacher"),
+                                        object.getString("project_title"),
+                                        "移动应用",
+                                        object.getString("department"),
+                                        "60000",
+                                        object.getString("requirement"),
+                                        object.getInteger("project_id")));
+                    }
+                    Message message=new Message();
+                    message.what=1;
+                    mHandler.sendMessage(message);
+
+                } catch (Exception e) {
+                    Log.e("error", e.toString());
+                    Message message=new Message();
+                    message.what=0;
+                    mHandler.sendMessage(message);
+                }
+            }
+        });
+
+        postsList.add(
+                new Posts(
+                        "teacher",
+                        "project_title",
+                        "移动应用",
+                        "department",
+                        "60000",
+                        "requirement",
+                        1000));
     }
+
+
 }

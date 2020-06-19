@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,21 +17,57 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.example.tsinghuahelp.news.Posts;
+import com.example.tsinghuahelp.utils.CommonInterface;
 
-public class DetailActivity extends AppCompatActivity {
+import org.jetbrains.annotations.NotNull;
 
-    TextView topic;
-    TextView teacher;
-    TextView time;
-    TextView department;
-    TextView require;
-    TextView researchField;
-    TextView description;
-    Button btnStar;
-    Button btnApply;
+import java.io.IOException;
 
-    public static Handler msgHandler;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
+
+public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private TextView topic;
+    private TextView teacher;
+    private TextView time;
+    private TextView department;
+    private TextView require;
+    private TextView researchField;
+    private TextView description;
+    private Button btnStar;
+    private Button btnApply;
+    private Button btnDelete;
+    private Button btnCheck;
+    private Button btnEdit;
+
+
     @SuppressLint("HandlerLeak")
+    private Handler mHandler=new Handler(){
+        @Override public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 0:
+//                    Toast.makeText(StarFollowAll.this,"后端信息获取失败",Toast.LENGTH_SHORT).show();
+                    break;
+                case 1:
+                    Log.e("m_tag","收到我的项目更新");
+//                    proAdapter.notifyDataSetChanged();
+                    break;
+                case 2:
+                    Log.e("m_tag","收到follow更新");
+//                    followUserAdapter.notifyDataSetChanged();
+                    break;
+            }
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,72 +75,152 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent intent = this.getIntent();
 
-        btnStar = (Button)findViewById(R.id.btn_star);
-        btnApply = (Button)findViewById(R.id.btn_apply);
+        btnStar = (Button) findViewById(R.id.btn_star);
+        btnStar.setOnClickListener(this);
+        btnApply = (Button) findViewById(R.id.btn_apply);
+        btnApply.setOnClickListener(this);
 
-        topic = (TextView)findViewById(R.id.projectName);
-        department = (TextView)findViewById(R.id.projectDept);
-        description = (TextView)findViewById(R.id.projectDescript);
-        researchField = (TextView)findViewById(R.id.projectField);
-        require = (TextView)findViewById(R.id.projectRequire);
-        time = (TextView)findViewById(R.id.projectTime);
-        teacher = (TextView)findViewById(R.id.projectTeacher);
+        btnDelete = (Button)findViewById(R.id.btn_delete);
+        btnDelete.setOnClickListener(this);
+        btnCheck = (Button)findViewById(R.id.btn_check);
+        btnCheck.setOnClickListener(this);
+        btnEdit = (Button)findViewById(R.id.btn_edit);
+        btnEdit.setOnClickListener(this);
+
+        // if it's the owner of the post
+        if (mainPage.type == false) {  // student
+
+        } else {
+
+        }
+
+        topic = (TextView) findViewById(R.id.projectName);
+        department = (TextView) findViewById(R.id.projectDept);
+        description = (TextView) findViewById(R.id.projectDescript);
+        researchField = (TextView) findViewById(R.id.projectField);
+        require = (TextView) findViewById(R.id.projectRequire);
+        time = (TextView) findViewById(R.id.projectTime);
+        teacher = (TextView) findViewById(R.id.projectTeacher);
 
         topic.setText(intent.getStringExtra("title"));
-
-        // 消息处理
-        msgHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                Toast.makeText(DetailActivity.this, msg.obj.toString(), Toast.LENGTH_LONG).show();
-            }
-        };
 
         // 关键权限必须动态申请
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
 
-        btnApply.setOnClickListener(new View.OnClickListener() {
+
+        fresh_page(intent.getIntExtra("id",-1));
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_star:
+                starProject();
+//                change=true;
+//                Intent intent=new Intent(getContext(),EditInfoActivity.class);
+//                intent.putExtra("icon_url",icon_url);
+//                intent.putExtra("id",user_id);
+//                intent.putExtra("name",name);
+//                intent.putExtra("real_name",real_name);
+//                intent.putExtra("school",school);
+//                intent.putExtra("department",department);
+//                intent.putExtra("grade",grade);
+//                intent.putExtra("signature",signature);
+//                intent.putExtra("verify",verify);
+//                intent.putExtra("person_info",person_info);
+//                startActivity(intent);
+                break;
+            case R.id.btn_apply:
+                applyProject();
+                break;
+            case R.id.btn_delete:
+                deleteProject();
+                break;
+            case R.id.btn_check:
+                checkProject();
+                break;
+            case R.id.btn_edit:
+                editProject();
+                break;
+        }
+    }
+
+    private void starProject(){
+
+        if(btnApply.getText() == "收藏")
+            btnApply.setText("取消收藏");
+        else
+            btnApply.setText("收藏");
+    }
+
+    private void applyProject(){
+
+        if(btnApply.getText() == "报名")
+            btnApply.setText("取消报名");
+        else
+            btnApply.setText("报名");
+    }
+
+    private void checkProject(){
+
+
+    }
+
+    private void deleteProject(){
+
+
+    }
+
+    private void editProject(){
+
+
+    }
+
+    private void fresh_page (int id) {
+        String url = "/api/user/project_info/" + String.valueOf(id);
+        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
             @Override
-            public void onClick(View v) {
-                if(btnApply.getText() == "报名")
-                    btnApply.setText("取消");
-                else
-                    btnApply.setText("报名");
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("error", e.toString());
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String resStr = response.body().string();
+                try {
+                    JSONObject jsonObject = JSONObject.parseObject(resStr);
+
+//                    jsonObject.get("teacher");
+//                    jsonObject.get("research_direction");
+//                    jsonObject.get("description");
+//                    jsonObject.get("department");
+//                    jsonObject.get("requirement");
+//
+//                    topic = (TextView) findViewById(R.id.projectName);
+//                    department = (TextView) findViewById(R.id.projectDept);
+//                    description = (TextView) findViewById(R.id.projectDescript);
+//                    researchField = (TextView) findViewById(R.id.projectField);
+//                    require = (TextView) findViewById(R.id.projectRequire);
+//                    time = (TextView) findViewById(R.id.projectTime);
+//                    teacher = (TextView) findViewById(R.id.projectTeacher);
+//
+//                    teacher.setText("导师");
+//                    topic.setText(intent.getStringExtra("title"));
+
+                    Message message = new Message();
+                    message.what = 1;
+                    mHandler.sendMessage(message);
+
+                } catch (Exception e) {
+                    Log.e("error", e.toString());
+                    Message message = new Message();
+                    message.what = 0;
+                    mHandler.sendMessage(message);
+                }
             }
         });
 
-        btnStar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-//                HashMap<String,String> h = new HashMap<>();
-//                // username
-//                h.put("username",mUsername.getText().toString());
-//                h.put("password",mPassword.getText().toString());
-//                h.put("type","true");
-//
-//                CommonInterface.sendOkHttpPostRequest("/api/user/register", new Callback() {
-//                    @Override
-//                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                        Log.e("error", e.toString());
-//                    }
-//
-//                    @Override
-//                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                        String resStr = response.body().string();
-//                        DetailActivity.this.runOnUiThread(() -> Toast.makeText(DetailActivity.this, resStr, Toast.LENGTH_LONG).show());
-//                        Log.e("response", resStr);
-////                        try {
-////                            // 解析json，然后进行自己的内部逻辑处理
-////                            JSONObject jsonObject = new JSONObject(resStr);
-////                        } catch (JSONException e) {
-////
-////                        }
-//                    }
-//                },h);
-            }
-        });
     }
 }

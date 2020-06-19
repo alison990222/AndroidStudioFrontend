@@ -73,6 +73,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
                     Intent detailIntent = new Intent(mCtx, DetailActivityTeacher.class);//ActivityDetail.class
                     detailIntent.putExtra("title",post.getTitle());
+                    detailIntent.putExtra("id",post.getID());
                     mCtx.startActivity(detailIntent);
 
                 }

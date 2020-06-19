@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 
 
 import java.net.HttpURLConnection;
@@ -40,8 +41,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         one = mlayout.getTabAt(0);
         two = mlayout.getTabAt(1);
-
-
-
     }
+
 }

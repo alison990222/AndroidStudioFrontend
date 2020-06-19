@@ -39,41 +39,73 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/projectDept"
-            android:layout_weight="1"
+            android:id="@+id/departmentName"
+            android:layout_weight = "1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:textSize="15dp"
-            android:text="学院"/>
-
+            android:text="学院："/>
 
         <TextView
             android:id="@+id/projectTeacher"
+            android:layout_weight = "1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:textSize="15dp"
-            android:text="导师"/>
+            android:text="姓名："/>
 
     </LinearLayout>
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal">
+
     <TextView
+        android:id="@+id/projectFieldLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textSize="15dp"
+        android:text="感兴趣方向："/>
+
+        <TextView
         android:id="@+id/projectField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:textSize="15dp"
-        android:text="研究方向"/>
+        android:text=""/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/projectRequire"
+        android:id="@+id/projectRequireLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:textSize="15dp"
-        android:text="招生"/>
+        android:text="身份："/>
 
+        <TextView
+            android:id="@+id/projectRequir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="15dp"
+            android:text=""/>
+
+</LinearLayout>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -97,21 +129,23 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn_star"
+            android:id="@+id/btn_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="80dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
-            android:text="收藏" />
+            android:text="编辑" />
 
         <Button
-            android:id="@+id/btn_apply"
+            android:id="@+id/btn_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="80dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:text="报名" />
+            android:text="删除" />
     </RelativeLayout>
+
+
 </LinearLayout>
