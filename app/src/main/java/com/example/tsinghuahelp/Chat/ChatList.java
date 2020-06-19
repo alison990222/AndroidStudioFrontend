@@ -6,6 +6,7 @@ public class ChatList {
     private String latestChat;
     private String date;
     private String urlProfile;
+    private String iconUrl;
 
     public ChatList(){}
 
@@ -15,6 +16,7 @@ public class ChatList {
         this.date = date;
         this.urlProfile = urlProfile;
         this.userID = userID;
+        this.iconUrl="http://47.94.145.111:8080/api/user/getIcon/"+userID;
     }
 
     public String getUsername() {
@@ -34,4 +36,7 @@ public class ChatList {
     }
 
     public String getUserID() { return userID; }
+    public String getIconUrl() {
+        return iconUrl;
+    }
 }
