@@ -238,21 +238,37 @@ public class EditInfoActivity extends Activity implements View.OnClickListener {
                 startActivityForResult(intent,4);
                 break;
             case R.id.save_btn:
-                HashMap<String,String> send_info = new HashMap<>();
-                send_info.put("username",name);
-                send_info.put("signature",signature);
-                send_info.put("personal_info",person_info);
-                send_info.put("realname",real_name);
-                send_info.put("school",school);
-                send_info.put("department",department);
-                send_info.put("grade",grade);
+                if(!change_icon&&!change_name&&!change_person_info&&!change_signature&&!change_verify){
+                    finish();
+                    break;
+                }
+                else {
+                    HashMap<String, String> send_info = new HashMap<>();
+                    send_info.put("username", name);
+                    send_info.put("signature", signature);
+                    send_info.put("personal_info", person_info);
+                    send_info.put("realname", real_name);
+                    send_info.put("school", school);
+                    send_info.put("department", department);
+                    send_info.put("grade", grade);
 
-                if(change_icon){update_icon();}
-                if(change_name){update("update_username",send_info);}
-                if(change_verify){update("verification",send_info);}
-                if(change_signature){update("update_signature",send_info);}
-                if(change_person_info){update("update_personal_info",send_info);}
-                break;
+                    if (change_icon) {
+                        update_icon();
+                    }
+                    if (change_name) {
+                        update("update_username", send_info);
+                    }
+                    if (change_verify) {
+                        update("verification", send_info);
+                    }
+                    if (change_signature) {
+                        update("update_signature", send_info);
+                    }
+                    if (change_person_info) {
+                        update("update_personal_info", send_info);
+                    }
+                    break;
+                }
         }
     }
 
