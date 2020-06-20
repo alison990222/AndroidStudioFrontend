@@ -358,6 +358,7 @@ public class OtherUserHomeActivity extends Activity implements View.OnClickListe
                 if(user_id==Global.CURRENT_ID){Toast.makeText(this,"不可以私信自己哦！",Toast.LENGTH_SHORT).show();return;}
                 Intent chatIntent = new Intent(this, ChatRoom.class);
                 chatIntent.putExtra("title",name);
+                chatIntent.putExtra("id",user_id.toString());
                 startActivity(chatIntent);
                 break;
             case R.id.backward_btn:

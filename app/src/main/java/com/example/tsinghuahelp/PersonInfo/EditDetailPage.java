@@ -140,6 +140,13 @@ public class EditDetailPage extends Activity {
 
         }
 
+        findViewById(R.id.backward_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         findViewById(R.id.save_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
