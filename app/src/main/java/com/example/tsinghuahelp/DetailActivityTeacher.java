@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.tsinghuahelp.CheckUser.CheckUser;
+import com.example.tsinghuahelp.PersonInfo.StarFollowAll;
 import com.example.tsinghuahelp.utils.CommonInterface;
 import com.example.tsinghuahelp.utils.Global;
 
@@ -30,10 +31,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+
+import static java.security.AccessController.getContext;
 
 public class DetailActivityTeacher extends AppCompatActivity implements View.OnClickListener{
 
@@ -41,7 +45,7 @@ public class DetailActivityTeacher extends AppCompatActivity implements View.OnC
     private TextView teacher;
     private TextView time;
     private TextView department;
-    private TextView require;
+
     private EditText researchField;
     private EditText description;
     private Button btnEdit;
@@ -60,11 +64,13 @@ public class DetailActivityTeacher extends AppCompatActivity implements View.OnC
     private String desctiptName;
     private String researchName;
     private String reqName;
+    private String createTime;
     private int ID;
     private String topicName;
     private String isRegistered;
     private String isStarred;
 
+    private String tchID;
 
 
     @SuppressLint("HandlerLeak")
@@ -93,6 +99,7 @@ public class DetailActivityTeacher extends AppCompatActivity implements View.OnC
                     department.setText("院系："+ deptName);
                     description.setText(desctiptName);
                     researchField.setText(researchName);
+                    time.setText(createTime);
 
                     if(isStarred.equals("true"))
                         btnStar.setText("取消收藏");
@@ -126,21 +133,10 @@ public class DetailActivityTeacher extends AppCompatActivity implements View.OnC
         btnEdit = (Button)findViewById(R.id.btn_edit);
         btnEdit.setOnClickListener(this);
 
-        // if it's the owner of the post
-        if (Global.TYPE == false) {  // student
-            btnDelete.setVisibility(View.INVISIBLE);
-            btnCheck.setVisibility(View.INVISIBLE);
-            btnEdit.setVisibility(View.INVISIBLE);
-        } else {
-            btnApply.setVisibility(View.INVISIBLE);
-            btnStar.setVisibility(View.INVISIBLE);
-        }
-
         topic = (TextView)findViewById(R.id.projectName);
         department = (TextView)findViewById(R.id.projectDept);
         description = (EditText)findViewById(R.id.projectDescript);
         researchField = (EditText)findViewById(R.id.projectField);
-        require = (TextView)findViewById(R.id.projectRequire);
         time = (TextView)findViewById(R.id.projectTime);
         teacher = (TextView)findViewById(R.id.projectTeacher);
         undergraduate = (CheckBox)findViewById(R.id.checkBox_undergraduate);
@@ -151,18 +147,24 @@ public class DetailActivityTeacher extends AppCompatActivity implements View.OnC
         phd.setClickable(false);
 
 
-        oldResearchFieldname = researchField.getText().toString();
-        oldDescription = description.getText().toString();
 
         topicName = intent.getStringExtra("title");
         topic.setText(topicName);
+        tchID = intent.getStringExtra("tchid");
+
         ID = intent.getIntExtra("id",-1);
+
+        // if it's the owner of the post
+        if (tchID.equals(String.valueOf(Global.CURRENT_ID)) ) {  // student
+            btnApply.setVisibility(View.INVISIBLE);
+            btnStar.setVisibility(View.INVISIBLE);
+        } else {
+            btnDelete.setVisibility(View.INVISIBLE);
+            btnCheck.setVisibility(View.INVISIBLE);
+            btnEdit.setVisibility(View.INVISIBLE);
+        }
+
         fresh_page(ID);
-
-        // 关键权限必须动态申请
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-
     }
 
     @Override
@@ -170,10 +172,6 @@ public class DetailActivityTeacher extends AppCompatActivity implements View.OnC
         switch (v.getId()){
             case R.id.btn_star:
                 starProject();
-
-//                Intent intent=new Intent(getContext(),EditInfoActivity.class);
-//                intent.putExtra("icon_url",icon_url);
-//                startActivity(intent);
                 break;
             case R.id.btn_apply:
                 applyProject();
@@ -207,23 +205,31 @@ public class DetailActivityTeacher extends AppCompatActivity implements View.OnC
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     String resStr = response.body().string();
+                    com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
                     Log.d("msg",resStr);
                     try {
-                        Log.d("SUCCESS", "success收藏");
+                        if(jsonObject.get("response").equals("valid")){
+                            DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, "收藏成功", Toast.LENGTH_LONG).show());
+                            isStarred= "true";
+                            btnStar.setText("取消收藏");
+                        }
+                        else{
+                            DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, jsonObject.get("detail").toString(), Toast.LENGTH_LONG).show());
+
+                        }
                         Message message = new Message();
                         message.what = 1;
                         mHandler.sendMessage(message);
 
                     } catch (Exception e) {
-                        Log.e("error", e.toString());
+                        Log.d("error",e.toString());
                         Message message = new Message();
                         message.what = 0;
                         mHandler.sendMessage(message);
                     }
                 }
             },h);
-            isStarred= "true";
-            btnStar.setText("取消收藏");
+
         }
         else{
             String url = "/api/student/cancel_star/";
@@ -240,23 +246,31 @@ public class DetailActivityTeacher extends AppCompatActivity implements View.OnC
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     String resStr = response.body().string();
-                    Log.d("msg",resStr);
+                    com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
+//                    Log.d("msg",resStr);
                     try {
-                        Log.d("SUCCESS", "success取消收藏");
+                        if(jsonObject.get("response").equals("valid")){
+                            DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, "取消收藏成功", Toast.LENGTH_LONG).show());
+                            isStarred= "false";
+                            btnStar.setText("收藏");
+                        }
+                        else{
+                            DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, jsonObject.get("response").toString(), Toast.LENGTH_LONG).show());
+                        }
+
                         Message message = new Message();
                         message.what = 1;
                         mHandler.sendMessage(message);
 
                     } catch (Exception e) {
-                        Log.e("error", e.toString());
+                        Log.d("error",e.toString());
                         Message message = new Message();
                         message.what = 0;
                         mHandler.sendMessage(message);
                     }
                 }
             },h);
-            isStarred= "false";
-            btnStar.setText("收藏");
+
         }
 
     }
@@ -278,23 +292,30 @@ public class DetailActivityTeacher extends AppCompatActivity implements View.OnC
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     String resStr = response.body().string();
-                    Log.d("msg",resStr);
+//                    Log.d("msg",resStr);
+                    com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
                     try {
-                        Log.d("SUCCESS", "success报名");
+                        if(jsonObject.get("response").equals("valid")){
+                            DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, "报名成功", Toast.LENGTH_LONG).show());
+                            isRegistered = "true";
+                            btnApply.setText("取消报名");
+                        }
+                        else{
+                            DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, jsonObject.get("response").toString(), Toast.LENGTH_LONG).show());
+                        }
                         Message message = new Message();
                         message.what = 1;
                         mHandler.sendMessage(message);
 
                     } catch (Exception e) {
-                        Log.e("error", e.toString());
+                        Log.d("error",e.toString());
                         Message message = new Message();
                         message.what = 0;
                         mHandler.sendMessage(message);
                     }
                 }
             },h);
-            isRegistered = "true";
-            btnApply.setText("取消报名");
+
         }
         else{
             String url = "/api/student/sign_out/";
@@ -311,31 +332,39 @@ public class DetailActivityTeacher extends AppCompatActivity implements View.OnC
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     String resStr = response.body().string();
-                    Log.d("msg",resStr);
+                    com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
+//                    Log.d("msg",resStr);
                     try {
-                        Log.d("SUCCESS", "success取消报名");
+                        if(jsonObject.get("response").equals("valid")){
+                            DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, "取消报名成功", Toast.LENGTH_LONG).show());
+                            isRegistered = "false";
+                            btnApply.setText("报名");
+                        }
+                        else{
+                            DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, jsonObject.get("response").toString(), Toast.LENGTH_LONG).show());
+                        }
                         Message message = new Message();
                         message.what = 1;
                         mHandler.sendMessage(message);
 
                     } catch (Exception e) {
-                        Log.e("error", e.toString());
+                        Log.d("error",e.toString());
                         Message message = new Message();
                         message.what = 0;
                         mHandler.sendMessage(message);
                     }
                 }
             },h);
-            isRegistered = "false";
-            btnApply.setText("报名");
+
         }
 
     }
 
     private void checkProject(){
 
-        Intent in=new Intent(DetailActivityTeacher.this, CheckUser.class);
-        in.putExtra("id",ID);
+        Intent in=new Intent(DetailActivityTeacher.this, StarFollowAll.class);
+        in.putExtra("type","applicants");
+        in.putExtra("projectID", String.valueOf(ID));
         startActivity(in);
     }
 
@@ -361,9 +390,17 @@ public class DetailActivityTeacher extends AppCompatActivity implements View.OnC
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         String resStr = response.body().string();
+                        com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
+
                         try {
+                            if(jsonObject.get("response").equals("valid")){
+                                DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, "删除成功", Toast.LENGTH_LONG).show());
+                            }
+                            else{
+                                DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, jsonObject.get("response").toString(), Toast.LENGTH_LONG).show());
+                            }
                         } catch (Exception e) {
-                            Log.e("error", e.toString());
+                            Log.d("error",e.toString());
                         }
                     }
                 },h);
@@ -453,15 +490,22 @@ public class DetailActivityTeacher extends AppCompatActivity implements View.OnC
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     String resStr = response.body().string();
+                    com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
+
                     try {
+                        if(jsonObject.get("response").equals("valid")){
+                            DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, "修改成功", Toast.LENGTH_LONG).show());
+                        }
+                        else{
+                            DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, jsonObject.get("response").toString(), Toast.LENGTH_LONG).show());
+                        }
 
                         Message message = new Message();
                         message.what = 1;
                         mHandler.sendMessage(message);
 
                     } catch (Exception e) {
-
-                        Log.e("error", e.toString());
+                        Log.d("error",e.toString());
                         Message message = new Message();
                         message.what = 0;
                         mHandler.sendMessage(message);
@@ -483,7 +527,7 @@ public class DetailActivityTeacher extends AppCompatActivity implements View.OnC
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String resStr = response.body().string();
-                Log.d("d",resStr);
+//                Log.d("d",resStr);
                 try {
                     com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
                     JSONObject data = jsonObject.getJSONObject("data");
@@ -495,6 +539,10 @@ public class DetailActivityTeacher extends AppCompatActivity implements View.OnC
                     researchName = data.get("research_direction").toString();
                     isRegistered = data.get("isRegistered").toString();
                     isStarred = data.get("isStarred").toString();
+                    createTime = data.get("createTime").toString();
+
+                    oldResearchFieldname = researchName;
+                    oldDescription = desctiptName;
 
                     Message message = new Message();
                     message.what = 1;

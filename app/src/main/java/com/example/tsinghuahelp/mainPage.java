@@ -38,6 +38,7 @@ public class mainPage extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         List<Fragment> fragments = new ArrayList<>();
 
+
         if(!Global.TYPE){ // student
             fragments.add(new Fragment1());
             fragments.add(new Fragment2());

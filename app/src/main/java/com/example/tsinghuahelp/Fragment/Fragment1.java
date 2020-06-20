@@ -51,6 +51,7 @@ public class Fragment1 extends Fragment  {
     private PostAdapter adapter;
 
     private List<Posts> postsList;
+    private int listSize;
 //    public static Handler msgHandler;
 
     public Fragment1() {
@@ -79,6 +80,7 @@ public class Fragment1 extends Fragment  {
         super.onCreate(savedInstanceState);
         postsList = new ArrayList<>();
 
+        listSize = 0;
         // 关键权限必须动态申请
         if (ContextCompat.checkSelfPermission(this.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
@@ -118,22 +120,26 @@ public class Fragment1 extends Fragment  {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String resStr = response.body().string();
+//                Log.d("hh",resStr);
                 try {
                     JSONObject jsonObject = JSONObject.parseObject(resStr);
                     JSONArray data = jsonObject.getJSONArray("data");
-
+                    postsList.clear();
                     for (int i = 0; i < data.size(); i++) {
                         JSONObject object = (JSONObject) data.get(i);
                         postsList.add(
                                 new Posts(
                                         object.getString("teacher"),
                                         object.getString("project_title"),
-                                        "移动应用",
+                                        object.getString("researchDirection"),
                                         object.getString("department"),
-                                        "60000",
+                                        "",
                                         object.getString("requirement"),
-                                        object.getInteger("project_id")));
+                                        object.getInteger("project_id"),
+                                        object.get("teacher_id").toString()));
                     }
+                    //{"department":"软件学院","project_id":6,"project_title":"空气炸锅的研究","requirement":"本科生 硕士生 博士生 ",
+                    // "researchDirection":"热能与分子","teacher":"lw3","teacher_id":7}
                     Message message=new Message();
                     message.what=1;
                     mHandler.sendMessage(message);
@@ -146,16 +152,17 @@ public class Fragment1 extends Fragment  {
                 }
             }
         });
+        listSize = postsList.size();
 
-        postsList.add(
-                new Posts(
-                        "teacher",
-                        "project_title",
-                        "移动应用",
-                        "department",
-                        "60000",
-                        "requirement",
-                        1000));
+//        postsList.add(
+//                new Posts(
+//                        "teacher",
+//                        "project_title",
+//                        "移动应用",
+//                        "department",
+//                        "60000",
+//                        "requirement",
+//                        1000));
     }
 
 

@@ -77,6 +77,13 @@ public class CheckUser extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(CheckUser.this, "點選第 " + (i + 1) + " 個 \n內容：" + userList.get(i), Toast.LENGTH_SHORT).show();
+
+//                int pos = i;
+//                FollowUser result = userList.get(i);
+//                int id = result.getId();
+//                Intent detailIntent = new Intent(mCtx, OtherUserHomeActivity.class);//ActivityDetail.class
+//                detailIntent.putExtra("id",result.getId());
+//                mCtx.startActivity(detailIntent);
             }
         });
 
@@ -94,7 +101,7 @@ public class CheckUser extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String resStr = response.body().string();
-                Log.d("data",resStr);
+                Log.d("applicantdata",resStr);
                 try {
                     JSONObject jsonObject = JSONObject.parseObject(resStr);
                     JSONArray data = jsonObject.getJSONArray("data");

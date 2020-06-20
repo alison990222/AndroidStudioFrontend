@@ -42,6 +42,8 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.example.tsinghuahelp.utils.Global.FRESH_PROJ_CODE;
+
 public class StarFollowAll extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TextView textView;
@@ -50,6 +52,7 @@ public class StarFollowAll extends AppCompatActivity {
     private List<FollowUser> followUserList = new ArrayList<FollowUser>();
     private List<SearchResult> proList = new ArrayList<SearchResult>();
     int mtype;
+    String projectID;
     public static boolean change=false;
     @SuppressLint("HandlerLeak")
     private Handler mHandler=new Handler(){
@@ -59,7 +62,7 @@ public class StarFollowAll extends AppCompatActivity {
                 case Global.FAIL_CODE:
                     Toast.makeText(StarFollowAll.this,msg.obj.toString(),Toast.LENGTH_SHORT).show();
                     break;
-                case Global.FRESH_PROJ_CODE:
+                case FRESH_PROJ_CODE:
                     Log.e("m_tag","收到我的项目更新");
                     proAdapter.notifyDataSetChanged();
                     break;
@@ -117,10 +120,18 @@ public class StarFollowAll extends AppCompatActivity {
             followUserAdapter = new FollowUserAdapter(this,followUserList);
             recyclerView.setAdapter(followUserAdapter);
         }
-        else{
+        else if(type.equals("follower")){
             //从服务器获取关注我的人
             mtype=2;
             textView.setText("关注我的");
+            followUserAdapter = new FollowUserAdapter(this,followUserList);
+            recyclerView.setAdapter(followUserAdapter);
+        }
+        else if(type.equals("applicants")){
+            //从服务器获取关注我的人
+            mtype=3;
+            textView.setText("报名人");
+            projectID = intent.getStringExtra("projectID");
             followUserAdapter = new FollowUserAdapter(this,followUserList);
             recyclerView.setAdapter(followUserAdapter);
         }
@@ -143,8 +154,49 @@ public class StarFollowAll extends AppCompatActivity {
                 url="/api/user/get_followed";
                 fresh_user(url);
                 break;
+            case 3:
+                url="/api/teacher/get_signin_student/" + projectID;
+                fresh_applicants(url);
+                break;
         }
 
+    }
+
+    public void fresh_applicants(String url) {
+        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("error", e.toString());
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String resStr = response.body().string();
+                Log.d("applicantdata",resStr);
+                try {
+                    JSONObject jsonObject = JSONObject.parseObject(resStr);
+                    JSONArray data = jsonObject.getJSONArray("data");
+
+                    for (int i = 0; i < data.size(); i++) {
+                        JSONObject object = (JSONObject) data.get(i);
+                        String o_username = object.getString("name");
+                        Boolean o_type = object.getBoolean("type");
+                        int o_id = object.getInteger("id");
+                        followUserList.add(new FollowUser(o_type,o_id,o_username));
+                    }
+                    // {"grade":"","id":1,"name":"汪","real_name":"","school":"","type":false}
+                    Message message = new Message();
+                    message.what = Global.FRESH_FOLL_CODE;
+                    mHandler.sendMessage(message);
+
+                } catch (Exception e) {
+                    Log.e("error", e.toString());
+                    Message message = new Message();
+                    message.what = Global.FAIL_CODE;
+                    mHandler.sendMessage(message);
+                }
+            }
+        });
     }
 
     public void fresh_pro(String url){
@@ -179,7 +231,7 @@ public class StarFollowAll extends AppCompatActivity {
                     }
 
                     Message message=new Message();
-                    message.what=Global.FRESH_PROJ_CODE;
+                    message.what= FRESH_PROJ_CODE;
                     mHandler.sendMessage(message);
                 } catch (Exception e) {
                     Message message=new Message();

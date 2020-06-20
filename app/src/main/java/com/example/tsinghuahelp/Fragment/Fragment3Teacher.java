@@ -126,14 +126,14 @@ public class Fragment3Teacher extends Fragment {
                                 String resStr = response.body().string();
                                 com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
                                 try{
-                                    if(jsonObject.get("response").equals("valid")){
+//                                    if(jsonObject.get("response").equals("valid")){
                                         getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "success", Toast.LENGTH_LONG).show());
                                         Intent in=new Intent(getContext(), mainPage.class);
                                         startActivity(in);
-                                    }
-                                    else{
-                                        getActivity().runOnUiThread(() -> Toast.makeText(getContext(), resStr, Toast.LENGTH_LONG).show());
-                                    }
+//                                    }
+//                                    else{
+//                                        getActivity().runOnUiThread(() -> Toast.makeText(getContext(), resStr, Toast.LENGTH_LONG).show());
+//                                    }
                                 }
                                 catch (Exception e){
                                     Log.e("error",e.toString());

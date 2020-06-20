@@ -65,6 +65,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             teacher = itemView.findViewById(R.id.textViewTeacher);
 
 
+
             itemView.setOnClickListener( new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -73,6 +74,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
                     Intent detailIntent = new Intent(mCtx, DetailActivityTeacher.class);//ActivityDetail.class
                     detailIntent.putExtra("title",post.getTitle());
+                    detailIntent.putExtra("tchid",post.getTchID());
                     detailIntent.putExtra("id",post.getID());
                     mCtx.startActivity(detailIntent);
 

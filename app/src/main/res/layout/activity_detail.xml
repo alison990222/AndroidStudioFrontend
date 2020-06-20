@@ -48,7 +48,7 @@
             android:text="学院："/>
 
         <TextView
-            android:id="@+id/projectTeacher"
+            android:id="@+id/ownerName"
             android:layout_weight = "1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -73,13 +73,20 @@
         android:textSize="15dp"
         android:text="感兴趣方向："/>
 
-        <TextView
-        android:id="@+id/projectField"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:textSize="15dp"
-        android:text=""/>
+
+        <EditText
+            android:id="@+id/interestField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:focusable="false"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:autoSizeTextType="uniform"
+            android:maxLines="2"
+            android:hint=""
+            android:textSize="15dp"
+            android:maxLength="30"/>
 
     </LinearLayout>
 
@@ -98,7 +105,7 @@
         android:text="身份："/>
 
         <TextView
-            android:id="@+id/projectRequir"
+            android:id="@+id/identity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -113,15 +120,20 @@
         android:textSize="15dp"
         android:text="细节：  "/>
 
-    <TextView
+    <EditText
         android:id="@+id/projectDescript"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:background="@drawable/textview_round_border"
         android:text="detail"
+        android:focusable="false"
+        android:layout_marginTop="5dp"
+        android:autoSizeTextType="uniform"
+        android:maxLines="2"
+        android:textSize="15dp"
         android:textColor="#050101"
-        android:textSize="15dp" />
+        android:hint="请输入项目细节"
+        android:maxLength="30"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"

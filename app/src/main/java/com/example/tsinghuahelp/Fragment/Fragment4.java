@@ -104,6 +104,7 @@ public class Fragment4 extends Fragment {
                     JSONObject jsonObject = JSONObject.parseObject(resStr);
                     JSONArray data = jsonObject.getJSONArray("data");
 
+                    list.clear();
                     for (int i = 0; i < data.size(); i++) {
                         JSONObject object = (JSONObject) data.get(i);
                         list.add(new ChatList(

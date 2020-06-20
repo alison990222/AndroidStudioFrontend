@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tsinghuahelp.R;
+import com.example.tsinghuahelp.utils.SetImageByUrl;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.List;
 
@@ -63,12 +65,20 @@ public class MessageChatAdapter extends RecyclerView.Adapter  {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         MessageChatModel message = messageChatModelList.get(position);
+
+        SetImageByUrl getImageByUrl = new SetImageByUrl();
+
+        String url = message.getIconUrl();
+
+
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_MESSAGE_SENT:
                 ((SentMessageHolder) holder).bind(message);
+//                getImageByUrl.setImage(((SentMessageHolder) holder).profile_image,url);
                 break;
             case VIEW_TYPE_MESSAGE_RECEIVED:
                 ((ReceivedMessageHolder) holder).bind(message);
+                getImageByUrl.setImage(((ReceivedMessageHolder) holder).profile_image,url);
         }
     }
 
@@ -82,12 +92,14 @@ public class MessageChatAdapter extends RecyclerView.Adapter  {
 
         TextView message;
         TextView time;
+//        CircularImageView profile_image;
 
 
         public SentMessageHolder(@NonNull View itemView) {
             super(itemView);
             message = (TextView)itemView.findViewById(R.id.message);
             time = (TextView)itemView.findViewById(R.id.time);
+//            profile_image = (CircularImageView)itemView.findViewById(R.id.profile_image);
 
         }
 
@@ -102,15 +114,20 @@ public class MessageChatAdapter extends RecyclerView.Adapter  {
     private class ReceivedMessageHolder extends RecyclerView.ViewHolder{
         TextView message;
         TextView time;
+        CircularImageView profile_image;
+
         public ReceivedMessageHolder(@NonNull View itemView) {
             super(itemView);
             message = (TextView)itemView.findViewById(R.id.message);
             time = (TextView)itemView.findViewById(R.id.time);
+            profile_image = (CircularImageView)itemView.findViewById(R.id.profile_image);
         }
 
         void bind(MessageChatModel messageModel){
             message.setText(messageModel.getText());
             time.setText(messageModel.getTime());
+
+
         }
     }
 }

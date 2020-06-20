@@ -25,7 +25,9 @@ import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.news.Posts;
 import com.example.tsinghuahelp.utils.CommonInterface;
 import com.example.tsinghuahelp.utils.Global;
+import com.example.tsinghuahelp.utils.SetImageByUrl;
 import com.example.tsinghuahelp.utils.WebSocket;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -42,15 +44,17 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class ChatRoom extends AppCompatActivity {
-    private List<MessageChatModel> messageChatModelList =  new ArrayList<>();
+    private static List<MessageChatModel> messageChatModelList =  new ArrayList<>();
     private RecyclerView recyclerView;
     static MessageChatAdapter adapter ;
 
     private EditText messageET;
     private ImageView sendBtn;
     private TextView username;
-    private String userID;
+    private static String userID;
+    private CircularImageView profile_image;
 
+    private String iconUrl;
     @SuppressLint("HandlerLeak")
     public static Handler msgHandler=new Handler(){
         @Override public void handleMessage(Message msg) {
@@ -63,6 +67,18 @@ public class ChatRoom extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     break;
             }
+
+            if(msg.obj!=null && !msg.obj.toString().equals("连接成功！")){
+                Log.d("mm",msg.obj.toString());
+                messageChatModelList.add( new MessageChatModel(
+                        msg.obj.toString(),
+                        getTime(),
+                        1,
+                        userID
+                ));
+                adapter.notifyDataSetChanged();
+            }
+
         }
     };
 
@@ -76,6 +92,8 @@ public class ChatRoom extends AppCompatActivity {
         messageET = (EditText)findViewById(R.id.messageET);
         sendBtn = (ImageView) findViewById(R.id.sendBtn);
         username = (TextView) findViewById(R.id.chat_username);
+        profile_image = (CircularImageView) findViewById(R.id.profile_image);
+
 
         recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
         LinearLayoutManager manager = new LinearLayoutManager(ChatRoom.this, RecyclerView.VERTICAL, false);
@@ -86,6 +104,9 @@ public class ChatRoom extends AppCompatActivity {
         username.setText(intent.getStringExtra("title"));
         userID = intent.getStringExtra("id").toString();
 
+        this.iconUrl="http://47.94.145.111:8080/api/user/getIcon/"+userID;
+        SetImageByUrl getImageByUrl = new SetImageByUrl();
+        getImageByUrl.setImage(profile_image,iconUrl);
 
         // 关键权限必须动态申请
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
@@ -101,6 +122,12 @@ public class ChatRoom extends AppCompatActivity {
         adapter = new MessageChatAdapter(messageChatModelList, ChatRoom.this );
         recyclerView.setAdapter(adapter);
 
+        findViewById(R.id.backward_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,7 +150,8 @@ public class ChatRoom extends AppCompatActivity {
                 MessageChatModel model = new MessageChatModel(
                         msg,
                         sdf.format(date),
-                        0
+                        0,
+                        userID
                 );
 
                 messageChatModelList.add(model);
@@ -150,6 +178,7 @@ public class ChatRoom extends AppCompatActivity {
                     com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
                     JSONArray data = jsonObject.getJSONArray("data");
 
+                    messageChatModelList.clear();
                     int viewType = 0;
                     for (int i = 0; i < data.size(); i++) {
                         com.alibaba.fastjson.JSONObject object = (com.alibaba.fastjson.JSONObject) data.get(i);
@@ -160,7 +189,8 @@ public class ChatRoom extends AppCompatActivity {
                         messageChatModelList.add( new MessageChatModel(
                                 object.get("content").toString(),
                                 object.get("time").toString(),
-                                viewType
+                                viewType,
+                                userID
                         ));
 
                     }
@@ -177,5 +207,11 @@ public class ChatRoom extends AppCompatActivity {
             }
         });
 
+    }
+    private static String getTime(){
+        SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
+        sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");// a为am/pm的标记
+        Date date = new Date();// 获取当前时间
+        return sdf.format(date);
     }
 }

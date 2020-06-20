@@ -11,9 +11,10 @@ public class Posts {
     private String department;
     private String description;
     private String requirement;
+    private String tchID;
     private int ID;
 
-    public Posts(String teacher, String title, String researchDirection, String department, String description, String requirement, int id) {
+    public Posts(String teacher, String title, String researchDirection, String department, String description, String requirement, int id, String tchID) {
         this.teacher = teacher;
         this.title = title;
         this.researchDirection = researchDirection;
@@ -21,7 +22,10 @@ public class Posts {
         this.description = description;
         this.requirement = requirement;
         this.ID = id;
+        this.tchID = tchID;
+
     }
+
 
     public String getTeacher() {
         return teacher;
@@ -46,6 +50,10 @@ public class Posts {
     public String getRequirement() {
         return requirement;
     }
+
     public int getID() { return ID;}
 
+    public String getTchID() {return tchID; }
+
 }
+

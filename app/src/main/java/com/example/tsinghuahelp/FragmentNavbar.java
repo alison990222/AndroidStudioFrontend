@@ -29,6 +29,7 @@ public class FragmentNavbar  extends AppCompatActivity {
     Fragment fragment3teacher = new Fragment3Teacher();
     Fragment fragment4 = new Fragment4();
     Fragment fragment5 = new Fragment5();
+    Fragment pos3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,8 @@ public class FragmentNavbar  extends AppCompatActivity {
         ButterKnife.bind(this);
 
         FragmentTransaction transaction = fm.beginTransaction();
+
+
         if(Global.TYPE == false){  // student
             transaction.add(R.id.content, fragment1);
             transaction.add(R.id.content, fragment2);
@@ -66,8 +69,12 @@ public class FragmentNavbar  extends AppCompatActivity {
                             hide(fragment4).hide(fragment5).show(fragment2).commit();
                     return true;
                 case R.id.navigation3:
-                    trans.hide(fragment2).hide(fragment1).
-                            hide(fragment4).hide(fragment5).show(fragment3teacher).commit();
+                    if(Global.TYPE == false)
+                        trans.hide(fragment2).hide(fragment1).
+                                hide(fragment4).hide(fragment5).show(fragment3).commit();
+                    else
+                        trans.hide(fragment2).hide(fragment1).
+                                hide(fragment4).hide(fragment5).show(fragment3teacher).commit();
                     return true;
                 case R.id.navigation4:
                     trans.hide(fragment2).hide(fragment3teacher).

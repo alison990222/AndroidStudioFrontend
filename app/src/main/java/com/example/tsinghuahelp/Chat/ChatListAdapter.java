@@ -10,9 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.tsinghuahelp.R;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.example.tsinghuahelp.utils.SetImageByUrl;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,8 +42,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Holder
         holder.username.setText(chat.getUsername());
         holder.description.setText(chat.getDescription());
         holder.date.setText(chat.getDate());
+        SetImageByUrl getImageByUrl = new SetImageByUrl();
 
-        Glide.with(mCtx).load(chat.getUrlProfile()).into(holder.profile);
+        String url = chat.getIconUrl();
+        getImageByUrl.setImage(holder.profile,url);
 
     }
 
