@@ -84,48 +84,54 @@ public class Fragment2 extends Fragment {
 
     private void get_recommend() {
         resultsList.clear();
-        String url="/api/user/recommend";
-        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-                Message message=new Message();
-                message.what=Global.FAIL_CODE;
-                message.obj=e.toString();
-                mHandler.sendMessage(message);
-            }
 
+        new Thread(new Runnable() {
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.e("response", resStr);
-                try {
-                    // 解析json，然后进行自己的内部逻辑处理
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    JSONArray jsonArray = jsonObject.getJSONArray("data");
-                    for (int i=0;i<jsonArray.size();i++){
-                        JSONObject object= (JSONObject) jsonArray.get(i);
-                        String o_title = object.getString("title");
-                        String o_teacher = object.getString("name");
-                        String o_department = object.getString("department");
-                        String o_description=object.getString("description");
-                        String o_type = object.getString("type");
-                        int o_id = object.getInteger("id");
-                        resultsList.add(new SearchResult(o_title,o_teacher,
-                                o_department, o_description,o_type,o_id));
+            public void run() {
+                String url = "/api/user/recommend";
+                CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
+                        Message message = new Message();
+                        message.what = Global.FAIL_CODE;
+                        message.obj = e.toString();
+                        mHandler.sendMessage(message);
                     }
 
-                    Message message=new Message();
-                    message.what=Global.FRESH_HOME_CODE;
-                    mHandler.sendMessage(message);
-                } catch (Exception e) {
-                    Message message=new Message();
-                    message.what=Global.FAIL_CODE;
-                    message.obj="获取推荐失败！";
-                    mHandler.sendMessage(message);
-                }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.e("response", resStr);
+                        try {
+                            // 解析json，然后进行自己的内部逻辑处理
+                            JSONObject jsonObject = JSONObject.parseObject(resStr);
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            for (int i = 0; i < jsonArray.size(); i++) {
+                                JSONObject object = (JSONObject) jsonArray.get(i);
+                                String o_title = object.getString("title");
+                                String o_teacher = object.getString("name");
+                                String o_department = object.getString("department");
+                                String o_description = object.getString("description");
+                                String o_type = object.getString("type");
+                                int o_id = object.getInteger("id");
+                                resultsList.add(new SearchResult(o_title, o_teacher,
+                                        o_department, o_description, o_type, o_id));
+                            }
+
+                            Message message = new Message();
+                            message.what = Global.FRESH_HOME_CODE;
+                            mHandler.sendMessage(message);
+                        } catch (Exception e) {
+                            Message message = new Message();
+                            message.what = Global.FAIL_CODE;
+                            message.obj = "获取推荐失败！";
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
             }
-        });
+        }).start();
     }
 
     @Override
@@ -171,54 +177,60 @@ public class Fragment2 extends Fragment {
     }
 
     private void search() {
-        String key_word=search_txt.getText().toString();
-        String type=select_txt.getText().toString();
-        HashMap<String,String> h = new HashMap<>();
-        h.put("key_word",key_word);
-        h.put("type",type);
         resultsList.clear();
-        String url="/api/user/search";
-        CommonInterface.sendOkHttpPostRequest(url, new Callback() {
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-                Message message=new Message();
-                message.what=Global.FAIL_CODE;
-                message.obj=e.toString();
-                mHandler.sendMessage(message);
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.e("response", resStr);
-                try {
-                    // 解析json，然后进行自己的内部逻辑处理
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    JSONArray jsonArray = jsonObject.getJSONArray("data");
-                    for (int i=0;i<jsonArray.size();i++){
-                        JSONObject object= (JSONObject) jsonArray.get(i);
-                        String o_title = object.getString("title");
-                        String o_teacher = object.getString("name");
-                        String o_department = object.getString("department");
-                        String o_description=object.getString("description");
-                        String o_type = object.getString("type");
-                        int o_id = object.getInteger("id");
-                        resultsList.add(new SearchResult(o_title,o_teacher,
-                                o_department, o_description,o_type,o_id));
+            public void run() {
+                String key_word=search_txt.getText().toString();
+                String type=select_txt.getText().toString();
+                HashMap<String,String> h = new HashMap<>();
+                h.put("key_word",key_word);
+                h.put("type",type);
+                String url="/api/user/search";
+                CommonInterface.sendOkHttpPostRequest(url, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
+                        Message message = new Message();
+                        message.what = Global.FAIL_CODE;
+                        message.obj = e.toString();
+                        mHandler.sendMessage(message);
                     }
 
-                    Message message=new Message();
-                    message.what=Global.FRESH_HOME_CODE;
-                    mHandler.sendMessage(message);
-                } catch (Exception e) {
-                    Message message=new Message();
-                    message.what=Global.FAIL_CODE;
-                    message.obj="获取搜索失败！";
-                    mHandler.sendMessage(message);
-                }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.e("response", resStr);
+                        try {
+                            // 解析json，然后进行自己的内部逻辑处理
+                            JSONObject jsonObject = JSONObject.parseObject(resStr);
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            for (int i = 0; i < jsonArray.size(); i++) {
+                                JSONObject object = (JSONObject) jsonArray.get(i);
+                                String o_title = object.getString("title");
+                                String o_teacher = object.getString("name");
+                                String o_department = object.getString("department");
+                                String o_description = object.getString("description");
+                                String o_type = object.getString("type");
+                                int o_id = object.getInteger("id");
+                                resultsList.add(new SearchResult(o_title, o_teacher,
+                                        o_department, o_description, o_type, o_id));
+                            }
+
+                            Message message = new Message();
+                            message.what = Global.FRESH_HOME_CODE;
+                            mHandler.sendMessage(message);
+                        } catch (Exception e) {
+                            Message message = new Message();
+                            message.what = Global.FAIL_CODE;
+                            message.obj = "获取搜索失败！";
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                }, h);
             }
-        },h);
+        }).start();
     }
+
 
 }

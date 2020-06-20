@@ -61,7 +61,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 
-public class EditInfoActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditInfoActivity extends Activity implements View.OnClickListener {
     String icon_url;
     String name;
     String real_name;
@@ -238,21 +238,37 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
                 startActivityForResult(intent,4);
                 break;
             case R.id.save_btn:
-                HashMap<String,String> send_info = new HashMap<>();
-                send_info.put("username",name);
-                send_info.put("signature",signature);
-                send_info.put("personal_info",person_info);
-                send_info.put("realname",real_name);
-                send_info.put("school",school);
-                send_info.put("department",department);
-                send_info.put("grade",grade);
+                if(!change_icon&&!change_name&&!change_person_info&&!change_signature&&!change_verify){
+                    finish();
+                    break;
+                }
+                else {
+                    HashMap<String, String> send_info = new HashMap<>();
+                    send_info.put("username", name);
+                    send_info.put("signature", signature);
+                    send_info.put("personal_info", person_info);
+                    send_info.put("realname", real_name);
+                    send_info.put("school", school);
+                    send_info.put("department", department);
+                    send_info.put("grade", grade);
 
-                if(change_icon){update_icon();}
-                if(change_name){update("update_username",send_info);}
-                if(change_verify){update("verification",send_info);}
-                if(change_signature){update("update_signature",send_info);}
-                if(change_person_info){update("update_personal_info",send_info);}
-                break;
+                    if (change_icon) {
+                        update_icon();
+                    }
+                    if (change_name) {
+                        update("update_username", send_info);
+                    }
+                    if (change_verify) {
+                        update("verification", send_info);
+                    }
+                    if (change_signature) {
+                        update("update_signature", send_info);
+                    }
+                    if (change_person_info) {
+                        update("update_personal_info", send_info);
+                    }
+                    break;
+                }
         }
     }
 
@@ -550,68 +566,86 @@ public class EditInfoActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void update(String type,HashMap<String,String> send_info){
-        String url = "/api/user/"+type;
-        CommonInterface.sendOkHttpPostRequest(url, new Callback() {
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-            }
+            public void run() {
+                String url = "/api/user/" + type;
+                CommonInterface.sendOkHttpPostRequest(url, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
+                    }
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.e("response", resStr);
-                try {
-                    // 解析json，然后进行自己的内部逻辑处理
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    String resp=jsonObject.getString("response");
-                    if(!resp.equals("valid")){throw new Exception();}
-                    if(type.equals("update_username")){change_name=false;}
-                    else if(type.equals("verification")){change_verify=false;}
-                    else if(type.equals("update_signature")){change_signature=false;}
-                    else if(type.equals("update_personal_info")){change_person_info=false;}
-                    Message message=new Message();
-                    message.what=2;
-                    mHandler.sendMessage(message);
-                } catch (Exception e) {
-                    Message message=new Message();
-                    message.what=0;
-                    message.obj=url;
-                    mHandler.sendMessage(message);
-                }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.e("response", resStr);
+                        try {
+                            // 解析json，然后进行自己的内部逻辑处理
+                            JSONObject jsonObject = JSONObject.parseObject(resStr);
+                            String resp = jsonObject.getString("response");
+                            if (!resp.equals("valid")) {
+                                throw new Exception();
+                            }
+                            if (type.equals("update_username")) {
+                                change_name = false;
+                            } else if (type.equals("verification")) {
+                                change_verify = false;
+                            } else if (type.equals("update_signature")) {
+                                change_signature = false;
+                            } else if (type.equals("update_personal_info")) {
+                                change_person_info = false;
+                            }
+                            Message message = new Message();
+                            message.what = 2;
+                            mHandler.sendMessage(message);
+                        } catch (Exception e) {
+                            Message message = new Message();
+                            message.what = 0;
+                            message.obj = url;
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                }, send_info);
             }
-        },send_info);
+        }).start();
     }
 
     private void logout(){
-        String url="/api/user/logout";
-        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.e("response", resStr);
-                try {
-                    // 解析json，然后进行自己的内部逻辑处理
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    String resp = jsonObject.getString("response");
-                    if (!resp.equals("valid")) {
-                        throw new Exception();
+            public void run() {
+                String url = "/api/user/logout";
+                CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
                     }
-                    else{Log.e("response", "返回了valid，成功登出了");
-                    Message message = new Message();
-                        message.what = 3;
-                        mHandler.sendMessage(message);}
-                } catch (Exception e) {
-                    Message message = new Message();
-                    message.what = 0;
-                    mHandler.sendMessage(message);
-                }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.e("response", resStr);
+                        try {
+                            // 解析json，然后进行自己的内部逻辑处理
+                            JSONObject jsonObject = JSONObject.parseObject(resStr);
+                            String resp = jsonObject.getString("response");
+                            if (!resp.equals("valid")) {
+                                throw new Exception();
+                            } else {
+                                Log.e("response", "返回了valid，成功登出了");
+                                Message message = new Message();
+                                message.what = 3;
+                                mHandler.sendMessage(message);
+                            }
+                        } catch (Exception e) {
+                            Message message = new Message();
+                            message.what = 0;
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
             }
-        });
+        }).start();
     }
 }

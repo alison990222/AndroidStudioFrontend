@@ -316,50 +316,55 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
     }
 
     private void fresh_page(){
-        CommonInterface.sendOkHttpGetRequest("/api/user/home", new Callback() {
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-                Message message=new Message();
-                message.what=Global.FAIL_CODE;
-                message.obj=e.toString();
-                mHandler.sendMessage(message);
-            }
+            public void run() {
+                CommonInterface.sendOkHttpGetRequest("/api/user/home", new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
+                        Message message = new Message();
+                        message.what = Global.FAIL_CODE;
+                        message.obj = e.toString();
+                        mHandler.sendMessage(message);
+                    }
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.e("response", resStr);
-                try {
-                    // 解析json，然后进行自己的内部逻辑处理
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    JSONObject data=jsonObject.getJSONObject("data");
-                    icon_url = data.getString("icon_url");
-                    name=data.getString("username");
-                    real_name=data.getString("real_name");
-                    school=data.getString("school");
-                    department=data.getString("department");
-                    grade=data.getString("grade");
-                    signature=data.getString("signature");
-                    person_info=data.getString("personal_info");
-                    user_id=data.getIntValue("id");
-                    verify=data.getBoolean("verification");
-                    follow_num=data.getInteger("follow_num").toString();
-                    star_pro_num=data.getInteger("star_or_pro_num").toString();
-                    follower_num=data.getInteger("followee_num").toString();
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.e("response", resStr);
+                        try {
+                            // 解析json，然后进行自己的内部逻辑处理
+                            JSONObject jsonObject = JSONObject.parseObject(resStr);
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            icon_url = data.getString("icon_url");
+                            name = data.getString("username");
+                            real_name = data.getString("real_name");
+                            school = data.getString("school");
+                            department = data.getString("department");
+                            grade = data.getString("grade");
+                            signature = data.getString("signature");
+                            person_info = data.getString("personal_info");
+                            user_id = data.getIntValue("id");
+                            verify = data.getBoolean("verification");
+                            follow_num = data.getInteger("follow_num").toString();
+                            star_pro_num = data.getInteger("star_or_pro_num").toString();
+                            follower_num = data.getInteger("followee_num").toString();
 
-                    Message message=new Message();
-                    message.what=Global.FRESH_HOME_CODE;
-                    mHandler.sendMessage(message);
-                    fresh_icon();
-                } catch (Exception e) {
-                    Message message=new Message();
-                    message.what=Global.FAIL_CODE;
-                    message.obj="获取用户信息失败！";
-                    mHandler.sendMessage(message);
-                }
+                            Message message = new Message();
+                            message.what = Global.FRESH_HOME_CODE;
+                            mHandler.sendMessage(message);
+                            fresh_icon();
+                        } catch (Exception e) {
+                            Message message = new Message();
+                            message.what = Global.FAIL_CODE;
+                            message.obj = "获取用户信息失败！";
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
             }
-        });
+        }).start();
     }
 
     private void fresh_icon(){
@@ -397,95 +402,107 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
 
     private void fresh_prolist(){
         proList.clear();
-        String url="/api/student/get_my_project";
-        if(Global.TYPE){url="/api/teacher/get_my_project";}
-        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-                Message message=new Message();
-                message.what=Global.FAIL_CODE;
-                message.obj=e.toString();
-                mHandler.sendMessage(message);
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.e("response", resStr);
-                try {
-                    // 解析json，然后进行自己的内部逻辑处理
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    JSONArray jsonArray = jsonObject.getJSONArray("data");
-                    for (int i=0;i<jsonArray.size();i++){
-                        JSONObject object= (JSONObject) jsonArray.get(i);
-                        String o_title = object.getString("title");
-                        String o_teacher = object.getString("teacher");
-                        String o_department = object.getString("department");
-                        String o_description=object.getString("description");
-                        int o_id = object.getInteger("id");
-                        proList.add(new SearchResult(o_title,o_teacher,
-                                o_department, o_description,"project",o_id));
+            public void run() {
+                String url = "/api/student/get_my_project";
+                if (Global.TYPE) {
+                    url = "/api/teacher/get_my_project";
+                }
+                CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
+                        Message message = new Message();
+                        message.what = Global.FAIL_CODE;
+                        message.obj = e.toString();
+                        mHandler.sendMessage(message);
                     }
 
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.e("response", resStr);
+                        try {
+                            // 解析json，然后进行自己的内部逻辑处理
+                            JSONObject jsonObject = JSONObject.parseObject(resStr);
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            for (int i = 0; i < jsonArray.size(); i++) {
+                                JSONObject object = (JSONObject) jsonArray.get(i);
+                                String o_title = object.getString("title");
+                                String o_teacher = object.getString("teacher");
+                                String o_department = object.getString("department");
+                                String o_description = object.getString("description");
+                                int o_id = object.getInteger("id");
+                                proList.add(new SearchResult(o_title, o_teacher,
+                                        o_department, o_description, "project", o_id));
+                            }
 
-                    Message message=new Message();
-                    message.what=Global.FRESH_PROJ_CODE;
-                    mHandler.sendMessage(message);
-                } catch (Exception e) {
-                    Message message=new Message();
-                    message.what=Global.FAIL_CODE;
-                    message.obj="获取我的项目失败！";
-                    mHandler.sendMessage(message);
-                }
+
+                            Message message = new Message();
+                            message.what = Global.FRESH_PROJ_CODE;
+                            mHandler.sendMessage(message);
+                        } catch (Exception e) {
+                            Message message = new Message();
+                            message.what = Global.FAIL_CODE;
+                            message.obj = "获取我的项目失败！";
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
             }
-        });
+        }).start();
 
     }
 
     private void fresh_planlist(){
         planList.clear();
-        String url="/api/student/get_my_plan";
-        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-                Message message=new Message();
-                message.what=Global.FAIL_CODE;
-                message.obj=e.toString();
-                mHandler.sendMessage(message);
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.e("response", resStr);
-                try {
-                    // 解析json，然后进行自己的内部逻辑处理
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    JSONArray jsonArray = jsonObject.getJSONArray("data");
-                    for (int i=0;i<jsonArray.size();i++){
-                        JSONObject object= (JSONObject) jsonArray.get(i);
-                        String o_title = object.getString("title");
-                        String o_student = object.getString("student");
-                        String o_department = object.getString("department");
-                        String o_description=object.getString("description");
-                        int o_id = object.getInteger("id");
-                        planList.add(new SearchResult(o_title,o_student,
-                                o_department, o_description,"plan",o_id));
+            public void run() {
+                String url = "/api/student/get_my_plan";
+                CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
+                        Message message = new Message();
+                        message.what = Global.FAIL_CODE;
+                        message.obj = e.toString();
+                        mHandler.sendMessage(message);
                     }
 
-                    Message message=new Message();
-                    message.what=Global.FRESH_PLAN_CODE;
-                    mHandler.sendMessage(message);
-                } catch (Exception e) {
-                    Message message=new Message();
-                    message.what=Global.FAIL_CODE;
-                    message.obj="获取我的计划失败！";
-                    mHandler.sendMessage(message);
-                }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.e("response", resStr);
+                        try {
+                            // 解析json，然后进行自己的内部逻辑处理
+                            JSONObject jsonObject = JSONObject.parseObject(resStr);
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            for (int i = 0; i < jsonArray.size(); i++) {
+                                JSONObject object = (JSONObject) jsonArray.get(i);
+                                String o_title = object.getString("title");
+                                String o_student = object.getString("student");
+                                String o_department = object.getString("department");
+                                String o_description = object.getString("description");
+                                int o_id = object.getInteger("id");
+                                planList.add(new SearchResult(o_title, o_student,
+                                        o_department, o_description, "plan", o_id));
+                            }
+
+                            Message message = new Message();
+                            message.what = Global.FRESH_PLAN_CODE;
+                            mHandler.sendMessage(message);
+                        } catch (Exception e) {
+                            Message message = new Message();
+                            message.what = Global.FAIL_CODE;
+                            message.obj = "获取我的计划失败！";
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
             }
-        });
+        }).start();
     }
 
 }

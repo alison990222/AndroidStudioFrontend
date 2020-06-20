@@ -106,6 +106,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         String resStr = response.body().string();
+                        Log.e("response", resStr);
                         try {
                             com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
                             if(jsonObject.get("response").equals("valid")){

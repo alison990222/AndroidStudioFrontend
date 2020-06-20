@@ -2,6 +2,7 @@ package com.example.tsinghuahelp;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -37,9 +38,8 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static java.security.AccessController.getContext;
 
-public class DetailActivityTeacher extends AppCompatActivity implements View.OnClickListener{
+public class DetailActivityTeacher extends Activity implements View.OnClickListener{
 
     private TextView topic;
     private TextView teacher;

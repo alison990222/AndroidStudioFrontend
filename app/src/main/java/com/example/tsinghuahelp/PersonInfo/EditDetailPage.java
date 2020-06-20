@@ -3,6 +3,7 @@ package com.example.tsinghuahelp.PersonInfo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,7 +30,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class EditDetailPage extends AppCompatActivity {
+public class EditDetailPage extends Activity {
     private TextView tl_title;
     private EditText edit;
     private EditText edit_realname;
@@ -139,6 +140,13 @@ public class EditDetailPage extends AppCompatActivity {
 
         }
 
+        findViewById(R.id.backward_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         findViewById(R.id.save_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,39 +174,46 @@ public class EditDetailPage extends AppCompatActivity {
     }
 
     private void update_password() {
-        String url = "/api/user/update_password";
-        HashMap<String,String> h = new HashMap<>();
-        h.put("old_password",edit_old_password.getText().toString());
-        h.put("new_password",edit_new_password.getText().toString());
-        CommonInterface.sendOkHttpPostRequest(url, new Callback() {
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-                Message message=new Message();
-                message.what=Global.FAIL_CODE;
-                message.obj=e.toString();
-                mHandler.sendMessage(message);
-            }
+            public void run() {
+                String url = "/api/user/update_password";
+                HashMap<String, String> h = new HashMap<>();
+                h.put("old_password", edit_old_password.getText().toString());
+                h.put("new_password", edit_new_password.getText().toString());
+                CommonInterface.sendOkHttpPostRequest(url, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
+                        Message message = new Message();
+                        message.what = Global.FAIL_CODE;
+                        message.obj = e.toString();
+                        mHandler.sendMessage(message);
+                    }
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.e("response", resStr);
-                try {
-                    // 解析json，然后进行自己的内部逻辑处理
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    String resp=jsonObject.getString("response");
-                    if(!resp.equals("valid")){throw new Exception();}
-                    Message message=new Message();
-                    message.what=Global.UPDATE_PASS_CODE;
-                    mHandler.sendMessage(message);
-                } catch (Exception e) {
-                    Message message=new Message();
-                    message.what=Global.UPDATE_FAIL_CODE;
-                    mHandler.sendMessage(message);
-                }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.e("response", resStr);
+                        try {
+                            // 解析json，然后进行自己的内部逻辑处理
+                            JSONObject jsonObject = JSONObject.parseObject(resStr);
+                            String resp = jsonObject.getString("response");
+                            if (!resp.equals("valid")) {
+                                throw new Exception();
+                            }
+                            Message message = new Message();
+                            message.what = Global.UPDATE_PASS_CODE;
+                            mHandler.sendMessage(message);
+                        } catch (Exception e) {
+                            Message message = new Message();
+                            message.what = Global.UPDATE_FAIL_CODE;
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                }, h);
             }
-        },h);
+        }).start();
 
     }
 }

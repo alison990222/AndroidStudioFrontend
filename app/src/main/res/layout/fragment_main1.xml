@@ -7,21 +7,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <androidx.appcompat.widget.Toolbar
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#749C27B0">
-
+        android:layout_height="51dp"
+        android:orientation="vertical">
         <TextView
             android:id="@+id/chat_username"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
+            android:ellipsize="marquee"
             android:gravity="center"
+            android:singleLine="true"
             android:text="Tsinghua Help"
             android:textColor="#4a4a4a"
-            android:textSize="25dp"></TextView>
+            android:textSize="25dp" />
 
-    </androidx.appcompat.widget.Toolbar>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray1"/>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView4"

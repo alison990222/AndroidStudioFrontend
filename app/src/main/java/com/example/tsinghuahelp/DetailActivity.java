@@ -3,6 +3,7 @@ package com.example.tsinghuahelp;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -36,7 +37,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 
-public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class DetailActivity extends Activity implements View.OnClickListener {
 
     private TextView topic;
     private TextView ownerName;

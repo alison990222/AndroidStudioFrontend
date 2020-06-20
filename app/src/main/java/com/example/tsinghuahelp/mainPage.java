@@ -55,6 +55,23 @@ public class mainPage extends AppCompatActivity {
         }
 
         viewPager.setAdapter(new MyFragmentAdapter(fm, fragments));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener(){
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                navigationMenu.getMenu().getItem(position).setChecked(true);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         navigationMenu.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
