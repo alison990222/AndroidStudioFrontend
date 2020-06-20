@@ -2,6 +2,7 @@ package com.example.tsinghuahelp.Chat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -41,7 +42,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class ChatRoom extends AppCompatActivity {
+public class ChatRoom extends Activity {
     private List<MessageChatModel> messageChatModelList =  new ArrayList<>();
     private RecyclerView recyclerView;
     static MessageChatAdapter adapter ;

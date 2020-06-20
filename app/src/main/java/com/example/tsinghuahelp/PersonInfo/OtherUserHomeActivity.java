@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -50,7 +51,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class OtherUserHomeActivity extends AppCompatActivity implements View.OnClickListener{
+public class OtherUserHomeActivity extends Activity implements View.OnClickListener{
     com.mikhaellopez.circularimageview.CircularImageView icon;
     TextView other_username;
     TextView is_verify;
@@ -209,48 +210,53 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
 
 
     private void fresh_page(){
-        CommonInterface.sendOkHttpGetRequest("/api/user/user_info/"+user_id, new Callback() {
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-                Message message=new Message();
-                message.what=Global.FAIL_CODE;
-                message.obj=e.toString();
-                mHandler.sendMessage(message);
-            }
+            public void run() {
+                CommonInterface.sendOkHttpGetRequest("/api/user/user_info/" + user_id, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
+                        Message message = new Message();
+                        message.what = Global.FAIL_CODE;
+                        message.obj = e.toString();
+                        mHandler.sendMessage(message);
+                    }
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.e("response", resStr);
-                try {
-                    // 解析json，然后进行自己的内部逻辑处理
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    JSONObject data=jsonObject.getJSONObject("data");
-                    icon_url = data.getString("icon_url");
-                    name=data.getString("username");
-                    real_name=data.getString("real_name");
-                    school=data.getString("school");
-                    department=data.getString("department");
-                    grade=data.getString("grade");
-                    signature_str=data.getString("signature");
-                    person_info=data.getString("personal_info");
-                    verify=data.getBoolean("verification");
-                    type=data.getBoolean("type");
-                    relation=data.getBoolean("relation");
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.e("response", resStr);
+                        try {
+                            // 解析json，然后进行自己的内部逻辑处理
+                            JSONObject jsonObject = JSONObject.parseObject(resStr);
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            icon_url = data.getString("icon_url");
+                            name = data.getString("username");
+                            real_name = data.getString("real_name");
+                            school = data.getString("school");
+                            department = data.getString("department");
+                            grade = data.getString("grade");
+                            signature_str = data.getString("signature");
+                            person_info = data.getString("personal_info");
+                            verify = data.getBoolean("verification");
+                            type = data.getBoolean("type");
+                            relation = data.getBoolean("relation");
 
-                    Message message=new Message();
-                    message.what=Global.FRESH_HOME_CODE;
-                    mHandler.sendMessage(message);
-                    fresh_icon();
-                } catch (Exception e) {
-                    Message message=new Message();
-                    message.what=Global.FAIL_CODE;
-                    message.obj="页面信息获取失败！";
-                    mHandler.sendMessage(message);
-                }
+                            Message message = new Message();
+                            message.what = Global.FRESH_HOME_CODE;
+                            mHandler.sendMessage(message);
+                            fresh_icon();
+                        } catch (Exception e) {
+                            Message message = new Message();
+                            message.what = Global.FAIL_CODE;
+                            message.obj = "页面信息获取失败！";
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
             }
-        });
+        }).start();
     }
 
     private void fresh_icon(){
@@ -289,48 +295,53 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
 
     private void fresh_prolist(){
         pList.clear();
-        String url="/api/user/get_plan_or_pro/"+user_id;
-        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-                Message message=new Message();
-                message.what=Global.FAIL_CODE;
-                message.obj=e.toString();
-                mHandler.sendMessage(message);
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.e("response", resStr);
-                try {
-                    // 解析json，然后进行自己的内部逻辑处理
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    JSONArray jsonArray = jsonObject.getJSONArray("data");
-                    for (int i=0;i<jsonArray.size();i++){
-                        JSONObject object= (JSONObject) jsonArray.get(i);
-                        String o_title = object.getString("title");
-                        String o_name = object.getString("name");
-                        String o_department = object.getString("department");
-                        String o_description=object.getString("description");
-                        String o_type=object.getString("type");
-                        int o_id = object.getInteger("id");
-                        pList.add(new SearchResult(o_title,o_name,
-                                o_department, o_description,o_type,o_id));
+            public void run() {
+                String url = "/api/user/get_plan_or_pro/" + user_id;
+                CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
+                        Message message = new Message();
+                        message.what = Global.FAIL_CODE;
+                        message.obj = e.toString();
+                        mHandler.sendMessage(message);
                     }
 
-                    Message message=new Message();
-                    message.what=Global.FRESH_PROJ_CODE;
-                    mHandler.sendMessage(message);
-                } catch (Exception e) {
-                    Message message=new Message();
-                    message.what=Global.FAIL_CODE;
-                    message.obj="项目计划信息获取失败！";
-                    mHandler.sendMessage(message);
-                }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.e("response", resStr);
+                        try {
+                            // 解析json，然后进行自己的内部逻辑处理
+                            JSONObject jsonObject = JSONObject.parseObject(resStr);
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            for (int i = 0; i < jsonArray.size(); i++) {
+                                JSONObject object = (JSONObject) jsonArray.get(i);
+                                String o_title = object.getString("title");
+                                String o_name = object.getString("name");
+                                String o_department = object.getString("department");
+                                String o_description = object.getString("description");
+                                String o_type = object.getString("type");
+                                int o_id = object.getInteger("id");
+                                pList.add(new SearchResult(o_title, o_name,
+                                        o_department, o_description, o_type, o_id));
+                            }
+
+                            Message message = new Message();
+                            message.what = Global.FRESH_PROJ_CODE;
+                            mHandler.sendMessage(message);
+                        } catch (Exception e) {
+                            Message message = new Message();
+                            message.what = Global.FAIL_CODE;
+                            message.obj = "项目计划信息获取失败！";
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
             }
-        });
+        }).start();
 
     }
 
@@ -377,46 +388,52 @@ public class OtherUserHomeActivity extends AppCompatActivity implements View.OnC
 
     public void goFollow(){
         if(user_id==Global.CURRENT_ID){Toast.makeText(this,"不可以追踪自己哦！",Toast.LENGTH_SHORT).show();return;}
-        HashMap<String,String> h = new HashMap<>();
-        h.put("user_id",user_id.toString());
-        String url="/api/user/go_follow";
-        if(relation){url="/api/user/cancel_follow";}
-        CommonInterface.sendOkHttpPostRequest(url, new Callback() {
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-                Message message=new Message();
-                message.what=Global.FAIL_CODE;
-                message.obj=e.toString();
-                mHandler.sendMessage(message);
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.e("response", resStr);
-                try {
-                    // 解析json，然后进行自己的内部逻辑处理
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    String resp = jsonObject.getString("response");
-                    if (!resp.equals("valid")) {
-                        throw new Exception();
-                    }
-                    else {
-                        Message message=new Message();
-                        message.what=Global.FRESH_BUTT_CODE;
+            public void run() {
+                HashMap<String, String> h = new HashMap<>();
+                h.put("user_id", user_id.toString());
+                String url = "/api/user/go_follow";
+                if (relation) {
+                    url = "/api/user/cancel_follow";
+                }
+                CommonInterface.sendOkHttpPostRequest(url, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
+                        Message message = new Message();
+                        message.what = Global.FAIL_CODE;
+                        message.obj = e.toString();
                         mHandler.sendMessage(message);
                     }
 
-                } catch (Exception e) {
-                    System.out.println(e);
-                    Message message=new Message();
-                    message.what=Global.FAIL_CODE;
-                    message.obj="追踪失败！";
-                    mHandler.sendMessage(message);
-                }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.e("response", resStr);
+                        try {
+                            // 解析json，然后进行自己的内部逻辑处理
+                            JSONObject jsonObject = JSONObject.parseObject(resStr);
+                            String resp = jsonObject.getString("response");
+                            if (!resp.equals("valid")) {
+                                throw new Exception();
+                            } else {
+                                Message message = new Message();
+                                message.what = Global.FRESH_BUTT_CODE;
+                                mHandler.sendMessage(message);
+                            }
+
+                        } catch (Exception e) {
+                            System.out.println(e);
+                            Message message = new Message();
+                            message.what = Global.FAIL_CODE;
+                            message.obj = "追踪失败！";
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                }, h);
             }
-        },h);
+        }).start();
     }
 
 }

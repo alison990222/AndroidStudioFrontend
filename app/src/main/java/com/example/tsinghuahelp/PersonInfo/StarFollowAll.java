@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -42,7 +43,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class StarFollowAll extends AppCompatActivity {
+public class StarFollowAll extends Activity {
     private RecyclerView recyclerView;
     private TextView textView;
     private FollowUserAdapter followUserAdapter;
@@ -149,87 +150,97 @@ public class StarFollowAll extends AppCompatActivity {
 
     public void fresh_pro(String url){
         proList.clear();
-        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-                Message message=new Message();
-                message.what=Global.FAIL_CODE;
-                message.obj=e.toString();
-                mHandler.sendMessage(message);
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.e("response", resStr);
-                try {
-                    // 解析json，然后进行自己的内部逻辑处理
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    JSONArray jsonArray = jsonObject.getJSONArray("data");
-                    for (int i=0;i<jsonArray.size();i++){
-                        JSONObject object= (JSONObject) jsonArray.get(i);
-                        String o_title = object.getString("title");
-                        String o_teacher = object.getString("teacher");
-                        String o_department = object.getString("department");
-                        String o_description=object.getString("description");
-                        int o_id = object.getInteger("id");
-                        proList.add(new SearchResult(o_title,o_teacher,
-                                o_department, o_description,"project",o_id));
+            public void run() {
+                CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
+                        Message message = new Message();
+                        message.what = Global.FAIL_CODE;
+                        message.obj = e.toString();
+                        mHandler.sendMessage(message);
                     }
 
-                    Message message=new Message();
-                    message.what=Global.FRESH_PROJ_CODE;
-                    mHandler.sendMessage(message);
-                } catch (Exception e) {
-                    Message message=new Message();
-                    message.what=Global.FAIL_CODE;
-                    message.obj="获取项目失败！";
-                    mHandler.sendMessage(message);
-                }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.e("response", resStr);
+                        try {
+                            // 解析json，然后进行自己的内部逻辑处理
+                            JSONObject jsonObject = JSONObject.parseObject(resStr);
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            for (int i = 0; i < jsonArray.size(); i++) {
+                                JSONObject object = (JSONObject) jsonArray.get(i);
+                                String o_title = object.getString("title");
+                                String o_teacher = object.getString("teacher");
+                                String o_department = object.getString("department");
+                                String o_description = object.getString("description");
+                                int o_id = object.getInteger("id");
+                                proList.add(new SearchResult(o_title, o_teacher,
+                                        o_department, o_description, "project", o_id));
+                            }
+
+                            Message message = new Message();
+                            message.what = Global.FRESH_PROJ_CODE;
+                            mHandler.sendMessage(message);
+                        } catch (Exception e) {
+                            Message message = new Message();
+                            message.what = Global.FAIL_CODE;
+                            message.obj = "获取项目失败！";
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
             }
-        });
+        }).start();
     }
 
     public void fresh_user(String url){
         followUserList.clear();
-        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-                Message message=new Message();
-                message.what=Global.FAIL_CODE;
-                message.obj=e.toString();
-                mHandler.sendMessage(message);
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.e("response", resStr);
-                try {
-                    // 解析json，然后进行自己的内部逻辑处理
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    JSONArray jsonArray = jsonObject.getJSONArray("data");
-                    for (int i=0;i<jsonArray.size();i++){
-                        JSONObject object= (JSONObject) jsonArray.get(i);
-                        String o_username = object.getString("username");
-                        Boolean o_type = object.getBoolean("type");
-                        int o_id = object.getInteger("id");
-                        followUserList.add(new FollowUser(o_type,o_id,o_username));
+            public void run() {
+                CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
+                        Message message = new Message();
+                        message.what = Global.FAIL_CODE;
+                        message.obj = e.toString();
+                        mHandler.sendMessage(message);
                     }
 
-                    Message message=new Message();
-                    message.what=Global.FRESH_FOLL_CODE;
-                    mHandler.sendMessage(message);
-                } catch (Exception e) {
-                    Message message=new Message();
-                    message.what=Global.FAIL_CODE;
-                    message.obj="获取follow用户失败！";
-                    mHandler.sendMessage(message);
-                }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.e("response", resStr);
+                        try {
+                            // 解析json，然后进行自己的内部逻辑处理
+                            JSONObject jsonObject = JSONObject.parseObject(resStr);
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            for (int i = 0; i < jsonArray.size(); i++) {
+                                JSONObject object = (JSONObject) jsonArray.get(i);
+                                String o_username = object.getString("username");
+                                Boolean o_type = object.getBoolean("type");
+                                int o_id = object.getInteger("id");
+                                followUserList.add(new FollowUser(o_type, o_id, o_username));
+                            }
+
+                            Message message = new Message();
+                            message.what = Global.FRESH_FOLL_CODE;
+                            mHandler.sendMessage(message);
+                        } catch (Exception e) {
+                            Message message = new Message();
+                            message.what = Global.FAIL_CODE;
+                            message.obj = "获取follow用户失败！";
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
             }
-        });
+        }).start();
     }
 
 }

@@ -109,53 +109,53 @@ public class Fragment1 extends Fragment  {
     }
 
     private void fresh_page(){
-        CommonInterface.sendOkHttpGetRequest("/api/user/projects", new Callback() {
+        postsList.clear();
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-            }
+            public void run() {
+                CommonInterface.sendOkHttpGetRequest("/api/user/projects", new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                try {
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    JSONArray data = jsonObject.getJSONArray("data");
-
-                    for (int i = 0; i < data.size(); i++) {
-                        JSONObject object = (JSONObject) data.get(i);
-                        postsList.add(
-                                new Posts(
-                                        object.getString("teacher"),
-                                        object.getString("project_title"),
-                                        "移动应用",
-                                        object.getString("department"),
-                                        "60000",
-                                        object.getString("requirement"),
-                                        object.getInteger("project_id")));
                     }
-                    Message message=new Message();
-                    message.what=1;
-                    mHandler.sendMessage(message);
 
-                } catch (Exception e) {
-                    Log.e("error", e.toString());
-                    Message message=new Message();
-                    message.what=0;
-                    mHandler.sendMessage(message);
-                }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.e("response", resStr);
+                        try {
+                            JSONObject jsonObject = JSONObject.parseObject(resStr);
+                            JSONArray data = jsonObject.getJSONArray("data");
+
+                            for (int i = 0; i < data.size(); i++) {
+                                JSONObject object = (JSONObject) data.get(i);
+                                postsList.add(
+                                        new Posts(
+                                                object.getString("teacher"),
+                                                object.getString("project_title"),
+                                                "移动应用",
+                                                object.getString("department"),
+                                                "60000",
+                                                object.getString("requirement"),
+                                                object.getInteger("project_id")));
+                            }
+                            Message message = new Message();
+                            message.what = 1;
+                            mHandler.sendMessage(message);
+
+                        } catch (Exception e) {
+                            Log.e("error", e.toString());
+                            Message message = new Message();
+                            message.what = 0;
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
             }
-        });
+        }).start();
 
-        postsList.add(
-                new Posts(
-                        "teacher",
-                        "project_title",
-                        "移动应用",
-                        "department",
-                        "60000",
-                        "requirement",
-                        1000));
+
     }
 
 

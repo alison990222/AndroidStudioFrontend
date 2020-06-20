@@ -2,11 +2,13 @@ package com.example.tsinghuahelp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 import com.example.tsinghuahelp.Adapter.MyPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import android.annotation.SuppressLint;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -15,7 +17,7 @@ import android.view.View;
 import java.net.HttpURLConnection;
 
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends FragmentActivity {
 
     private HttpURLConnection conn;
 
