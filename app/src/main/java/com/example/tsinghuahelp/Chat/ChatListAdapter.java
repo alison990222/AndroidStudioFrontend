@@ -50,10 +50,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Holder
         getImageByUrl.setImage(holder.profile,url);
         if(!chat.getReadAll()&&!holder.red_point){
             holder.red_point=true;
-            new BadgeView(mCtx)
-                    .setBadgeType(BadgeView.Type.TYPE_POINT)
-                    .setBadgeOverlap(false)
-                    .bindToTargetView(holder.target);
+            holder.badgeView.setBadgeEnable(true);
+        }
+        else if(chat.getReadAll()&&holder.red_point){
+            holder.badgeView.setBadgeEnable(false);
+            holder.red_point=false;
         }
 
     }
@@ -68,6 +69,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Holder
         private CircularImageView profile;
         private TextView target;
         public boolean red_point=false;
+        private BadgeView badgeView;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
@@ -77,6 +79,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Holder
             description = itemView.findViewById(R.id.msg_description);
             profile = itemView.findViewById(R.id.msg_pic);
             target=itemView.findViewById(R.id.red_dot);
+            badgeView= new BadgeView(mCtx)
+                    .setBadgeType(BadgeView.Type.TYPE_POINT)
+                    .setBadgeOverlap(false);
+            badgeView.bindToTargetView(target);
+            badgeView.setBadgeEnable(false);
 
             itemView.setOnClickListener( new View.OnClickListener() {
                 @Override

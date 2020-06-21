@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSONArray;
+import com.example.tsinghuahelp.Fragment.Fragment4;
 import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.news.Posts;
 import com.example.tsinghuahelp.utils.CommonInterface;
@@ -92,6 +93,7 @@ public class ChatRoom extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.chat_room);
+        Fragment4.change=true;
 
         messageET = (EditText)findViewById(R.id.messageET);
         sendBtn = (ImageView) findViewById(R.id.sendBtn);
@@ -180,7 +182,7 @@ public class ChatRoom extends Activity {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String resStr = response.body().string();
-//                Log.d("chatmsg",resStr);
+                Log.d("chatmsg",resStr);
                 try {
                     com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
                     JSONArray data = jsonObject.getJSONArray("data");

@@ -39,8 +39,17 @@ public class Fragment4 extends Fragment {
     private List<ChatList> list = new ArrayList<>();
     private RecyclerView recyclerView;
     private ChatListAdapter adapter;
+    public static boolean change;
     public Fragment4() {
         // Required empty public constructor
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(change){
+            fresh_page();
+            change=false;
+        }
     }
 
     @SuppressLint("HandlerLeak")
