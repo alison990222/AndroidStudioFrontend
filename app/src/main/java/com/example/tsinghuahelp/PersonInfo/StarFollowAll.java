@@ -163,40 +163,46 @@ public class StarFollowAll extends Activity {
     }
 
     public void fresh_applicants(String url) {
-        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+        followUserList.clear();
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.d("applicantdata",resStr);
-                try {
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    JSONArray data = jsonObject.getJSONArray("data");
-
-                    for (int i = 0; i < data.size(); i++) {
-                        JSONObject object = (JSONObject) data.get(i);
-                        String o_username = object.getString("name");
-                        Boolean o_type = object.getBoolean("type");
-                        int o_id = object.getInteger("id");
-                        followUserList.add(new FollowUser(o_type,o_id,o_username));
+            public void run() {
+                CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
                     }
-                    // {"grade":"","id":1,"name":"汪","real_name":"","school":"","type":false}
-                    Message message = new Message();
-                    message.what = Global.FRESH_FOLL_CODE;
-                    mHandler.sendMessage(message);
 
-                } catch (Exception e) {
-                    Log.e("error", e.toString());
-                    Message message = new Message();
-                    message.what = Global.FAIL_CODE;
-                    mHandler.sendMessage(message);
-                }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.d("applicantdata", resStr);
+                        try {
+                            JSONObject jsonObject = JSONObject.parseObject(resStr);
+                            JSONArray data = jsonObject.getJSONArray("data");
+
+                            for (int i = 0; i < data.size(); i++) {
+                                JSONObject object = (JSONObject) data.get(i);
+                                String o_username = object.getString("name");
+                                Boolean o_type = object.getBoolean("type");
+                                int o_id = object.getInteger("id");
+                                followUserList.add(new FollowUser(o_type, o_id, o_username));
+                            }
+                            // {"grade":"","id":1,"name":"汪","real_name":"","school":"","type":false}
+                            Message message = new Message();
+                            message.what = Global.FRESH_FOLL_CODE;
+                            mHandler.sendMessage(message);
+
+                        } catch (Exception e) {
+                            Log.e("error", e.toString());
+                            Message message = new Message();
+                            message.what = Global.FAIL_CODE;
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
             }
-        });
+        }).start();
     }
 
     public void fresh_pro(String url){

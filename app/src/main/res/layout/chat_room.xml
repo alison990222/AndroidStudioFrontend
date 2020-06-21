@@ -15,17 +15,18 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.Toolbar
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="#749C27B0">
+            android:layout_height="51dp"
 
+                android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="50dp"
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:layout_marginStart="15dp"
                     android:id="@+id/backward_btn"
                     android:ellipsize="none"
                     android:layout_width="30dp"
@@ -34,7 +35,8 @@
                     android:src="@drawable/back"
                     android:layout_gravity="center"
                     android:singleLine="true"
-                    android:tint="#4a4a4a"></ImageView>
+                    android:tint="#4a4a4a"
+                    android:layout_marginLeft="15dp" />
 
 
 
@@ -44,7 +46,6 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="5dp"
-                    android:src="@drawable/user"
                     android:layout_gravity="center_vertical"
                     app:civ_border_color="#FF000000"
                     app:civ_border_width="0dp" />
@@ -58,11 +59,16 @@
                     android:maxLines="1"
                     android:text="username"
                     android:textColor="#4a4a4a"
-                    android:textSize="18dp"></TextView>
+                    android:textSize="18dp"/>
 
             </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray1"/>
+            </LinearLayout>
 
-        </androidx.appcompat.widget.Toolbar>
+
 
         <RelativeLayout
             android:layout_width="match_parent"

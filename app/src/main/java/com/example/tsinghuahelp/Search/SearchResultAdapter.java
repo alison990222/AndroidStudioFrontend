@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.example.tsinghuahelp.DetailActivity;
 import com.example.tsinghuahelp.DetailActivityTeacher;
 import com.example.tsinghuahelp.PersonInfo.OtherUserHomeActivity;
 import com.example.tsinghuahelp.R;
@@ -69,18 +70,21 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
                     //去往项目详情页面
                     System.out.println("去往项目详情页面");
                     Intent detailIntent = new Intent(mCtx, DetailActivityTeacher.class);//ActivityDetail.class
-                    detailIntent.putExtra("title",result.getTitle());
+                    detailIntent.putExtra("id",result.getId());
                     mCtx.startActivity(detailIntent);
                 }
                 else if(type.equals("plan")){
                     //去往计划详情页面
                     System.out.println("去往计划详情页面");
+                    Intent detailIntent = new Intent(mCtx, DetailActivity.class);//ActivityDetail.class
+                    detailIntent.putExtra("id",result.getId());
+                    mCtx.startActivity(detailIntent);
                 }
                 else{
                     //去往个人主页详情页面
                     System.out.println("去往个人主页详情页面");
                     Intent detailIntent = new Intent(mCtx, OtherUserHomeActivity.class);//ActivityDetail.class
-//                    detailIntent.putExtra("title",result.getTitle());
+                    detailIntent.putExtra("id",result.getId());
                     mCtx.startActivity(detailIntent);
                 }
             });

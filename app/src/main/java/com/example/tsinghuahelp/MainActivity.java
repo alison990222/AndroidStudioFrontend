@@ -118,8 +118,6 @@ public class MainActivity extends Activity {
                             }
                             else if(jsonObject.get("detail").equals("已登录")){
                                 JSONObject data=jsonObject.getJSONObject("data");
-                                Global.TYPE = data.getBoolean("type");
-                                Global.CURRENT_ID=data.getInteger("user_id");
                                 Intent mainIntent = new Intent(MainActivity.this, mainPage.class);
                                 startActivity(mainIntent);
                             }

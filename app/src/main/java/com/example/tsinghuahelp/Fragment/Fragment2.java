@@ -27,6 +27,7 @@ import com.example.tsinghuahelp.mainPage;
 import com.example.tsinghuahelp.news.PostAdapter;
 import com.example.tsinghuahelp.utils.CommonInterface;
 import com.example.tsinghuahelp.utils.Global;
+import com.example.tsinghuahelp.utils.MyDialog;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -64,6 +65,11 @@ public class Fragment2 extends Fragment {
                     break;
                 case Global.FRESH_HOME_CODE:
                     Log.e("m_tag","收到更新");
+                    adapter.notifyDataSetChanged();
+                    break;
+                case Global.FRESH_PROJ_CODE:
+                    Log.e("m_tag","收到搜索更新");
+                    if(resultsList.size()==0){showInfo();}
                     adapter.notifyDataSetChanged();
                     break;
             }
@@ -176,6 +182,26 @@ public class Fragment2 extends Fragment {
         return mView;
     }
 
+    public void showInfo() {
+        String message="没有找到搜索结果！";
+        final MyDialog dialog = new MyDialog(getContext());
+        dialog.setMessage(message)
+                .setTitle("提示")
+                .setSingle(true).setOnClickBottomListener(new MyDialog.OnClickBottomListener() {
+            @Override
+            public void onPositiveClick() {
+                dialog.dismiss();
+                Toast.makeText(getContext(),"xxxx",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNegtiveClick() {
+                dialog.dismiss();
+                Toast.makeText(getContext(),"ssss",Toast.LENGTH_SHORT).show();
+            }
+        }).show();
+    }
+
     private void search() {
         resultsList.clear();
         new Thread(new Runnable() {
@@ -218,7 +244,7 @@ public class Fragment2 extends Fragment {
                             }
 
                             Message message = new Message();
-                            message.what = Global.FRESH_HOME_CODE;
+                            message.what = Global.FRESH_PROJ_CODE;
                             mHandler.sendMessage(message);
                         } catch (Exception e) {
                             Message message = new Message();

@@ -10,8 +10,7 @@
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/follow_pic"
         android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/user" />
+        android:layout_height="48dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -111,7 +111,6 @@
                 android:id="@+id/info_pic"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/user"
                 android:scaleType="centerCrop"
 
                 android:layout_gravity="center"
