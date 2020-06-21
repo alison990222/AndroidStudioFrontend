@@ -2,6 +2,7 @@ package com.example.tsinghuahelp.PersonInfo;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +26,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.tsinghuahelp.Adapter.InfoAdapter;
 import com.example.tsinghuahelp.Chat.ChatRoom;
+import com.example.tsinghuahelp.Fragment.Fragment4;
 import com.example.tsinghuahelp.Fragment.Fragment5;
 import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.Search.SearchResult;
@@ -358,6 +360,7 @@ public class OtherUserHomeActivity extends Activity implements View.OnClickListe
                 break;
             case R.id.chat_btn:
                 if(user_id==Global.CURRENT_ID){Toast.makeText(this,"不可以私信自己哦！",Toast.LENGTH_SHORT).show();return;}
+                Fragment4.change=true;
                 Intent chatIntent = new Intent(this, ChatRoom.class);
                 chatIntent.putExtra("title",name);
                 chatIntent.putExtra("id",user_id.toString());

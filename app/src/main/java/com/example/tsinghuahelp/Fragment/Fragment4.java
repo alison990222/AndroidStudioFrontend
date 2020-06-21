@@ -43,15 +43,15 @@ public class Fragment4 extends Fragment {
     public Fragment4() {
         // Required empty public constructor
     }
-    // 这会导致返回的时候重复绘制
-//    @Override
-//    public void onResume(){
-//        super.onResume();
-//        if(change){
-//            fresh_page();
-//            change=false;
-//        }
-//    }
+//     这会导致返回的时候重复绘，重绘没关系，反正要刷新
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(change){
+            fresh_page();
+            change=false;
+        }
+    }
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler=new Handler(){
