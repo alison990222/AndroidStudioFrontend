@@ -7,15 +7,17 @@ public class ChatList {
     private String date;
     private String urlProfile;
     private String iconUrl;
+    private boolean readAll=true;
 
     public ChatList(){}
 
-    public ChatList(String username, String description, String date, String urlProfile, String userID) {
+    public ChatList(String username, String description, String date, String urlProfile, String userID,boolean readAll) {
         this.username = username;
         this.latestChat = description;
         this.date = date;
         this.urlProfile = urlProfile;
         this.userID = userID;
+        this.readAll=readAll;
         this.iconUrl="http://47.94.145.111:8080/api/user/getIcon/"+userID;
     }
 
@@ -39,4 +41,5 @@ public class ChatList {
     public String getIconUrl() {
         return iconUrl;
     }
+    public boolean getReadAll(){return readAll;}
 }

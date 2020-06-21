@@ -90,42 +90,52 @@ public class Fragment4 extends Fragment {
     }
 
     private void fresh_page(){
-        CommonInterface.sendOkHttpGetRequest("/api/chat/get_chatter/", new Callback() {
+        list.clear();
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.d("chatdata",resStr);
-                try {
-                    JSONObject jsonObject = JSONObject.parseObject(resStr);
-                    JSONArray data = jsonObject.getJSONArray("data");
-
-                    list.clear();
-                    for (int i = 0; i < data.size(); i++) {
-                        JSONObject object = (JSONObject) data.get(i);
-                        list.add(new ChatList(
-                                object.get("name").toString(),
-                                object.get("latest_content").toString(),
-                                object.get("time").toString(),
-                                "",
-                                object.get("from_id").toString()));
+            public void run() {
+                CommonInterface.sendOkHttpGetRequest("/api/chat/get_chatter/", new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
+                        Message message = new Message();
+                        message.what = 0;
+                        mHandler.sendMessage(message);
                     }
-                    Message message=new Message();
-                    message.what=1;
-                    mHandler.sendMessage(message);
 
-                } catch (Exception e) {
-                    Log.e("error", e.toString());
-                    Message message=new Message();
-                    message.what=0;
-                    mHandler.sendMessage(message);
-                }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.d("chatdata", resStr);
+                        try {
+                            JSONObject jsonObject = JSONObject.parseObject(resStr);
+                            JSONArray data = jsonObject.getJSONArray("data");
+
+                            list.clear();
+                            for (int i = 0; i < data.size(); i++) {
+                                JSONObject object = (JSONObject) data.get(i);
+                                list.add(new ChatList(
+                                        object.get("name").toString(),
+                                        object.get("latest_content").toString(),
+                                        object.get("time").toString(),
+                                        "",
+                                        object.get("from_id").toString(),
+                                        object.getBoolean("read_all")));
+                            }
+                            Message message = new Message();
+                            message.what = 1;
+                            mHandler.sendMessage(message);
+
+                        } catch (Exception e) {
+                            Log.e("error", e.toString());
+                            Message message = new Message();
+                            message.what = 0;
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
             }
-        });
+        }).start();
 
     }
 

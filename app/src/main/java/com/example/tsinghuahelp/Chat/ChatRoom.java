@@ -110,6 +110,8 @@ public class ChatRoom extends Activity {
         SetImageByUrl getImageByUrl = new SetImageByUrl();
         getImageByUrl.setImage(profile_image,iconUrl);
 
+
+
         // 关键权限必须动态申请
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);

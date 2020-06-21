@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.tsinghuahelp.utils.BadgeView;
 import com.example.tsinghuahelp.utils.CommonInterface;
 import com.example.tsinghuahelp.utils.Global;
 
@@ -101,6 +102,8 @@ public class MainActivity extends Activity {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         Log.e("error", e.toString());
+                        Intent mainIntent = new Intent(MainActivity.this, mainPage.class);
+                        startActivity(mainIntent);
                     }
 
                     @Override
@@ -126,6 +129,7 @@ public class MainActivity extends Activity {
                             }
                         } catch (Exception e) {
                             Log.e("error", e.toString());
+
                         }
                     }
                 },h);

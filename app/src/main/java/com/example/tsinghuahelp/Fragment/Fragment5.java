@@ -158,6 +158,7 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
         ButterKnife.bind(this, mView);
         tabLayout = mView.findViewById(R.id.tab_layout);
         TextView starORpro=mView.findViewById(R.id.star_or_proj);
+        //情况A(有margin时)
         myRecyclerView = mView.findViewById(R.id.info_recyclerView);
         myRecyclerView.setHasFixedSize(true);
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

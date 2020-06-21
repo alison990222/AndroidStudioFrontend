@@ -61,5 +61,12 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        android:id="@+id/red_dot"/>
+
+
+
 
 </LinearLayout>

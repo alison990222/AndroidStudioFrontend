@@ -2,6 +2,7 @@ package com.example.tsinghuahelp.Chat;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tsinghuahelp.PersonInfo.StarFollowAll;
 import com.example.tsinghuahelp.R;
+import com.example.tsinghuahelp.utils.BadgeView;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.example.tsinghuahelp.utils.SetImageByUrl;
 
@@ -43,9 +46,14 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Holder
         holder.description.setText(chat.getDescription());
         holder.date.setText(chat.getDate());
         SetImageByUrl getImageByUrl = new SetImageByUrl();
-
         String url = chat.getIconUrl();
         getImageByUrl.setImage(holder.profile,url);
+        if(!chat.getReadAll()){
+            new BadgeView(mCtx)
+                    .setBadgeType(BadgeView.Type.TYPE_POINT)
+                    .setBadgeOverlap(false)
+                    .bindToTargetView(holder.target);
+        }
 
     }
 
@@ -57,6 +65,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Holder
     public class Holder extends RecyclerView.ViewHolder{
         private TextView username, date, description;
         private CircularImageView profile;
+        private TextView target;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
@@ -65,6 +74,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Holder
             date = itemView.findViewById(R.id.msg_date);
             description = itemView.findViewById(R.id.msg_description);
             profile = itemView.findViewById(R.id.msg_pic);
+            target=itemView.findViewById(R.id.red_dot);
 
             itemView.setOnClickListener( new View.OnClickListener() {
                 @Override
