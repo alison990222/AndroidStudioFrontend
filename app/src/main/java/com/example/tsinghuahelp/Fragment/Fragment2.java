@@ -201,7 +201,7 @@ public class Fragment2 extends Fragment {
             @Override
             public void run() {
                 String key_word=search_txt.getText().toString();
-                String type=select_txt.getText().toString();
+                String type=select_txt.getText().toString().toLowerCase();
                 HashMap<String,String> h = new HashMap<>();
                 h.put("key_word",key_word);
                 h.put("type",type);

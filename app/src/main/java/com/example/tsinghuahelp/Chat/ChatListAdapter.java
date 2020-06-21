@@ -48,7 +48,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Holder
         SetImageByUrl getImageByUrl = new SetImageByUrl();
         String url = chat.getIconUrl();
         getImageByUrl.setImage(holder.profile,url);
-        if(!chat.getReadAll()){
+        if(!chat.getReadAll()&&!holder.red_point){
+            holder.red_point=true;
             new BadgeView(mCtx)
                     .setBadgeType(BadgeView.Type.TYPE_POINT)
                     .setBadgeOverlap(false)
@@ -66,6 +67,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.Holder
         private TextView username, date, description;
         private CircularImageView profile;
         private TextView target;
+        public boolean red_point=false;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
