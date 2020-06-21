@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:padding="10dp"
     android:background="@drawable/go_to_edit"
+    android:layout_marginTop="5dp"
     android:layout_marginStart="10dp"
     android:orientation="horizontal"
     android:layout_marginLeft="10dp">
@@ -59,12 +60,21 @@
             android:textColor="#2E2E2E"
             android:textSize="14sp" />
 
+        <View
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_marginTop="28dp"
+            android:background="@color/gray2"/>
     </LinearLayout>
+
+
 
     <TextView
         android:layout_width="20dp"
         android:layout_height="match_parent"
         android:id="@+id/red_dot"/>
+
 
 
 

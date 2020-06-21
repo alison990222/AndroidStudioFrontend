@@ -64,6 +64,7 @@ public class DetailActivity extends Activity implements View.OnClickListener {
     private String oldInterestField;
     private String oldDescription;
 
+    private String studentID;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler=new Handler(){
@@ -74,11 +75,20 @@ public class DetailActivity extends Activity implements View.OnClickListener {
 //                    Toast.makeText(StarFollowAll.this,"后端信息获取失败",Toast.LENGTH_SHORT).show();
                     break;
                 case 1:
-//                    ownerName.setText("姓名："+ studentName);
+                    ownerName.setText("姓名："+ studentName);
                     department.setText("院系："+ deptName);
                     description.setText(desctiptDetail);
                     interestField.setText(plan_direction);
                     time.setText(createTime);
+                    topic.setText(topicName);
+                    identity.setText(studentType);
+
+
+                    // if it's the owner of the post
+                    if (studentID.equals(String.valueOf(Global.CURRENT_ID))) {  // student
+                        btnDelete.setVisibility(View.VISIBLE);
+                        btnEdit.setVisibility(View.VISIBLE);
+                    }
 
                     break;
             }
@@ -101,13 +111,6 @@ public class DetailActivity extends Activity implements View.OnClickListener {
         btnEdit = (Button)findViewById(R.id.btn_edit);
         btnEdit.setOnClickListener(this);
 
-        // if it's the owner of the post
-//        if (tchID.equals(String.valueOf(Global.CURRENT_ID)) ) {  // student
-//
-//        } else {
-//            btnDelete.setVisibility(View.INVISIBLE);
-//            btnEdit.setVisibility(View.INVISIBLE);
-//        }
 
         topic = (TextView) findViewById(R.id.projectName);
         time = (TextView) findViewById(R.id.projectTime);
@@ -118,7 +121,8 @@ public class DetailActivity extends Activity implements View.OnClickListener {
         description = (EditText) findViewById(R.id.projectDescript);
         identity = (TextView) findViewById(R.id.identity);
 
-        topic.setText(intent.getStringExtra("title"));
+        btnDelete.setVisibility(View.INVISIBLE);
+        btnEdit.setVisibility(View.INVISIBLE);
         fresh_page();
     }
 
@@ -267,6 +271,7 @@ public class DetailActivity extends Activity implements View.OnClickListener {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String resStr = response.body().string();
+                Log.d("studentdata",resStr);
                 try {
                     com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
                     JSONObject data = jsonObject.getJSONObject("data");
@@ -276,6 +281,9 @@ public class DetailActivity extends Activity implements View.OnClickListener {
                     plan_direction = data.get("plan_direction").toString();
                     studentType = data.get("type").toString();
                     createTime = data.get("createTime").toString();
+                    studentID = data.get("student_id").toString();
+                    topicName = data.get("plan_title").toString();
+                    studentName = data.get("student_name").toString();
 
                     oldInterestField = plan_direction;
                     oldDescription = desctiptDetail;

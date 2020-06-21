@@ -101,12 +101,23 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
                     description.setText(desctiptName);
                     researchField.setText(researchName);
                     time.setText(createTime);
+                    topic.setText(topicName);
+
+                    // if it's the owner of the post
+                    if (tchID.equals(String.valueOf(Global.CURRENT_ID)) ) {  // student
+
+                        btnDelete.setVisibility(View.VISIBLE);
+                        btnCheck.setVisibility(View.VISIBLE);
+                        btnEdit.setVisibility(View.VISIBLE);
+                    } else {
+                        btnApply.setVisibility(View.VISIBLE);
+                        btnStar.setVisibility(View.VISIBLE);
+                    }
 
                     if(isStarred.equals("true"))
                         btnStar.setText("取消收藏");
                     if(isRegistered.equals("true"))
                         btnApply.setText("取消报名");
-
                     break;
             }
         }
@@ -147,23 +158,19 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
         master.setClickable(false);
         phd.setClickable(false);
 
+        btnDelete.setVisibility(View.INVISIBLE);
+        btnCheck.setVisibility(View.INVISIBLE);
+        btnEdit.setVisibility(View.INVISIBLE);
+        btnApply.setVisibility(View.INVISIBLE);
+        btnStar.setVisibility(View.INVISIBLE);
 
 
         topicName = intent.getStringExtra("title");
         topic.setText(topicName);
-        tchID = intent.getStringExtra("tchid");
+//        tchID = intent.getStringExtra("tchid");
 
         ID = intent.getIntExtra("id",-1);
 
-        // if it's the owner of the post
-        if (tchID.equals(String.valueOf(Global.CURRENT_ID)) ) {  // student
-            btnApply.setVisibility(View.INVISIBLE);
-            btnStar.setVisibility(View.INVISIBLE);
-        } else {
-            btnDelete.setVisibility(View.INVISIBLE);
-            btnCheck.setVisibility(View.INVISIBLE);
-            btnEdit.setVisibility(View.INVISIBLE);
-        }
 
         fresh_page(ID);
     }
@@ -531,7 +538,7 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String resStr = response.body().string();
-//                Log.d("d",resStr);
+                Log.d("d",resStr);
                 try {
                     com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
                     JSONObject data = jsonObject.getJSONObject("data");
@@ -544,6 +551,9 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
                     isRegistered = data.get("isRegistered").toString();
                     isStarred = data.get("isStarred").toString();
                     createTime = data.get("createTime").toString();
+                    tchID = data.get("teacher_id").toString();
+                    topicName = data.get("project_title").toString();
+
 
                     oldResearchFieldname = researchName;
                     oldDescription = desctiptName;
