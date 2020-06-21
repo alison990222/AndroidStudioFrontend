@@ -81,9 +81,9 @@ public class Fragment2 extends Fragment {
 
         super.onCreate(savedInstanceState);
         resultsList = new ArrayList<>();
-        if(!Global.TYPE) {
-            get_recommend();
-        }
+
+        get_recommend();
+
 
 
     }
@@ -95,7 +95,8 @@ public class Fragment2 extends Fragment {
             @Override
             public void run() {
                 String url = "/api/user/recommend";
-                CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+                HashMap<String,String> h = new HashMap<>();
+                CommonInterface.sendOkHttpPostRequest(url, new Callback() {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         Log.e("error", e.toString());
@@ -135,7 +136,7 @@ public class Fragment2 extends Fragment {
                             mHandler.sendMessage(message);
                         }
                     }
-                });
+                },h);
             }
         }).start();
     }

@@ -21,14 +21,14 @@
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:weightSum="3">
-        <TextView
-            android:id="@+id/spinner_select_txt"
-            android:background="@drawable/spinner_border"
-            android:layout_width="55dp"
-            android:layout_height="match_parent"
-            android:text="All"
-            android:layout_weight="2"
-            />
+
+            <TextView
+                android:id="@+id/spinner_select_txt"
+                android:layout_width="55dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@drawable/spinner_border"
+                android:text="All" />
         <Spinner
             android:id="@+id/search_spinner"
             android:layout_width="20dp"

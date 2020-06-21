@@ -11,11 +11,11 @@
     <string name="confirm">确定</string>
 
     <string-array name="search_spinner_list">
+        <item>All</item>
         <item>Teacher</item>
         <item>Student</item>
         <item>Project</item>
         <item>Plan</item>
-        <item>All</item>
     </string-array>
 
 </resources>

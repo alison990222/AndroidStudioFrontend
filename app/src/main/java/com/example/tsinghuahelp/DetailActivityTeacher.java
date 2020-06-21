@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.tsinghuahelp.CheckUser.CheckUser;
+import com.example.tsinghuahelp.Fragment.Fragment5;
 import com.example.tsinghuahelp.PersonInfo.StarFollowAll;
 import com.example.tsinghuahelp.utils.CommonInterface;
 import com.example.tsinghuahelp.utils.Global;
@@ -209,6 +210,7 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
                     Log.d("msg",resStr);
                     try {
                         if(jsonObject.get("response").equals("valid")){
+                            Fragment5.change=true;
                             DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, "收藏成功", Toast.LENGTH_LONG).show());
                             isStarred= "true";
                             btnStar.setText("取消收藏");
@@ -250,6 +252,7 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
 //                    Log.d("msg",resStr);
                     try {
                         if(jsonObject.get("response").equals("valid")){
+                            Fragment5.change=true;
                             DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, "取消收藏成功", Toast.LENGTH_LONG).show());
                             isStarred= "false";
                             btnStar.setText("收藏");
@@ -394,6 +397,7 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
 
                         try {
                             if(jsonObject.get("response").equals("valid")){
+                                Fragment5.change=true;
                                 DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, "删除成功", Toast.LENGTH_LONG).show());
                             }
                             else{
