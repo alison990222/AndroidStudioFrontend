@@ -120,7 +120,7 @@ public class Fragment4 extends Fragment {
                                         object.get("time").toString(),
                                         "",
                                         object.get("from_id").toString(),
-                                        object.getBoolean("read_all")));
+                                        object.getBoolean("real_all")));
                             }
                             Message message = new Message();
                             message.what = 1;
