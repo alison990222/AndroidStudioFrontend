@@ -144,19 +144,18 @@
         android:maxLines="2"
         android:textSize="15dp"
         android:textColor="#050101"
-        android:hint="请输入项目细节"
-        android:maxLength="30"/>
+        android:hint="请输入项目细节" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <Button
             android:id="@+id/btn_star"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="80dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
             android:text="收藏" />
@@ -174,7 +173,7 @@
             android:id="@+id/btn_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
+            android:layout_alignLeft="@id/btn_check"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
             android:text="编辑" />
@@ -183,18 +182,22 @@
             android:id="@+id/btn_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
             android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@id/btn_edit"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30dp"
             android:text="查看" />
 
+<!-- android:layout_toRightOf="@id/btn_edit"-->
         <Button
             android:id="@+id/btn_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/btn_check"
-            android:layout_marginLeft="30dp"
+
+            android:layout_alignRight="@id/btn_check"
+            android:layout_alignParentRight="true"
+
             android:layout_alignParentBottom="true"
             android:text="删除" />
+
     </RelativeLayout>
 </LinearLayout>

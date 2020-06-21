@@ -75,12 +75,11 @@ public class Fragment4 extends Fragment {
         // 绑定视图
         ButterKnife.bind(this, mView);
 
-
-
         recyclerView = mView.findViewById(R.id.recyclerView4);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         fresh_page();
+        Log.d("msg","in fresh page");
 
         adapter = new ChatListAdapter(list,getContext());
         recyclerView.setAdapter(adapter);
@@ -111,7 +110,6 @@ public class Fragment4 extends Fragment {
                             JSONObject jsonObject = JSONObject.parseObject(resStr);
                             JSONArray data = jsonObject.getJSONArray("data");
 
-                            list.clear();
                             for (int i = 0; i < data.size(); i++) {
                                 JSONObject object = (JSONObject) data.get(i);
                                 list.add(new ChatList(
@@ -120,7 +118,7 @@ public class Fragment4 extends Fragment {
                                         object.get("time").toString(),
                                         "",
                                         object.get("from_id").toString(),
-                                        object.getBoolean("read_all")));
+                                        object.getBoolean("real_all")));
                             }
                             Message message = new Message();
                             message.what = 1;

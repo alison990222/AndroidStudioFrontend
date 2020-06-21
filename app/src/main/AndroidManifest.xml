@@ -16,17 +16,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
-        <activity android:name=".PersonInfo.EditDetailPage" />
-        <activity android:name=".PersonInfo.EditInfoActivity" />
+        <activity android:name=".PersonInfo.EditDetailPage"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".PersonInfo.EditInfoActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".PersonInfo.StarFollowAll" />
         <activity android:name=".PersonInfo.OtherUserHomeActivity" />
-        <activity android:name=".mainPage" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".DetailActivity" />
+        <activity android:name=".mainPage"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".RegisterActivity"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".DetailActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".Chat.ChatRoom" />
-        <activity android:name=".DetailActivityTeacher" />
-        <activity android:name=".CheckUser.CheckUser" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".DetailActivityTeacher"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".CheckUser.CheckUser"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

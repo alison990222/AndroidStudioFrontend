@@ -21,6 +21,11 @@ public class WebSocket {
 //    private static String SOCKET_URL = "ws://47.94.145.111:8080/websocket/2";
 
     private String SOCKET_URL;
+
+    public static WebSocketClient getSocketClient() {
+        return socketClient;
+    }
+
     public static void initSocket(String SOCKET_URL) {
         try {
             URI u = new URI(SOCKET_URL);
@@ -55,6 +60,8 @@ public class WebSocket {
 
         }
     }
+
+
 
     public static void reconnect(String SOCKET_URL) {
         new Thread(() -> {

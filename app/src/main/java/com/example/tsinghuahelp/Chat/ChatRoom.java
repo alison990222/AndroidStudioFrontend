@@ -44,6 +44,8 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.example.tsinghuahelp.utils.WebSocket.getSocketClient;
+
 
 public class ChatRoom extends Activity {
     private static List<MessageChatModel> messageChatModelList =  new ArrayList<>();
@@ -129,6 +131,7 @@ public class ChatRoom extends Activity {
         findViewById(R.id.backward_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getSocketClient().onClose(1000,"onClose",true);
                 finish();
             }
         });

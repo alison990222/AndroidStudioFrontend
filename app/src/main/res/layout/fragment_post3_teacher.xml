@@ -90,7 +90,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
         android:background="#9ab5ff"
-        android:hint="Post" />
+        android:hint="Post"
+        />
 
 
 </RelativeLayout>
