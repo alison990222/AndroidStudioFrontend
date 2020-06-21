@@ -305,13 +305,11 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
             @Override
             public void onPositiveClick() {
                 dialog.dismiss();
-                Toast.makeText(getContext(),"xxxx",Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNegtiveClick() {
                 dialog.dismiss();
-                Toast.makeText(getContext(),"ssss",Toast.LENGTH_SHORT).show();
             }
         }).show();
     }
@@ -392,10 +390,12 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
                         message.obj="获取头像失败！";
                         mHandler.sendMessage(message);
                     }
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    Log.e("error", e.toString());
+                    Message message = new Message();
+                    message.what = Global.FAIL_CODE;
+                    message.obj = e.toString();
+                    mHandler.sendMessage(message);
                 }
             }
         }).start();
@@ -438,8 +438,6 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
                                 proList.add(new SearchResult(o_title, o_teacher,
                                         o_department, o_description, "project", o_id));
                             }
-
-
                             Message message = new Message();
                             message.what = Global.FRESH_PROJ_CODE;
                             mHandler.sendMessage(message);
@@ -490,7 +488,6 @@ public class Fragment5 extends Fragment implements View.OnClickListener{
                                 planList.add(new SearchResult(o_title, o_student,
                                         o_department, o_description, "plan", o_id));
                             }
-
                             Message message = new Message();
                             message.what = Global.FRESH_PLAN_CODE;
                             mHandler.sendMessage(message);

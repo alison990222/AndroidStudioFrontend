@@ -76,13 +76,11 @@ public class EditDetailPage extends Activity {
                     @Override
                     public void onPositiveClick() {
                         dialog.dismiss();
-                        Toast.makeText(EditDetailPage.this,"xxxx",Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onNegtiveClick() {
                         dialog.dismiss();
-                        Toast.makeText(EditDetailPage.this,"ssss",Toast.LENGTH_SHORT).show();
                         Message message=new Message();
                         message.what=Global.FINISH_CODE;
                         mHandler.sendMessage(message);

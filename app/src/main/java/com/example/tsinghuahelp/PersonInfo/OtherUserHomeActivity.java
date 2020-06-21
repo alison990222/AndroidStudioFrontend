@@ -281,13 +281,15 @@ public class OtherUserHomeActivity extends Activity implements View.OnClickListe
                     else{
                         Message message=new Message();
                         message.what=Global.FAIL_CODE;
-                        message.obj="图片信息获取失败";
+                        message.obj="获取头像失败！";
                         mHandler.sendMessage(message);
                     }
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    Log.e("error", e.toString());
+                    Message message = new Message();
+                    message.what = Global.FAIL_CODE;
+                    message.obj = e.toString();
+                    mHandler.sendMessage(message);
                 }
             }
         }).start();

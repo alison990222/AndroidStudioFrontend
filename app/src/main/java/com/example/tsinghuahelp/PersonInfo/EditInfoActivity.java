@@ -40,6 +40,7 @@ import com.example.tsinghuahelp.MainActivity;
 import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.Search.SearchResult;
 import com.example.tsinghuahelp.utils.CommonInterface;
+import com.example.tsinghuahelp.utils.Global;
 import com.example.tsinghuahelp.utils.MyDialog;
 
 import org.jetbrains.annotations.NotNull;
@@ -95,14 +96,14 @@ public class EditInfoActivity extends Activity implements View.OnClickListener {
         @Override public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case 0:
-                    Toast.makeText(EditInfoActivity.this, "后端信息获取失败", Toast.LENGTH_SHORT).show();
+                case Global.FAIL_CODE:
+                    Toast.makeText(EditInfoActivity.this, msg.obj.toString(), Toast.LENGTH_SHORT).show();
                     break;
-                case 1:
+                case Global.FRESH_ICON_CODE:
                     Log.e("m_tag","收到信息更新图片");
                     icon_pic.setImageBitmap(bitmap);
                     break;
-                case 2:
+                case Global.SAVE_CODE:
                     Log.e("m_tag","决定是否退出");
                     if(!change_icon&&!change_name&&!change_person_info&&!change_signature&&!change_verify){
                         finish();
@@ -111,7 +112,10 @@ public class EditInfoActivity extends Activity implements View.OnClickListener {
                         showWarningInfo();
                     }
                     break;
-                case 3:
+                case Global.FINISH_CODE:
+                    finish();
+                    break;
+                case Global.QUIT_CODE:
                     Intent intent = new Intent();
                     intent.setClass(EditInfoActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);//设置不要刷新将要跳到的界面
@@ -133,15 +137,13 @@ public class EditInfoActivity extends Activity implements View.OnClickListener {
             @Override
             public void onPositiveClick() {
                 dialog.dismiss();
-                Toast.makeText(EditInfoActivity.this,"xxxx",Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNegtiveClick() {
                 dialog.dismiss();
-                Toast.makeText(EditInfoActivity.this,"ssss",Toast.LENGTH_SHORT).show();
                 Message message=new Message();
-                message.what=3;
+                message.what=Global.FINISH_CODE;
                 mHandler.sendMessage(message);
             }
         }).show();
@@ -301,6 +303,10 @@ public class EditInfoActivity extends Activity implements View.OnClickListener {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.e("error", e.toString());
+                Message message = new Message();
+                message.what = Global.FAIL_CODE;
+                message.obj = e.toString();
+                mHandler.sendMessage(message);
             }
 
             @Override
@@ -314,12 +320,12 @@ public class EditInfoActivity extends Activity implements View.OnClickListener {
                     if(!resp.equals("valid")){throw new Exception();}
                     change_icon=false;
                     Message message=new Message();
-                    message.what=2;
+                    message.what=Global.FINISH_CODE;
                     mHandler.sendMessage(message);
                 } catch (Exception e) {
                     Message message=new Message();
-                    message.what=0;
-                    message.obj="update_icon";
+                    message.what=Global.FAIL_CODE;
+                    message.obj="update_icon失败！";
                     mHandler.sendMessage(message);
                 }
             }
@@ -548,18 +554,21 @@ public class EditInfoActivity extends Activity implements View.OnClickListener {
                         InputStream in = connection.getInputStream();
                         bitmap = BitmapFactory.decodeStream(in);
                         Message message=new Message();
-                        message.what=1;
+                        message.what=Global.FRESH_ICON_CODE;
                         mHandler.sendMessage(message);
                     }
                     else{
                         Message message=new Message();
-                        message.what=0;
+                        message.what=Global.FAIL_CODE;
+                        message.obj="获取头像失败！";
                         mHandler.sendMessage(message);
                     }
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    Log.e("error", e.toString());
+                    Message message = new Message();
+                    message.what = Global.FAIL_CODE;
+                    message.obj = e.toString();
+                    mHandler.sendMessage(message);
                 }
             }
         }).start();
@@ -574,6 +583,10 @@ public class EditInfoActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         Log.e("error", e.toString());
+                        Message message = new Message();
+                        message.what = Global.FAIL_CODE;
+                        message.obj = e.toString();
+                        mHandler.sendMessage(message);
                     }
 
                     @Override
@@ -597,12 +610,12 @@ public class EditInfoActivity extends Activity implements View.OnClickListener {
                                 change_person_info = false;
                             }
                             Message message = new Message();
-                            message.what = 2;
+                            message.what = Global.FINISH_CODE;
                             mHandler.sendMessage(message);
                         } catch (Exception e) {
                             Message message = new Message();
-                            message.what = 0;
-                            message.obj = url;
+                            message.what = Global.FAIL_CODE;
+                            message.obj = url+"失败！";
                             mHandler.sendMessage(message);
                         }
                     }
@@ -620,6 +633,10 @@ public class EditInfoActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         Log.e("error", e.toString());
+                        Message message = new Message();
+                        message.what = Global.FAIL_CODE;
+                        message.obj = e.toString();
+                        mHandler.sendMessage(message);
                     }
 
                     @Override
@@ -635,12 +652,13 @@ public class EditInfoActivity extends Activity implements View.OnClickListener {
                             } else {
                                 Log.e("response", "返回了valid，成功登出了");
                                 Message message = new Message();
-                                message.what = 3;
+                                message.what = Global.QUIT_CODE;
                                 mHandler.sendMessage(message);
                             }
                         } catch (Exception e) {
                             Message message = new Message();
-                            message.what = 0;
+                            message.what = Global.FAIL_CODE;
+                            message.obj="登出失败！";
                             mHandler.sendMessage(message);
                         }
                     }

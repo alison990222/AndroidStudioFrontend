@@ -5,9 +5,11 @@ public class Global {
     public static int CURRENT_ID=0;
 
     public static final int FAIL_CODE=0;
+    public static final int QUIT_CODE=3;
     public static final int FINISH_CODE=5;
     public static final int FRESH_HOME_CODE=1;
     public static final int UPDATE_PASS_CODE=1;
+    public static final int SAVE_CODE=1;
     public static final int UPDATE_FAIL_CODE=2;
     public static final int FRESH_ICON_CODE=2;
     public static final int FRESH_FOLL_CODE=2;

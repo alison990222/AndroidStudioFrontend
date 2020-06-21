@@ -102,8 +102,6 @@ public class MainActivity extends Activity {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         Log.e("error", e.toString());
-                        Intent mainIntent = new Intent(MainActivity.this, mainPage.class);
-                        startActivity(mainIntent);
                     }
 
                     @Override

@@ -23,8 +23,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.Search.SearchResult;
 import com.example.tsinghuahelp.Search.SearchResultAdapter;
-import com.example.tsinghuahelp.mainPage;
-import com.example.tsinghuahelp.news.PostAdapter;
 import com.example.tsinghuahelp.utils.CommonInterface;
 import com.example.tsinghuahelp.utils.Global;
 import com.example.tsinghuahelp.utils.MyDialog;
@@ -81,16 +79,12 @@ public class Fragment2 extends Fragment {
 
         super.onCreate(savedInstanceState);
         resultsList = new ArrayList<>();
-
         get_recommend();
-
-
 
     }
 
     private void get_recommend() {
         resultsList.clear();
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -192,13 +186,11 @@ public class Fragment2 extends Fragment {
             @Override
             public void onPositiveClick() {
                 dialog.dismiss();
-                Toast.makeText(getContext(),"xxxx",Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNegtiveClick() {
                 dialog.dismiss();
-                Toast.makeText(getContext(),"ssss",Toast.LENGTH_SHORT).show();
             }
         }).show();
     }

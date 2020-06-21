@@ -52,8 +52,12 @@ public class StarFollowAll extends Activity {
     private List<FollowUser> followUserList = new ArrayList<FollowUser>();
     private List<SearchResult> proList = new ArrayList<SearchResult>();
     int mtype;
+    public static boolean change;
+    private static final int STAR_CODE=0;
+    private static final int FOLLOW_CODE=1;
+    private static final int FOLLOWER_CODE=2;
+    private static final int SIGNIN_CODE=3;
     String projectID;
-    public static boolean change=false;
     @SuppressLint("HandlerLeak")
     private Handler mHandler=new Handler(){
         @Override public void handleMessage(Message msg) {
@@ -83,7 +87,6 @@ public class StarFollowAll extends Activity {
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +110,7 @@ public class StarFollowAll extends Activity {
         assert type != null;
         if(type.equals("star")){
             //从服务器获取项目
-            mtype=0;
+            mtype=STAR_CODE;
             textView.setText("关注项目");
             if(Global.TYPE){textView.setText("我的项目");}
             proAdapter = new SearchResultAdapter(this,proList);
@@ -115,21 +118,21 @@ public class StarFollowAll extends Activity {
         }
         else if(type.equals("follow")){
             //从服务器获取我的关注
-            mtype=1;
+            mtype=FOLLOW_CODE;
             textView.setText("我的关注");
             followUserAdapter = new FollowUserAdapter(this,followUserList);
             recyclerView.setAdapter(followUserAdapter);
         }
         else if(type.equals("follower")){
             //从服务器获取关注我的人
-            mtype=2;
+            mtype=FOLLOWER_CODE;
             textView.setText("关注我的");
             followUserAdapter = new FollowUserAdapter(this,followUserList);
             recyclerView.setAdapter(followUserAdapter);
         }
         else if(type.equals("applicants")){
             //从服务器获取关注我的人
-            mtype=3;
+            mtype=SIGNIN_CODE;
             textView.setText("报名人");
             projectID = intent.getStringExtra("projectID");
             followUserAdapter = new FollowUserAdapter(this,followUserList);
@@ -141,20 +144,20 @@ public class StarFollowAll extends Activity {
 
     public void fresh(){
         switch (mtype){
-            case 0:
+            case STAR_CODE:
                 String url="/api/user/get_star";
                 if(Global.TYPE){url="/api/teacher/get_my_project";}
                 fresh_pro(url);
                 break;
-            case 1:
+            case FOLLOW_CODE:
                 url="/api/user/get_follower";
                 fresh_user(url);
                 break;
-            case 2:
+            case FOLLOWER_CODE:
                 url="/api/user/get_followed";
                 fresh_user(url);
                 break;
-            case 3:
+            case SIGNIN_CODE:
                 url="/api/teacher/get_signin_student/" + projectID;
                 fresh_applicants(url);
                 break;
@@ -171,6 +174,10 @@ public class StarFollowAll extends Activity {
                     @Override
                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         Log.e("error", e.toString());
+                        Message message = new Message();
+                        message.what = Global.FAIL_CODE;
+                        message.obj = e.toString();
+                        mHandler.sendMessage(message);
                     }
 
                     @Override
@@ -188,7 +195,7 @@ public class StarFollowAll extends Activity {
                                 int o_id = object.getInteger("id");
                                 followUserList.add(new FollowUser(o_type, o_id, o_username));
                             }
-                            // {"grade":"","id":1,"name":"汪","real_name":"","school":"","type":false}
+
                             Message message = new Message();
                             message.what = Global.FRESH_FOLL_CODE;
                             mHandler.sendMessage(message);
@@ -197,6 +204,7 @@ public class StarFollowAll extends Activity {
                             Log.e("error", e.toString());
                             Message message = new Message();
                             message.what = Global.FAIL_CODE;
+                            message.obj = "获取成员失败！";
                             mHandler.sendMessage(message);
                         }
                     }
