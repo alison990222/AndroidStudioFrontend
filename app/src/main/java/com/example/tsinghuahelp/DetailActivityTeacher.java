@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat;
 import com.alibaba.fastjson.JSONObject;
 import com.example.tsinghuahelp.CheckUser.CheckUser;
 import com.example.tsinghuahelp.Fragment.Fragment5;
+import com.example.tsinghuahelp.PersonInfo.OtherUserHomeActivity;
 import com.example.tsinghuahelp.PersonInfo.StarFollowAll;
 import com.example.tsinghuahelp.utils.CommonInterface;
 import com.example.tsinghuahelp.utils.Global;
@@ -145,12 +146,15 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
         btnEdit = (Button)findViewById(R.id.btn_edit);
         btnEdit.setOnClickListener(this);
 
+
+
         topic = (TextView)findViewById(R.id.projectName);
         department = (TextView)findViewById(R.id.projectDept);
         description = (EditText)findViewById(R.id.projectDescript);
         researchField = (EditText)findViewById(R.id.projectField);
         time = (TextView)findViewById(R.id.projectTime);
         teacher = (TextView)findViewById(R.id.projectTeacher);
+        teacher.setOnClickListener(this);
         undergraduate = (CheckBox)findViewById(R.id.checkBox_undergraduate);
         master =(CheckBox)findViewById(R.id.checkBox_master);
         phd = (CheckBox)findViewById(R.id.checkBox_phd);
@@ -192,6 +196,11 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
                 break;
             case R.id.btn_edit:
                 editProject();
+                break;
+            case R.id.projectTeacher:
+                Intent in=new Intent(DetailActivityTeacher.this, OtherUserHomeActivity.class);
+                in.putExtra("id",tchID);
+                startActivity(in);
                 break;
         }
 

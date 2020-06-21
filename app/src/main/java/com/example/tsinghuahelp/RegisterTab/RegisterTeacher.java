@@ -104,6 +104,8 @@ public class RegisterTeacher extends Fragment {
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         String resStr = response.body().string();
                         getActivity().runOnUiThread(() -> Toast.makeText(getContext(), resStr, Toast.LENGTH_LONG).show());
+                        Intent in=new Intent(getActivity(), MainActivity.class);
+                        startActivity(in);
                         Log.e("response", resStr);
 
                     }

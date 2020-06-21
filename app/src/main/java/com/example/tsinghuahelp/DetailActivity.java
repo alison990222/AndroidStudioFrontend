@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.tsinghuahelp.Fragment.Fragment5;
+import com.example.tsinghuahelp.PersonInfo.OtherUserHomeActivity;
 import com.example.tsinghuahelp.news.Posts;
 import com.example.tsinghuahelp.utils.CommonInterface;
 import com.example.tsinghuahelp.utils.Global;
@@ -111,10 +112,11 @@ public class DetailActivity extends Activity implements View.OnClickListener {
         btnEdit = (Button)findViewById(R.id.btn_edit);
         btnEdit.setOnClickListener(this);
 
+        ownerName = (TextView) findViewById(R.id.ownerName);
+        ownerName.setOnClickListener(this);
 
         topic = (TextView) findViewById(R.id.projectName);
         time = (TextView) findViewById(R.id.projectTime);
-        ownerName = (TextView) findViewById(R.id.ownerName);
         interestField = (EditText) findViewById(R.id.interestField);
 
         department = (TextView) findViewById(R.id.departmentName);
@@ -135,6 +137,12 @@ public class DetailActivity extends Activity implements View.OnClickListener {
 
             case R.id.btn_edit:
                 editProject();
+                break;
+
+            case R.id.ownerName:
+                Intent in=new Intent(DetailActivity.this, OtherUserHomeActivity.class);
+                in.putExtra("id",studentID);
+                startActivity(in);
                 break;
         }
     }
