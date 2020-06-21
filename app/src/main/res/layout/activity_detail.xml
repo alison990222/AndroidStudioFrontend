@@ -13,7 +13,10 @@
         android:layout_height="50dp"
         android:textAlignment="center"
         android:gravity="center"
+        android:autoSizeMaxTextSize="80dp"
+        android:autoSizeMinTextSize="2dp"
         android:textSize="30dp"
+        android:autoSizeTextType="uniform"
         android:text="Tsinghua Help"/>
 
     <TextView

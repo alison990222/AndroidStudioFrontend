@@ -71,6 +71,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
                     System.out.println("去往项目详情页面");
                     Intent detailIntent = new Intent(mCtx, DetailActivityTeacher.class);//ActivityDetail.class
                     detailIntent.putExtra("id",result.getId());
+                    detailIntent.putExtra("title",result.getTitle());
                     mCtx.startActivity(detailIntent);
                 }
                 else if(type.equals("plan")){
@@ -78,6 +79,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
                     System.out.println("去往计划详情页面");
                     Intent detailIntent = new Intent(mCtx, DetailActivity.class);//ActivityDetail.class
                     detailIntent.putExtra("id",result.getId());
+                    detailIntent.putExtra("title",result.getTitle());
                     mCtx.startActivity(detailIntent);
                 }
                 else{

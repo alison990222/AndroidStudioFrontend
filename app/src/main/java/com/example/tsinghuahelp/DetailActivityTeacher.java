@@ -117,9 +117,16 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
 
                     if(isStarred.equals("true"))
                         btnStar.setText("取消收藏");
+                    else{
+                        btnStar.setText("收藏");
+                    }
                     if(isRegistered.equals("true"))
                         btnApply.setText("取消报名");
+                    else
+                        btnApply.setText("报名");
                     break;
+
+
             }
         }
     };
@@ -199,7 +206,7 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
                 break;
             case R.id.projectTeacher:
                 Intent in=new Intent(DetailActivityTeacher.this, OtherUserHomeActivity.class);
-                in.putExtra("id",tchID);
+                in.putExtra("id",Integer.valueOf(tchID));
                 startActivity(in);
                 break;
         }
@@ -227,9 +234,9 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
                     try {
                         if(jsonObject.get("response").equals("valid")){
                             Fragment5.change=true;
-                            DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, "收藏成功", Toast.LENGTH_LONG).show());
                             isStarred= "true";
-                            btnStar.setText("取消收藏");
+//                            btnStar.setText("取消收藏");
+                            DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, "收藏成功", Toast.LENGTH_LONG).show());
                         }
                         else{
                             DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, jsonObject.get("detail").toString(), Toast.LENGTH_LONG).show());
@@ -269,9 +276,9 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
                     try {
                         if(jsonObject.get("response").equals("valid")){
                             Fragment5.change=true;
-                            DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, "取消收藏成功", Toast.LENGTH_LONG).show());
                             isStarred= "false";
-                            btnStar.setText("收藏");
+//                            btnStar.setText("收藏");
+                            DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, "取消收藏成功", Toast.LENGTH_LONG).show());
                         }
                         else{
                             DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, jsonObject.get("response").toString(), Toast.LENGTH_LONG).show());
@@ -317,7 +324,7 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
                         if(jsonObject.get("response").equals("valid")){
                             DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, "报名成功", Toast.LENGTH_LONG).show());
                             isRegistered = "true";
-                            btnApply.setText("取消报名");
+//                            btnApply.setText("取消报名");
                         }
                         else{
                             DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, jsonObject.get("response").toString(), Toast.LENGTH_LONG).show());
@@ -357,7 +364,7 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
                         if(jsonObject.get("response").equals("valid")){
                             DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, "取消报名成功", Toast.LENGTH_LONG).show());
                             isRegistered = "false";
-                            btnApply.setText("报名");
+//                            btnApply.setText("报名");
                         }
                         else{
                             DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, jsonObject.get("response").toString(), Toast.LENGTH_LONG).show());
@@ -499,6 +506,10 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
             h.put("description",newDescription);
             h.put("research_direction",newResearchField);
             h.put("title",topicName);
+
+            desctiptName = newDescription;
+            reqName = requirements;
+
 
             String url = "/api/teacher/update_recruit/";
             CommonInterface.sendOkHttpPostRequest(url, new Callback() {

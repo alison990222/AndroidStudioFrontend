@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSONArray;
+import com.example.tsinghuahelp.Fragment.Fragment4;
 import com.example.tsinghuahelp.R;
 import com.example.tsinghuahelp.news.Posts;
 import com.example.tsinghuahelp.utils.CommonInterface;
@@ -92,6 +93,7 @@ public class ChatRoom extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.chat_room);
+        Fragment4.change=true;
 
         messageET = (EditText)findViewById(R.id.messageET);
         sendBtn = (ImageView) findViewById(R.id.sendBtn);
@@ -103,11 +105,19 @@ public class ChatRoom extends Activity {
         LinearLayoutManager manager = new LinearLayoutManager(ChatRoom.this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
 
+        manager.setStackFromEnd(true);
+
+
         Intent intent = this.getIntent();
 
         username.setText(intent.getStringExtra("title"));
         userID = intent.getStringExtra("id").toString();
 
+        if(userID.equals("0")){ // not system msg
+            messageET.setFocusableInTouchMode(false);
+            messageET.setFocusable(false);
+            sendBtn.setEnabled(false);
+        }
         this.iconUrl="http://47.94.145.111:8080/api/user/getIcon/"+userID;
         SetImageByUrl getImageByUrl = new SetImageByUrl();
         getImageByUrl.setImage(profile_image,iconUrl);
@@ -180,7 +190,7 @@ public class ChatRoom extends Activity {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String resStr = response.body().string();
-//                Log.d("chatmsg",resStr);
+                Log.d("chatmsg",resStr);
                 try {
                     com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
                     JSONArray data = jsonObject.getJSONArray("data");

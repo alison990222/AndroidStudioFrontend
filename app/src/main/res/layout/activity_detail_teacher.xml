@@ -13,7 +13,10 @@
         android:layout_height="50dp"
         android:textAlignment="center"
         android:gravity="center"
+        android:autoSizeMaxTextSize="80dp"
+        android:autoSizeMinTextSize="2dp"
         android:textSize="30dp"
+        android:autoSizeTextType="uniform"
         android:text="Tsinghua Help"/>
 
     <TextView
@@ -80,7 +83,7 @@
         android:layout_marginTop="5dp"
         android:autoSizeTextType="uniform"
         android:maxLines="2"
-        android:hint="请输入研究方向"
+        android:hint=""
         android:textSize="15dp"
         android:maxLength="30"/>
 

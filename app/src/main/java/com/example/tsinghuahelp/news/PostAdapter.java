@@ -42,9 +42,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Posts posts = postsList.get(position);
         holder.title.setText(posts.getTitle());
-        holder.teacher.setText(posts.getTeacher());
-        holder.department.setText(posts.getDepartment());
-        holder.researchDirection.setText(posts.getResearchDirection());
+        holder.teacher.setText("导师："+posts.getTeacher());
+        holder.department.setText("院系："+posts.getDepartment());
+        holder.researchDirection.setText("研究方向："+posts.getResearchDirection());
     }
 
     @Override

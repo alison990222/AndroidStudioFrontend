@@ -39,9 +39,19 @@ public class Fragment4 extends Fragment {
     private List<ChatList> list = new ArrayList<>();
     private RecyclerView recyclerView;
     private ChatListAdapter adapter;
+    public static boolean change;
     public Fragment4() {
         // Required empty public constructor
     }
+    // 这会导致返回的时候重复绘制
+//    @Override
+//    public void onResume(){
+//        super.onResume();
+//        if(change){
+//            fresh_page();
+//            change=false;
+//        }
+//    }
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler=new Handler(){
@@ -61,10 +71,6 @@ public class Fragment4 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        list.add(new ChatList("zxt","i don't have description","2020/5/1","",""));
-//        list.add(new ChatList("wyq","send me the code","2020/5/2","",""));
-//        list.add(new ChatList("lw","ok","2020/5/5","",""));
 
     }
 

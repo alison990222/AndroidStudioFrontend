@@ -141,7 +141,7 @@ public class DetailActivity extends Activity implements View.OnClickListener {
 
             case R.id.ownerName:
                 Intent in=new Intent(DetailActivity.this, OtherUserHomeActivity.class);
-                in.putExtra("id",studentID);
+                in.putExtra("id",Integer.valueOf(studentID));
                 startActivity(in);
                 break;
         }

@@ -17,7 +17,7 @@
         android:layout_marginTop="15dp"
         android:textAlignment="center"
         android:gravity="center"
-        android:text="Username"
+        android:text="发布计划"
         android:textSize="30dp" />
 
 
