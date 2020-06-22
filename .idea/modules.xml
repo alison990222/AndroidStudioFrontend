@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/AndroidStudioFrontend-app.iml" filepath="$PROJECT_DIR$/app/AndroidStudioFrontend-app.iml" group="TsinghuaHelp/app" />
+      <module fileurl="file://$PROJECT_DIR$/app/Downloads-AndroidStudioFrontend-app.iml" filepath="$PROJECT_DIR$/app/Downloads-AndroidStudioFrontend-app.iml" group="TsinghuaHelp/app" />
       <module fileurl="file://$PROJECT_DIR$/app/GitDocument-AndroidStudioFrontend-app.iml" filepath="$PROJECT_DIR$/app/GitDocument-AndroidStudioFrontend-app.iml" group="TsinghuaHelp/app" />
       <module fileurl="file://$PROJECT_DIR$/TsinghuaHelp.iml" filepath="$PROJECT_DIR$/TsinghuaHelp.iml" group="TsinghuaHelp" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="TsinghuaHelp/app" />
