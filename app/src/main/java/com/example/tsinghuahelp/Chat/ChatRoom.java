@@ -128,11 +128,11 @@ public class ChatRoom extends Activity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
 
+        fresh_page(userID);
+
         String socketURL = "ws://47.94.145.111:8080/websocket/" +  String.valueOf(Global.CURRENT_ID);
         Log.d("m",socketURL);
         WebSocket.initSocket(socketURL);
-
-        fresh_page(userID);
 
         recyclerView.smoothScrollToPosition(messageChatModelList.size());
         adapter = new MessageChatAdapter(messageChatModelList, ChatRoom.this );
