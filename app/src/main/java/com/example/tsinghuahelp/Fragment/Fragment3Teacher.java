@@ -85,21 +85,6 @@ public class Fragment3Teacher extends Fragment {
                 if(phd.isChecked())
                     requirements += "博士生 ";
 
-
-                // 消息处理
-                msgHandler = new Handler() {
-                    @Override
-                    public void handleMessage(Message msg) {
-                        super.handleMessage(msg);
-                        Toast.makeText(getContext(), msg.obj.toString(), Toast.LENGTH_LONG).show();
-                    }
-                };
-
-                // 关键权限必须动态申请
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-
-
                 String finalRequirements = requirements;
 
                 HashMap<String,String> h = new HashMap<>();
@@ -107,7 +92,6 @@ public class Fragment3Teacher extends Fragment {
                 h.put("research_direction",researchField.getText().toString());
                 h.put("requirement", finalRequirements);
                 h.put("description",detail.getText().toString());
-
 
                 final MyDialog dialog = new MyDialog(getContext());
                 dialog.setMessage("发布后可在详情页进行修改删除")
@@ -126,14 +110,9 @@ public class Fragment3Teacher extends Fragment {
                                 String resStr = response.body().string();
                                 com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
                                 try{
-//                                    if(jsonObject.get("response").equals("valid")){
-                                        getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "success", Toast.LENGTH_LONG).show());
-                                        Intent in=new Intent(getContext(), mainPage.class);
-                                        startActivity(in);
-//                                    }
-//                                    else{
-//                                        getActivity().runOnUiThread(() -> Toast.makeText(getContext(), resStr, Toast.LENGTH_LONG).show());
-//                                    }
+                                    getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "success", Toast.LENGTH_LONG).show());
+                                    Intent in=new Intent(getContext(), mainPage.class);
+                                    startActivity(in);
                                 }
                                 catch (Exception e){
                                     Log.e("error",e.toString());
@@ -145,7 +124,6 @@ public class Fragment3Teacher extends Fragment {
                     @Override
                     public void onNegtiveClick() {
                         dialog.dismiss();
-                        Toast.makeText(getContext(),"ssss",Toast.LENGTH_SHORT).show();
                     }
                 }).show();
             }

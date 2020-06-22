@@ -83,7 +83,7 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
                 case 0:
 //                    Toast.makeText(StarFollowAll.this,"后端信息获取失败",Toast.LENGTH_SHORT).show();
                     break;
-                case 1:
+                case Global.FRESH_HOME_CODE:
 
                     for (String retval: reqName.split(" ")){
                         if(retval.equals("博士生")){
@@ -139,8 +139,6 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
         setContentView(R.layout.activity_detail_teacher);
 
         Intent intent = this.getIntent();
-
-
         btnStar = (Button) findViewById(R.id.btn_star);
         btnStar.setOnClickListener(this);
         btnApply = (Button) findViewById(R.id.btn_apply);
@@ -152,8 +150,6 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
         btnCheck.setOnClickListener(this);
         btnEdit = (Button)findViewById(R.id.btn_edit);
         btnEdit.setOnClickListener(this);
-
-
 
         topic = (TextView)findViewById(R.id.projectName);
         department = (TextView)findViewById(R.id.projectDept);
@@ -175,13 +171,10 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
         btnApply.setVisibility(View.INVISIBLE);
         btnStar.setVisibility(View.INVISIBLE);
 
-
         topicName = intent.getStringExtra("title");
         topic.setText(topicName);
-//        tchID = intent.getStringExtra("tchid");
 
         ID = intent.getIntExtra("id",-1);
-
 
         fresh_page(ID);
     }
@@ -243,13 +236,13 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
 
                         }
                         Message message = new Message();
-                        message.what = 1;
+                        message.what = Global.FRESH_HOME_CODE;
                         mHandler.sendMessage(message);
 
                     } catch (Exception e) {
                         Log.d("error",e.toString());
                         Message message = new Message();
-                        message.what = 0;
+                        message.what = Global.FAIL_CODE;
                         mHandler.sendMessage(message);
                     }
                 }
@@ -285,13 +278,13 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
                         }
 
                         Message message = new Message();
-                        message.what = 1;
+                        message.what = Global.FRESH_HOME_CODE;
                         mHandler.sendMessage(message);
 
                     } catch (Exception e) {
                         Log.d("error",e.toString());
                         Message message = new Message();
-                        message.what = 0;
+                        message.what = Global.FAIL_CODE;
                         mHandler.sendMessage(message);
                     }
                 }
@@ -330,13 +323,13 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
                             DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, jsonObject.get("response").toString(), Toast.LENGTH_LONG).show());
                         }
                         Message message = new Message();
-                        message.what = 1;
+                        message.what = Global.FRESH_HOME_CODE;
                         mHandler.sendMessage(message);
 
                     } catch (Exception e) {
                         Log.d("error",e.toString());
                         Message message = new Message();
-                        message.what = 0;
+                        message.what = Global.FAIL_CODE;
                         mHandler.sendMessage(message);
                     }
                 }
@@ -370,13 +363,13 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
                             DetailActivityTeacher.this.runOnUiThread(() -> Toast.makeText(DetailActivityTeacher.this, jsonObject.get("response").toString(), Toast.LENGTH_LONG).show());
                         }
                         Message message = new Message();
-                        message.what = 1;
+                        message.what = Global.FRESH_HOME_CODE;
                         mHandler.sendMessage(message);
 
                     } catch (Exception e) {
                         Log.d("error",e.toString());
                         Message message = new Message();
-                        message.what = 0;
+                        message.what = Global.FAIL_CODE;
                         mHandler.sendMessage(message);
                     }
                 }
@@ -490,12 +483,10 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
             String newResearchField = researchField.getText().toString();
             if(!newResearchField.equals(oldResearchFieldname)){
                 oldResearchFieldname = newResearchField;
-//                System.out.println("新的研究方向："+newResearchField);
             }
             String newDescription = description.getText().toString();
             if(!newDescription.equals(oldDescription)){
                 oldDescription = newDescription;
-//                System.out.println("新的项目描述："+ newDescription);
             }
             btnEdit.setText("编辑");
 
@@ -532,13 +523,13 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
                         }
 
                         Message message = new Message();
-                        message.what = 1;
+                        message.what = Global.FRESH_HOME_CODE;
                         mHandler.sendMessage(message);
 
                     } catch (Exception e) {
                         Log.d("error",e.toString());
                         Message message = new Message();
-                        message.what = 0;
+                        message.what = Global.FAIL_CODE;
                         mHandler.sendMessage(message);
                     }
                 }
@@ -549,47 +540,52 @@ public class DetailActivityTeacher extends Activity implements View.OnClickListe
     private void fresh_page (int id) {
         String url = "/api/user/project_info/" + String.valueOf(id);
 
-        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
+            public void run() {
+                CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.d("d",resStr);
+                        try {
+                            com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
+                            JSONObject data = jsonObject.getJSONObject("data");
+
+                            reqName = data.get("requirement").toString();
+                            tchName = data.get("teacher").toString();
+                            deptName = data.get("department").toString();
+                            desctiptName = data.get("description").toString();
+                            researchName = data.get("research_direction").toString();
+                            isRegistered = data.get("isRegistered").toString();
+                            isStarred = data.get("isStarred").toString();
+                            createTime = data.get("createTime").toString();
+                            tchID = data.get("teacher_id").toString();
+                            topicName = data.get("project_title").toString();
+
+
+                            oldResearchFieldname = researchName;
+                            oldDescription = desctiptName;
+
+                            Message message = new Message();
+                            message.what = Global.FRESH_HOME_CODE;
+                            mHandler.sendMessage(message);
+
+                        } catch (Exception e) {
+                            Log.e("error", e.toString());
+                            Message message = new Message();
+                            message.what = Global.FAIL_CODE;
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
             }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.d("d",resStr);
-                try {
-                    com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
-                    JSONObject data = jsonObject.getJSONObject("data");
-
-                    reqName = data.get("requirement").toString();
-                    tchName = data.get("teacher").toString();
-                    deptName = data.get("department").toString();
-                    desctiptName = data.get("description").toString();
-                    researchName = data.get("research_direction").toString();
-                    isRegistered = data.get("isRegistered").toString();
-                    isStarred = data.get("isStarred").toString();
-                    createTime = data.get("createTime").toString();
-                    tchID = data.get("teacher_id").toString();
-                    topicName = data.get("project_title").toString();
-
-
-                    oldResearchFieldname = researchName;
-                    oldDescription = desctiptName;
-
-                    Message message = new Message();
-                    message.what = 1;
-                    mHandler.sendMessage(message);
-
-                } catch (Exception e) {
-                    Log.e("error", e.toString());
-                    Message message = new Message();
-                    message.what = 0;
-                    mHandler.sendMessage(message);
-                }
-            }
-        });
+        }).start();
 
     }
 }

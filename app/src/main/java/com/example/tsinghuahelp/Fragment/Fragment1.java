@@ -27,6 +27,7 @@ import com.example.tsinghuahelp.mainPage;
 import com.example.tsinghuahelp.news.PostAdapter;
 import com.example.tsinghuahelp.news.Posts;
 import com.example.tsinghuahelp.utils.CommonInterface;
+import com.example.tsinghuahelp.utils.Global;
 import com.example.tsinghuahelp.utils.MyDialog;
 
 import org.jetbrains.annotations.NotNull;
@@ -63,10 +64,10 @@ public class Fragment1 extends Fragment  {
         @Override public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
-                case 0:
+                case Global.FAIL_CODE:
                     Log.d("error","backend not connected");
                     break;
-                case 1:
+                case Global.FRESH_HOME_CODE:
                     adapter.notifyDataSetChanged();
 
                     break;
@@ -143,13 +144,13 @@ public class Fragment1 extends Fragment  {
                                                 object.get("teacher_id").toString()));
                             }
                             Message message = new Message();
-                            message.what = 1;
+                            message.what = Global.FRESH_HOME_CODE;
                             mHandler.sendMessage(message);
 
                         } catch (Exception e) {
                             Log.e("error", e.toString());
                             Message message = new Message();
-                            message.what = 0;
+                            message.what = Global.FAIL_CODE;
                             mHandler.sendMessage(message);
                         }
                     }

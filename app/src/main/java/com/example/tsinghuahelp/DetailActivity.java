@@ -75,7 +75,7 @@ public class DetailActivity extends Activity implements View.OnClickListener {
                 case 0:
 //                    Toast.makeText(StarFollowAll.this,"后端信息获取失败",Toast.LENGTH_SHORT).show();
                     break;
-                case 1:
+                case Global.FRESH_HOME_CODE:
                     ownerName.setText("姓名："+ studentName);
                     department.setText("院系："+ deptName);
                     description.setText(desctiptDetail);
@@ -252,7 +252,7 @@ public class DetailActivity extends Activity implements View.OnClickListener {
                         }
 
                         Message message = new Message();
-                        message.what = 1;
+                        message.what = Global.FRESH_HOME_CODE;
                         mHandler.sendMessage(message);
 
                     } catch (Exception e) {
@@ -270,44 +270,49 @@ public class DetailActivity extends Activity implements View.OnClickListener {
 
     private void fresh_page () {
         String url = "/api/user/plan_info/" + String.valueOf(planID);
-        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
+            public void run() {
+                CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.d("studentdata",resStr);
+                        try {
+                            com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
+                            JSONObject data = jsonObject.getJSONObject("data");
+
+                            deptName = data.get("department").toString();
+                            desctiptDetail = data.get("description").toString();
+                            plan_direction = data.get("plan_direction").toString();
+                            studentType = data.get("type").toString();
+                            createTime = data.get("createTime").toString();
+                            studentID = data.get("student_id").toString();
+                            topicName = data.get("plan_title").toString();
+                            studentName = data.get("student_name").toString();
+
+                            oldInterestField = plan_direction;
+                            oldDescription = desctiptDetail;
+
+                            Message message = new Message();
+                            message.what = Global.FRESH_HOME_CODE;
+                            mHandler.sendMessage(message);
+
+                        } catch (Exception e) {
+                            Log.e("error", e.toString());
+                            Message message = new Message();
+                            message.what = 0;
+                            mHandler.sendMessage(message);
+                        }
+                    }
+                });
             }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.d("studentdata",resStr);
-                try {
-                    com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
-                    JSONObject data = jsonObject.getJSONObject("data");
-
-                    deptName = data.get("department").toString();
-                    desctiptDetail = data.get("description").toString();
-                    plan_direction = data.get("plan_direction").toString();
-                    studentType = data.get("type").toString();
-                    createTime = data.get("createTime").toString();
-                    studentID = data.get("student_id").toString();
-                    topicName = data.get("plan_title").toString();
-                    studentName = data.get("student_name").toString();
-
-                    oldInterestField = plan_direction;
-                    oldDescription = desctiptDetail;
-
-                    Message message = new Message();
-                    message.what = 1;
-                    mHandler.sendMessage(message);
-
-                } catch (Exception e) {
-                    Log.e("error", e.toString());
-                    Message message = new Message();
-                    message.what = 0;
-                    mHandler.sendMessage(message);
-                }
-            }
-        });
+        }).start();
 
     }
 }

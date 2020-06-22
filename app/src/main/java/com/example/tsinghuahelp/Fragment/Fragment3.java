@@ -76,13 +76,6 @@ public class Fragment3 extends Fragment {
         master = mView.findViewById(R.id.checkBox_master);
         phd = mView.findViewById(R.id.checkBox_phd);
 
-
-        // 关键权限必须动态申请
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-
-
-
         btnPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,14 +114,10 @@ public class Fragment3 extends Fragment {
                                 String resStr = response.body().string();
                                 com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
                                 try{
-//                                    if(jsonObject.get("response").equals("valid")){
-                                        getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "success", Toast.LENGTH_LONG).show());
-                                        Intent in=new Intent(getContext(), mainPage.class);
-                                        startActivity(in);
-//                                    }
-//                                    else{
-//                                        Toast.makeText(getContext(), resStr, Toast.LENGTH_LONG).show();
-//                                    }
+                                    getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "success", Toast.LENGTH_LONG).show());
+                                    Intent in=new Intent(getContext(), mainPage.class);
+                                    startActivity(in);
+
                                 }
                                 catch (Exception e){
                                     Log.e("error",e.toString());
@@ -140,12 +129,10 @@ public class Fragment3 extends Fragment {
                     @Override
                     public void onNegtiveClick() {
                         dialog.dismiss();
-//                        Toast.makeText(getContext(),"ssss",Toast.LENGTH_SHORT).show();
                     }
                 }).show();
             }
         });
-
 
         return mView;
     }

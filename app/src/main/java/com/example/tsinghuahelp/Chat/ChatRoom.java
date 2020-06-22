@@ -66,10 +66,10 @@ public class ChatRoom extends Activity {
         @Override public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
-                case 0:
+                case Global.FAIL_CODE:
                     Log.d("error","backend not connected");
                     break;
-                case 1:
+                case  Global.FRESH_HOME_CODE:
                     adapter.notifyDataSetChanged();
                     break;
             }
@@ -212,13 +212,13 @@ public class ChatRoom extends Activity {
 
                     }
                     Message message=new Message();
-                    message.what=1;
+                    message.what= Global.FRESH_HOME_CODE;
                     msgHandler.sendMessage(message);
 
                 } catch (Exception e) {
                     Log.e("error", e.toString());
                     Message message=new Message();
-                    message.what=0;
+                    message.what=Global.FAIL_CODE;
                     msgHandler.sendMessage(message);
                 }
             }
