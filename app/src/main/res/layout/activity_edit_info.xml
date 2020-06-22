@@ -356,17 +356,17 @@
         <Button
             android:id="@+id/password_btn"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:background="#9ab5ff"
+            android:layout_height="wrap_content"
+            android:background="@drawable/person_button"
             android:hint="修改密码" />
 
         <Button
             android:id="@+id/quit_btn"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
             android:layout_marginLeft="61dp"
             android:layout_toRightOf="@+id/password_btn"
-            android:background="#9ab5ff"
+            android:layout_height="wrap_content"
+            android:background="@drawable/person_button"
             android:hint="退出登录" />
 
 
