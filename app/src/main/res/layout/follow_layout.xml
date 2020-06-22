@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:padding="2dp"
     android:orientation="horizontal"
-    android:background="@android:color/white">
+    android:background="@drawable/go_to2">
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/follow_pic"
