@@ -17,7 +17,7 @@ public class WebSocket {
     private static int RE_TIME = 5;  // 发起重连的时间
 
     private static WebSocketClient socketClient = null;
-    
+
     private String SOCKET_URL;
 
     public static WebSocketClient getSocketClient() {

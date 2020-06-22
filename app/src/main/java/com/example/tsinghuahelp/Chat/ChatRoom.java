@@ -75,7 +75,6 @@ public class ChatRoom extends Activity {
             }
 
             if(msg.obj!=null && !msg.obj.toString().equals("连接成功！")){
-                Log.d("here","whaterre>>>");
                 messageChatModelList.add( new MessageChatModel(
                         msg.obj.toString(),
                         getTime(),
@@ -84,7 +83,6 @@ public class ChatRoom extends Activity {
                 ));
                 adapter.notifyDataSetChanged();
             }
-
         }
     };
 
@@ -139,43 +137,42 @@ public class ChatRoom extends Activity {
                 finish();
             }
         });
+        
+        String socketURL = "ws://47.94.145.111:8080/websocket/" +  String.valueOf(Global.CURRENT_ID);
+        Log.d("m",socketURL);
+        WebSocket.initSocket(socketURL);
 
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String msg = messageET.getText().toString();
 
-            String socketURL = "ws://47.94.145.111:8080/websocket/" +  String.valueOf(Global.CURRENT_ID);
-            Log.d("m",socketURL);
-            WebSocket.initSocket(socketURL);
-
-            sendBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String msg = messageET.getText().toString();
-
-                    JSONObject obj = new JSONObject();
-                    try {
-                        obj.put("message", msg);
-                        obj.put("to",userID);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    WebSocket.send(obj);
-
-                    SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
-                    sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");// a为am/pm的标记
-                    Date date = new Date();// 获取当前时间
-
-                    MessageChatModel model = new MessageChatModel(
-                            msg,
-                            sdf.format(date),
-                            0,
-                            userID
-                    );
-
-                    messageChatModelList.add(model);
-                    recyclerView.smoothScrollToPosition(messageChatModelList.size());
-                    adapter.notifyDataSetChanged();
-                    messageET.setText("");
+                JSONObject obj = new JSONObject();
+                try {
+                    obj.put("message", msg);
+                    obj.put("to",userID);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            });
+                WebSocket.send(obj);
+
+                SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
+                sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");// a为am/pm的标记
+                Date date = new Date();// 获取当前时间
+
+                MessageChatModel model = new MessageChatModel(
+                        msg,
+                        sdf.format(date),
+                        0,
+                        userID
+                );
+
+                messageChatModelList.add(model);
+                recyclerView.smoothScrollToPosition(messageChatModelList.size());
+                adapter.notifyDataSetChanged();
+                messageET.setText("");
+            }
+        });
 
 }
     private void fresh_page(String userID){
