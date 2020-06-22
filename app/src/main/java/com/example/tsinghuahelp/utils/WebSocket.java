@@ -17,9 +17,7 @@ public class WebSocket {
     private static int RE_TIME = 5;  // 发起重连的时间
 
     private static WebSocketClient socketClient = null;
-
-//    private static String SOCKET_URL = "ws://47.94.145.111:8080/websocket/2";
-
+    
     private String SOCKET_URL;
 
     public static WebSocketClient getSocketClient() {
@@ -45,7 +43,6 @@ public class WebSocket {
 
                 @Override
                 public void onClose(int code, String reason, boolean remote) {
-                    socketClient = null;
                     if (code != 1000)   // 1000为正常关闭，不是意外关闭
                         WebSocket.reconnect(SOCKET_URL);
                 }
@@ -61,6 +58,10 @@ public class WebSocket {
         }
     }
 
+    public static void socketClose() {
+        Log.d("close","i'm closing");
+        socketClient.close();
+    }
 
 
     public static void reconnect(String SOCKET_URL) {
@@ -77,10 +78,10 @@ public class WebSocket {
         }).start();
     }
 
-    public static boolean send(JSONObject msg) {
+    public static boolean send(JSONObject sendmsg) {
         if (socketClient.isOpen()) {
-            Log.e("send msg", msg.toString());
-            socketClient.send(msg.toString());
+            Log.e("send msg", sendmsg.toString());
+            socketClient.send(sendmsg.toString());
             return true;
         } else {
             return false;

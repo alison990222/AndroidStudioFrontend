@@ -75,6 +75,7 @@ public class ChatRoom extends Activity {
             }
 
             if(msg.obj!=null && !msg.obj.toString().equals("连接成功！")){
+                Log.d("here","whaterre>>>");
                 messageChatModelList.add( new MessageChatModel(
                         msg.obj.toString(),
                         getTime(),
@@ -100,39 +101,32 @@ public class ChatRoom extends Activity {
         username = (TextView) findViewById(R.id.chat_username);
         profile_image = (CircularImageView) findViewById(R.id.profile_image);
 
-
         recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
         LinearLayoutManager manager = new LinearLayoutManager(ChatRoom.this, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
 
         manager.setStackFromEnd(true);
 
-
         Intent intent = this.getIntent();
 
         username.setText(intent.getStringExtra("title"));
         userID = intent.getStringExtra("id").toString();
 
-        if(userID.equals("0")){ // not system msg
+        if(userID.equals("0")){ // system msg
             messageET.setFocusableInTouchMode(false);
             messageET.setFocusable(false);
             sendBtn.setEnabled(false);
         }
-        this.iconUrl="http://47.94.145.111:8080/api/user/getIcon/"+userID;
-        SetImageByUrl getImageByUrl = new SetImageByUrl();
-        getImageByUrl.setImage(profile_image,iconUrl);
-
-
 
         // 关键权限必须动态申请
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
 
-        fresh_page(userID);
+        this.iconUrl="http://47.94.145.111:8080/api/user/getIcon/"+userID;
+        SetImageByUrl getImageByUrl = new SetImageByUrl();
+        getImageByUrl.setImage(profile_image,iconUrl);
 
-        String socketURL = "ws://47.94.145.111:8080/websocket/" +  String.valueOf(Global.CURRENT_ID);
-        Log.d("m",socketURL);
-        WebSocket.initSocket(socketURL);
+        fresh_page(userID);
 
         recyclerView.smoothScrollToPosition(messageChatModelList.size());
         adapter = new MessageChatAdapter(messageChatModelList, ChatRoom.this );
@@ -141,88 +135,98 @@ public class ChatRoom extends Activity {
         findViewById(R.id.backward_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSocketClient().onClose(1000,"onClose",true);
+                WebSocket.socketClose();
                 finish();
             }
         });
 
-        sendBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String msg = messageET.getText().toString();
 
-                JSONObject obj = new JSONObject();
-                try {
-                    obj.put("message", msg);
-                    obj.put("to",userID);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            String socketURL = "ws://47.94.145.111:8080/websocket/" +  String.valueOf(Global.CURRENT_ID);
+            Log.d("m",socketURL);
+            WebSocket.initSocket(socketURL);
+
+            sendBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String msg = messageET.getText().toString();
+
+                    JSONObject obj = new JSONObject();
+                    try {
+                        obj.put("message", msg);
+                        obj.put("to",userID);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    WebSocket.send(obj);
+
+                    SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
+                    sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");// a为am/pm的标记
+                    Date date = new Date();// 获取当前时间
+
+                    MessageChatModel model = new MessageChatModel(
+                            msg,
+                            sdf.format(date),
+                            0,
+                            userID
+                    );
+
+                    messageChatModelList.add(model);
+                    recyclerView.smoothScrollToPosition(messageChatModelList.size());
+                    adapter.notifyDataSetChanged();
+                    messageET.setText("");
                 }
-                WebSocket.send(obj);
+            });
 
-                SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
-                sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");// a为am/pm的标记
-                Date date = new Date();// 获取当前时间
-
-                MessageChatModel model = new MessageChatModel(
-                        msg,
-                        sdf.format(date),
-                        0,
-                        userID
-                );
-
-                messageChatModelList.add(model);
-                recyclerView.smoothScrollToPosition(messageChatModelList.size());
-                adapter.notifyDataSetChanged();
-                messageET.setText("");
-            }
-        });
-
-    }
+}
     private void fresh_page(String userID){
         String url = "/api/chat/get_chat_content/" + String.valueOf(userID);
-        CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+        new Thread(new Runnable() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e("error", e.toString());
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String resStr = response.body().string();
-                Log.d("chatmsg",resStr);
-                try {
-                    com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
-                    JSONArray data = jsonObject.getJSONArray("data");
-
-                    messageChatModelList.clear();
-                    int viewType = 0;
-                    for (int i = 0; i < data.size(); i++) {
-                        com.alibaba.fastjson.JSONObject object = (com.alibaba.fastjson.JSONObject) data.get(i);
-                        if(object.get("type").toString().equals("sender"))
-                            viewType = 1;
-                        else
-                            viewType = 0;
-                        messageChatModelList.add( new MessageChatModel(
-                                object.get("content").toString(),
-                                object.get("time").toString(),
-                                viewType,
-                                userID
-                        ));
-
+            public void run() {
+                CommonInterface.sendOkHttpGetRequest(url, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        Log.e("error", e.toString());
                     }
-                    Message message=new Message();
-                    message.what= Global.FRESH_HOME_CODE;
-                    msgHandler.sendMessage(message);
 
-                } catch (Exception e) {
-                    Log.e("error", e.toString());
-                    Message message=new Message();
-                    message.what=Global.FAIL_CODE;
-                    msgHandler.sendMessage(message);
-                }
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String resStr = response.body().string();
+                        Log.d("chatmsg",resStr);
+                        try {
+                            com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(resStr);
+                            JSONArray data = jsonObject.getJSONArray("data");
+
+                            messageChatModelList.clear();
+                            int viewType = 0;
+                            for (int i = 0; i < data.size(); i++) {
+                                com.alibaba.fastjson.JSONObject object = (com.alibaba.fastjson.JSONObject) data.get(i);
+                                if(object.get("type").toString().equals("sender"))
+                                    viewType = 1;
+                                else
+                                    viewType = 0;
+                                messageChatModelList.add( new MessageChatModel(
+                                        object.get("content").toString(),
+                                        object.get("time").toString(),
+                                        viewType,
+                                        userID
+                                ));
+
+                            }
+                            Message message=new Message();
+                            message.what= Global.FRESH_HOME_CODE;
+                            msgHandler.sendMessage(message);
+
+                        } catch (Exception e) {
+                            Log.e("error", e.toString());
+                            Message message=new Message();
+                            message.what=Global.FAIL_CODE;
+                            msgHandler.sendMessage(message);
+                        }
+                    }
+                });
             }
-        });
+        }).start();
 
     }
     private static String getTime(){
