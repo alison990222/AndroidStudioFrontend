@@ -67,8 +67,6 @@ public class ChatRoom extends Activity {
     public void onBackPressed() {
         super.onBackPressed();
         WebSocket.socketClose();
-
-        Log.e(TAG, "onBackPressed: 按下了返回键");
         // exitApplication();
     }
 
