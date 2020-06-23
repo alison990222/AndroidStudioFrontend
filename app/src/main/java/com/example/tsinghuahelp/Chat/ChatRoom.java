@@ -45,6 +45,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static androidx.constraintlayout.widget.Constraints.TAG;
 import static com.example.tsinghuahelp.utils.WebSocket.getSocketClient;
 
 
@@ -61,6 +62,16 @@ public class ChatRoom extends Activity {
     private CircularImageView profile_image;
 
     private String iconUrl;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        WebSocket.socketClose();
+
+        Log.e(TAG, "onBackPressed: 按下了返回键");
+        // exitApplication();
+    }
+
     @SuppressLint("HandlerLeak")
     public static Handler msgHandler=new Handler(){
         @Override public void handleMessage(Message msg) {
